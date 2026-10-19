@@ -1,0 +1,5 @@
+# Recorded in the team's task 4.1 logbook.
+# Account access and placement must be checked before application integration.
+existing_context:
+  asset_id: 6004597
+  placement_metadata: data/context/Context_Placement.json

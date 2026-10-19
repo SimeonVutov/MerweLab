@@ -1,0 +1,4 @@
+# Line starting with '#' is a comment
+# Empty lines are ignored
+# Example building ID: NL.IMBAG.Pand.0599100000689019
+

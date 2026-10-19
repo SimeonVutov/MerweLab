@@ -1,0 +1,8 @@
+baseline:
+  label: Existing situation
+
+scenario_a:
+  label: Three larger building volumes
+
+scenario_b:
+  label: Smaller buildings around a central road

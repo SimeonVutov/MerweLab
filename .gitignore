@@ -1,0 +1,40 @@
+# Local downloads and regenerable data
+/Downloads/
+/data/raw/
+/data/cache/
+/outputs/full_runs/
+
+# Downloaded conversion dependencies and generated models
+/tools/3dbag_to_gml/citygml-tools-*/
+/tools/3dbag_to_gml/data/
+/tools/3dbag_to_gml/merged.city.*
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+
+# Local configuration
+.env
+.env.*
+!.env.example
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated OpenFOAM data
+/analysis/wind/**/constant/polyMesh/
+/analysis/wind/**/processor[0-9]*/
+/analysis/wind/**/postProcessing/
+/analysis/wind/**/log.*
+
+
+/logs/
+
+*.log

@@ -1,0 +1,15 @@
+buurtcode,buurtnaam,aantalInwoners,aantalHuishoudens,percentagePersonen0Tot15Jaar,percentagePersonen15Tot25Jaar,percentagePersonen25Tot45Jaar,percentagePersonen45Tot65Jaar,percentagePersonen65JaarEnOuder,groteSupermarktGemiddeldeAfstandInKm,winkelsOvDagelijkseLevensmGemAfstInKm,huisartsenpraktijkGemiddeldeAfstandInKm,apotheekGemiddeldeAfstandInKm,kinderdagverblijfGemiddeldeAfstandInKm,basisonderwijsGemiddeldeAfstandInKm,treinstationGemiddeldeAfstandInKm,percentageEenpersoonshuishoudens,percentageHuishoudensZonderKinderen,percentageHuishoudensMetKinderen,personenautosPerHuishouden,percentageKoopwoningen,percHuurwoningenInBezitWoningcorporaties
+BU05990321,Bospolder,7570,3765,15,16,33,25,12,0.4,0.3,0.5,0.5,0.3,0.4,3.2,51,18,32,0.5,21,59
+BU05990322,Tussendijken,7380,3895,15,15,34,23,13,0.5,0.2,0.4,0.5,0.3,0.4,3.0,55,18,28,0.4,13,59
+BU05990323,Spangen,10040,4455,19,15,32,24,10,0.6,0.4,0.4,0.5,0.3,0.3,2.3,43,18,39,0.6,27,62
+BU05990327,Oud Mathenesse,7085,4245,11,14,40,23,11,0.4,0.3,0.6,0.4,0.4,0.5,1.3,60,20,20,0.5,36,19
+BU05990328,Witte Dorp,585,250,18,12,23,29,19,0.7,0.4,0.9,0.7,0.5,0.7,1.8,37,16,46,0.7,23,77
+BU05991926,Nieuw Mathenesse,2410,870,11,15,64,9,0,1.1,1.0,1.0,1.5,1.3,1.3,2.6,59,36,5,0.4,0,0
+BU06060102,Natuurkundigenbuurt,995,550,12,10,29,27,22,0.5,0.2,0.3,1.0,0.2,0.2,1.0,53,24,23,0.6,31,49
+BU06060103,Singelkwartier,2095,1140,13,13,36,26,13,0.4,0.3,0.5,1.0,0.3,0.5,0.5,52,22,26,0.6,45,36
+BU06060104,Stationsbuurt,1000,525,16,11,47,20,6,0.3,0.2,0.6,0.8,0.2,0.3,0.4,50,22,28,0.6,45,0
+BU06060105,Wetenschappersbuurt,1020,420,25,12,44,16,3,0.2,0.2,0.5,0.5,0.4,0.3,0.7,36,19,45,0.8,41,41
+BU06060106,Newtonbuurt,2175,1135,15,14,37,25,9,0.4,0.1,0.3,0.6,0.3,0.3,0.7,49,22,29,0.5,42,13
+BU06060107,Boylebuurt,1220,590,18,14,32,26,10,0.6,0.2,0.4,0.7,0.6,0.6,1.0,48,17,34,0.6,33,34
+BU06060108,Glasbuurt,835,475,14,12,44,22,7,0.9,0.5,0.8,1.3,0.7,0.7,1.4,57,21,22,0.7,52,0
+BU06060109,Marconibuurt,1945,980,14,12,38,26,9,0.6,0.2,0.3,1.0,0.2,0.3,1.1,47,23,31,0.6,50,10

@@ -1,0 +1,60 @@
+{
+  "input_crs": "EPSG:7415",
+  "geographic_crs": "EPSG:4979",
+  "local_axes": {
+    "x": "East",
+    "y": "North",
+    "z": "Up"
+  },
+  "units": "metres",
+  "origin_rd_nap": {
+    "easting_m": 88161.36718500001,
+    "northing_m": 436172.9375,
+    "nap_height_m": 7.102500000000001
+  },
+  "origin_wgs84": {
+    "longitude_degrees": 4.415828548832496,
+    "latitude_degrees": 51.91003490937786,
+    "ellipsoidal_height_m": 50.71538568229483
+  },
+  "origin_ecef_m": [
+    3931170.631728463,
+    303579.5742737761,
+    4996674.237044582
+  ],
+  "rotation_ecef_to_enu": [
+    [
+      -0.0769944712811331,
+      0.9970315197585976,
+      0.0
+    ],
+    [
+      -0.7847067570884222,
+      -0.06059796573671422,
+      0.6168980401398144
+    ],
+    [
+      0.6150667904966995,
+      0.047497738434932234,
+      0.7870430789173207
+    ]
+  ],
+  "transformation": "Inverse of RD New + Amersfoort to ETRS89 (9) + Inverse of ETRS89 to NAP height (2) + ETRS89 to WGS 84 (1) (with axis order normalized for visualization)",
+  "transformation_definition": "proj=pipeline step inv proj=sterea lat_0=52.1561605555556 lon_0=5.38763888888889 k=0.9999079 x_0=155000 y_0=463000 ellps=bessel step proj=hgridshift grids=nl_nsgi_rdtrans2018.tif step proj=vgridshift grids=nl_nsgi_nlgeo2018.tif multiplier=1 step proj=unitconvert xy_in=rad xy_out=deg",
+  "reported_transformation_accuracy_m": 1.001,
+  "enu_ecef_roundtrip_error_m": 0.0,
+  "vertex_count": 2838,
+  "local_bounds_m": {
+    "minimum": [
+      -457.854071702596,
+      -569.3401215123131,
+      -8.953735293706028
+    ],
+    "maximum": [
+      448.5287313614097,
+      565.7889824348533,
+      8.888128844130474
+    ]
+  },
+  "placement_note": "Geometry conversion only. Cesium must use the recorded origin and correctly interpret the model as Z-up East-North-Up. Negative local Z values are expected below the chosen origin."
+}
