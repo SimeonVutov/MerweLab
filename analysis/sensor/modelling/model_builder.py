@@ -1,6 +1,6 @@
 
 import os
-
+from tensorflow.keras.optimizers import Adam
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -23,13 +23,13 @@ def create_model(input_length, model_config):
          Dense(1)]
     )
     model.compile(
-        optimizer='adam',
+        optimizer=Adam(learning_rate=model_config.learning_rate),
         loss='mse',
         metrics=['mae'],
     )
     return model
 
-def train_model(model, x_train, y_train, x_validation, y_validation, model_config):
+def train_model(model, x_train, y_train, x_validation, y_validation, model_config, verbose = 1):
     early_stopping = EarlyStopping(
         monitor='val_loss',
         patience=model_config.patience,
@@ -41,7 +41,7 @@ def train_model(model, x_train, y_train, x_validation, y_validation, model_confi
         epochs=model_config.epochs,
         batch_size=model_config.batch_size,
         callbacks=[early_stopping],
-        verbose=1,
+        verbose=verbose,
         validation_data=(x_validation, y_validation),
     )
     return model, history

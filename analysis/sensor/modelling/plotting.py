@@ -30,17 +30,19 @@ def plot_training_history(history) -> None:
     _finish_plot("LSTM Training History", "Epoch", "MSE loss", legend=True)
 
 
-def plot_forecast(comparison):
+def plot_forecast(comparison, max_comparison = None):
     """Plot actual versus predicted temperature on the test set."""
+    if max_comparison is None:
+        max_comparison = len(comparison["timestamp"])
     plt.figure(figsize=(15, 6))
     plt.plot(
-        comparison["timestamp"],
-        comparison["actual_temperature"],
+        comparison["timestamp"][:max_comparison],
+        comparison["actual_temperature"][:max_comparison],
         label="Actual temperature",
     )
     plt.plot(
-        comparison["timestamp"],
-        comparison["predicted_temperature"],
+        comparison["timestamp"][:max_comparison],
+        comparison["predicted_temperature"][:max_comparison],
         label="Predicted temperature",
         alpha=0.8,
     )

@@ -70,7 +70,7 @@ end_points = find_end_points(data, train_ratio=TRAIN_RATIO, val_ratio=VALIDATION
 
 
 # %% Scale data to [0, 1]
-scaler = MyScaler.from_values(data[TEMPERATURE_COLUMN])
+scaler = MyScaler.from_values(data[TEMPERATURE_COLUMN][:end_points["train_end"]])
 scaled_temperature = scaler.scale(data[TEMPERATURE_COLUMN].values)
 
 # %% 4. Build sequences and split them
@@ -134,8 +134,8 @@ comparison = pd.DataFrame({
 
 # Plot actual versus predicted air temperature
 
-
 plot_forecast(comparison)
+plot_forecast(comparison, 2000)
 
 # %% 8. Save the model
 model.save(MODEL_PATH)
