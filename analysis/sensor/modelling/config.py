@@ -3,24 +3,24 @@ from pathlib import Path
 
 # Files
 DATA_PATH = Path("../rotterdam_airport_weather.csv")
-MODEL_PATH = Path("../LSTM_model_id_1_3.keras")
-SCALER_PATH = Path("../scaler.json")
+MODEL_PATH = Path("../LSTM_model_id_4_1.keras")
+SCALER_PATH = Path("../scalers.json")
 
 # Column names
 TIMESTAMP_COLUMN = "time"
-TEMPERATURE_COLUMN = "temperature"
-HUMIDITY_COLUMN = "humidity"
-PRESSURE_COLUMN = "pressure"
+FEATURE_COLUMNS = ["temperature", "humidity", "pressure"]
+TARGET_COLUMN = "temperature"
+assert TARGET_COLUMN in FEATURE_COLUMNS, "TARGET_COLUMN must also be listed in FEATURE_COLUMNS"
 
 # Seed
 RANDOM_SEED = 42
 
 # Data Split
-TRAIN_RATIO = 0.6
-VALIDATION_RATIO = 0.3
+TRAIN_RATIO = 0.7
+VALIDATION_RATIO = 0.2
 
 # Sequence Construction
-FORECAST_HORIZON = 6
+FORECAST_HORIZON = 3
 INPUT_SEQUENCE_LENGTH = 18
 
 @dataclass(frozen=True)
@@ -32,4 +32,4 @@ class ModelConfig:
     epochs: int = 30
     batch_size: int = 256
     patience: int = 4
-    learning_rate: float = 0.0011207606211860567
+    learning_rate: float = 0.005603803105930284

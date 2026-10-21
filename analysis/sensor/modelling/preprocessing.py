@@ -38,35 +38,61 @@ class MyScaler:
         content = json.loads(Path(path).read_text())
         return cls(content["min_value"], content["max_value"])
 
-def create_sequences(values, input_length, forecast_horizon):
+def fit_scalers(data, columns, train_end):
+    return {
+        column: MyScaler.from_values(data[column].to_numpy()[:train_end])
+        for column in columns
+    }
+
+def scale_features(data, columns, scalers):
+    return np.column_stack(
+        [scalers[column].scale(data[column].to_numpy()) for column in columns]
+    )
+
+def save_scalers(path, scalers):
+    content = {
+        column: {"min_value": float(scaler.min_value), "max_value": float(scaler.max_value)}
+        for column, scaler in scalers.items()
+    }
+    Path(path).write_text(json.dumps(content, indent=2))
+
+def load_scalers(path):
+    content = json.loads(Path(path).read_text())
+    return {
+        column: MyScaler(values["min_value"], values["max_value"])
+        for column, values in content.items()
+    }
+
+
+def create_sequences(features, target, input_length, forecast_horizon):
     X = []
     y = []
     target_indices = []
 
     max_start = (
-        len(values)
+        len(features)
         - input_length
         - forecast_horizon
         + 1
     )
 
     for i in range(max_start):
-        input_sequence = values[i:i + input_length]
+        input_sequence = features[i:i + input_length]
         target_index = i + input_length + forecast_horizon - 1
 
         if (
             np.isnan(input_sequence).any()
-            or np.isnan(values[target_index])
+            or np.isnan(target[target_index])
         ):
             continue
 
         X.append(input_sequence)
-        y.append(values[target_index])
+        y.append(target[target_index])
         target_indices.append(target_index)
 
     if not X:
         return (
-            np.empty((0, input_length)),
+            np.empty((0, input_length, features.shape[1])),
             np.empty((0,)),
             np.empty((0,), dtype=int),
         )

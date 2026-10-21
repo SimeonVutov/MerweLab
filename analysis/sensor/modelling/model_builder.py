@@ -15,9 +15,9 @@ from tensorflow.keras.layers import (
 )
 
 
-def create_model(input_length, model_config):
+def create_model(input_shape, model_config):
     model = Sequential(
-        [LSTM(model_config.lstm_neurons, activation='tanh', input_shape=(input_length, 1)),
+        [LSTM(model_config.lstm_neurons, activation='tanh', input_shape=input_shape),
          Dropout(model_config.dropout_rate),
          Dense(model_config.dense_neurons, activation='relu'),
          Dense(1)]

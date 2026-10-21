@@ -15,12 +15,13 @@ from config import (
     INPUT_SEQUENCE_LENGTH,
     MODEL_PATH,
     RANDOM_SEED,
-    TEMPERATURE_COLUMN,
     TIMESTAMP_COLUMN,
     TRAIN_RATIO,
     VALIDATION_RATIO,
     ModelConfig,
     SCALER_PATH,
+    TARGET_COLUMN,
+    FEATURE_COLUMNS
 )
 
 from data_loading import (
@@ -28,10 +29,12 @@ from data_loading import (
 )
 
 from preprocessing import (
-    MyScaler,
     find_end_points,
     create_sequences,
-    split_sequences
+    split_sequences,
+    fit_scalers,
+    scale_features,
+    save_scalers
 )
 from model_builder import (
     create_model,
@@ -59,10 +62,7 @@ model_config = ModelConfig()
 
 # %% 1. Import and check data
 
-data = load_weather_data(DATA_PATH, TIMESTAMP_COLUMN, TEMPERATURE_COLUMN)
-
-# visualise_data(prepared_data[TIMESTAMP_COLUMN], prepared_data[TEMPERATURE_COLUMN],
-#                "Time", "Temperature", "Temperature from data")
+data = load_weather_data(DATA_PATH, TIMESTAMP_COLUMN, FEATURE_COLUMNS)
 
 # %% 2. Find chronological splits
 
@@ -70,13 +70,18 @@ end_points = find_end_points(data, train_ratio=TRAIN_RATIO, val_ratio=VALIDATION
 
 
 # %% Scale data to [0, 1]
-scaler = MyScaler.from_values(data[TEMPERATURE_COLUMN][:end_points["train_end"]])
-scaled_temperature = scaler.scale(data[TEMPERATURE_COLUMN].values)
+scalers = fit_scalers(data, FEATURE_COLUMNS, end_points["train_end"])
+scaled_features = scale_features(data, FEATURE_COLUMNS, scalers)
+
+# The target is scaled separately, its scaler converts predictions back to real values
+target_scaler = scalers[TARGET_COLUMN]
+scaled_target = target_scaler.scale(data[TARGET_COLUMN].to_numpy())
 
 # %% 4. Build sequences and split them
 
 x_all, y_all, target_idx = create_sequences(
-    scaled_temperature,
+    scaled_features,
+    scaled_target,
     INPUT_SEQUENCE_LENGTH,
     FORECAST_HORIZON
 )
@@ -91,7 +96,7 @@ print("Final X_test shape:", x_test.shape)
 
 # %% 5. Creating the temperature predicting LSTM model
 
-model = create_model(INPUT_SEQUENCE_LENGTH, model_config)
+model = create_model(x_train.shape[1:], model_config)
 model, history = train_model(model,x_train,y_train,x_val,y_val,model_config)
 
 plot_training_history(history)
@@ -100,13 +105,13 @@ plot_training_history(history)
 # %% 6. Evaluate all datasets
 
 # set up the predictions:
-y_train_actual = scaler.inverse_scale(y_train)
-y_validation_actual = scaler.inverse_scale(y_val)
-y_test_actual = scaler.inverse_scale(y_test)
+y_train_actual = target_scaler.inverse_scale(y_train)
+y_validation_actual = target_scaler.inverse_scale(y_val)
+y_test_actual = target_scaler.inverse_scale(y_test)
 
-train_pred = predict_original_scale(model, x_train, scaler)
-validation_pred = predict_original_scale(model, x_val, scaler)
-test_pred = predict_original_scale(model, x_test, scaler)
+train_pred = predict_original_scale(model, x_train, target_scaler)
+validation_pred = predict_original_scale(model, x_val, target_scaler)
+test_pred = predict_original_scale(model, x_test, target_scaler)
 
 results = pd.DataFrame([
     evaluate_forecast(y_train_actual, train_pred, "Training"),
@@ -139,7 +144,7 @@ plot_forecast(comparison, 2000)
 
 # %% 8. Save the model
 model.save(MODEL_PATH)
-scaler.save(SCALER_PATH)
+save_scalers(SCALER_PATH, scalers)
 
 
 
