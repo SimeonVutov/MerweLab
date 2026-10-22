@@ -9,6 +9,7 @@ from tensorflow.keras.callbacks import (
     EarlyStopping
 )
 from tensorflow.keras.layers import (
+    Input,
     LSTM,
     Dense,
     Dropout
@@ -17,10 +18,13 @@ from tensorflow.keras.layers import (
 
 def create_model(input_shape, model_config):
     model = Sequential(
-        [LSTM(model_config.lstm_neurons, activation='tanh', input_shape=input_shape),
-         Dropout(model_config.dropout_rate),
-         Dense(model_config.dense_neurons, activation='relu'),
-         Dense(1)]
+        [
+            Input(shape=input_shape),
+            LSTM(model_config.lstm_neurons, activation='tanh'),
+            Dropout(model_config.dropout_rate),
+            Dense(model_config.dense_neurons, activation='relu'),
+            Dense(1)
+        ]
     )
     model.compile(
         optimizer=Adam(learning_rate=model_config.learning_rate),

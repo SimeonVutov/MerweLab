@@ -49,44 +49,51 @@ First thing to do is to check if adding more feature columns is worth it.
 For forecast horizon = 6 (1 hour)
 `FEATURE_COLUMNS = ['temperature']`
 
-| ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
-|-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
-| 1_1 | 64              | 64               | 0.1          | 1024       | 30     | 4        | 0.001                 | 24                    | 1.603969 | 1.780930  |
-| 1_2 | 128             | 128              | 0.5          | 1024       | 30     | 4        | 0.001                 | 24                    | 0.974797 | 1.085572  |
+| ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate | Input Sequence Length | Val RMSE | Test RMSE |
+|-----|-----------------|------------------|--------------|------------|--------|----------|---------------|-----------------------|----------|-----------|
+| 1_1 | 150             | 125              | 0.2          | 1024       | 30     | 4        | 0.001         | 18                    | ?        | ?         |
 
 For forecast horizon = 6 (1 hour)
 `FEATURE_COLUMNS = ['temperature', 'humidity', 'pressure']`
 
 | ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate | Input Sequence Length | Val RMSE | Test RMSE |
 |-----|-----------------|------------------|--------------|------------|--------|----------|---------------|-----------------------|----------|-----------|
-| 2_1 | 64              | 64               | 0.1          | 1024       | 30     | 4        | 0.001         | 24                    | 1.296699 | 1.423658  |
-| 2_2 | 150             | 125              | 0.5          | 1024       | 30     | 4        | 0.001         | 24                    | 0.977658 | 1.088771  |
+| 2_1 | 150             | 125              | 0.2          | 1024       | 30     | 4        | 0.001         | 18                    | ?        | ?         |
 
 From the observations the conclusion is that adding more feature that may impact the temperature isn't making the model much worse but most likely it will be better (given 1_1 and 2_1 comparison).
 
 ## Input Size Selection
 
-We decided to set INPUT_SIZE_LENGTH to 24. It means that the model takes observations within last 4 hours before the prediction is made.
+We decided to set INPUT_SIZE_LENGTH to 18. It means that the model takes observations within last 3 hours before the prediction is made.
 
-## Hyperparameter Optimization
+## Hyperparameter Optimization for FORECAST_HORIZON = 6
 
 In order to optimize hyperparameters there is `tuning.py`. Library used to optimized this is called optuna. Below you can see the result.
 
 | ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
 |-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
-| 3_1 | 192             | 256              | 0.0          | 256        | 30     | 4        | 0.0007193453335958094 | 24                    | 0.776963 | 0.837494  |
+| 3_1 | 224             | 128              | 0.25         | 256        | 20     | 4        | 0.0006447487694793648 | 18                    | 0.776963 | 0.837494  |
 
 
-## Model for forecast horizon = 3 (10 minutes)
+## Model for forecast horizon = 3 (30 minutes)
 
-Since forecast horizon is smaller I decided to reduce INPUT_SIZE_LENGTH to 18.
+To keep everything the same the INPUT_SIZE_LENGTH is 18.
 
-Again I used the `tuning.py` and these are my results.
+Again I used the `tuning.py` and these is my best result.
+
+| ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
+|-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
+| 4_1 | 224             | 160              | 0.25         | 256        | 20     | 4        | 0.0008210842167906902 | 18                    | 0.525221 | 0.571771  |
+
+## Model for forecast horizon = 1 (10 minutes)
+
+To keep everything the same the INPUT_SIZE_LENGTH is 18.
+
+Again I used the `tuning.py` and these is my best result.
 
 | ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate        | Input Sequence Length | Val RMSE | Test RMSE |
 |-----|-----------------|------------------|--------------|------------|--------|----------|----------------------|-----------------------|----------|-----------|
-| 3_1 | 192             | 256              | 0.0          | 256        | 30     | 4        | 0.005603803105930284 | 24                    | 0.520113 | 0.564781  |
-
+| 5_1 | 192             | 256              | 0.0          | 256        | 30     | 4        | 0.005603803105930284 | 18                    | 0.520113 | 0.564781  |
 
 # Reusing the model
 

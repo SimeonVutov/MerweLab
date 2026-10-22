@@ -15,19 +15,19 @@ from config import RANDOM_SEED, ModelConfig
 from model_builder import create_model, train_model
 from pipeline import prepare_data
 
-N_TRIALS = 7
+N_TRIALS = 5
 STUDY_NAME = "lstm_temperature"
-STORAGE = "sqlite:///optuna_study_30_min.db"  # lets you stop and resume the search
+STORAGE = "sqlite:///optuna_study_60_min.db"  # lets you stop and resume the search
 
 
 def suggest_config(trial: optuna.Trial) -> ModelConfig:
     """Define the search space: which values Optuna may try for each setting."""
     return ModelConfig(
-        lstm_neurons=trial.suggest_int("lstm_units", 32, 256, step=32),
-        dropout_rate=trial.suggest_float("dropout_rate", 0.0, 0.9, step=0.15),
-        dense_neurons=trial.suggest_int("dense_units", 32, 256, step=32),
-        batch_size=trial.suggest_categorical("batch_size", [256, 512, 1024, 2048, 4096]),
-        learning_rate=trial.suggest_float("learning_rate", 5e-4, 5e-2, log=True),
+        lstm_neurons=trial.suggest_int("lstm_units", 128, 256, step=32),
+        dropout_rate=trial.suggest_float("dropout_rate", 0.0, 0.35, step=0.05),
+        dense_neurons=trial.suggest_int("dense_units", 128, 256, step=32),
+        batch_size=trial.suggest_categorical("batch_size", [256, 512, 1024, 2048]),
+        learning_rate=trial.suggest_float("learning_rate", 5e-4, 2e-3, log=True),
     )
 
 
