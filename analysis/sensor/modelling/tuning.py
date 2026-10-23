@@ -15,9 +15,9 @@ from config import RANDOM_SEED, ModelConfig
 from model_builder import create_model, train_model
 from pipeline import prepare_data
 
-N_TRIALS = 5
-STUDY_NAME = "lstm_temperature"
-STORAGE = "sqlite:///optuna_study_60_min.db"  # lets you stop and resume the search
+N_TRIALS = 15
+STUDY_NAME = "lstm_temperature_narrowed"
+STORAGE = "sqlite:///optuna_study_10_min.db"  # lets you stop and resume the search
 
 
 def suggest_config(trial: optuna.Trial) -> ModelConfig:

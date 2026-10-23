@@ -72,7 +72,8 @@ In order to optimize hyperparameters there is `tuning.py`. Library used to optim
 
 | ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
 |-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
-| 3_1 | 224             | 128              | 0.25         | 256        | 20     | 4        | 0.0006447487694793648 | 18                    | 0.776963 | 0.837494  |
+| 3_1 | 224             | 128              | 0.25         | 256        | 20     | 4        | 0.0006447487694793648 | 18                    | 0.773798 | 0.833297  |
+| 3_2 | 320             | 96               | 0.1          | 256        | 20     | 4        | 0.001                 | 18                    | 0.784782 | 0.846423  |
 
 
 ## Model for forecast horizon = 3 (30 minutes)
@@ -84,16 +85,21 @@ Again I used the `tuning.py` and these is my best result.
 | ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
 |-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
 | 4_1 | 224             | 160              | 0.25         | 256        | 20     | 4        | 0.0008210842167906902 | 18                    | 0.525221 | 0.571771  |
+| 4_2 | 320             | 96               | 0.1          | 256        | 20     | 4        | 0.001                 | 18                    | 0.516917 | 0.559183  |
+| 4_3 | 416             | 128              | 0.01         | 256        | 20     | 4        | 0.001                 | 18                    | 0.517498 | 0.560797  |
 
 ## Model for forecast horizon = 1 (10 minutes)
 
 To keep everything the same the INPUT_SIZE_LENGTH is 18.
 
-Again I used the `tuning.py` and these is my best result.
+Again I used the `tuning.py` and these is my best result. Note that 5_1 is suggested by the optimizer, all other models are based on my parameters.
 
-| ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate        | Input Sequence Length | Val RMSE | Test RMSE |
-|-----|-----------------|------------------|--------------|------------|--------|----------|----------------------|-----------------------|----------|-----------|
-| 5_1 | 192             | 256              | 0.0          | 256        | 30     | 4        | 0.005603803105930284 | 18                    | 0.520113 | 0.564781  |
+| ID  | Neurons in LSTM | Neurons in Dense | Dropout Rate | Batch Size | Epochs | Patience | Learning Rate         | Input Sequence Length | Val RMSE | Test RMSE |
+|-----|-----------------|------------------|--------------|------------|--------|----------|-----------------------|-----------------------|----------|-----------|
+| 5_1 | 224             | 192              | 0.2          | 256        | 20     | 4        | 0.0015147501360859895 | 18                    | 0.478729 | 0.522286  |
+| 5_2 | 256             | 144              | 0.1          | 256        | 20     | 4        | 0.001                 | 18                    | 0.354708 | 0.376104  |
+| 5_3 | 320             | 96               | 0.15         | 256        | 20     | 4        | 0.001                 | 18                    | 0.352751 | 0.372160  |
+| 5_4 | 352             | 96               | 0.1          | 256        | 20     | 4        | 0.001                 | 18                    | 0.333121 | 0.367017  |
 
 # Reusing the model
 

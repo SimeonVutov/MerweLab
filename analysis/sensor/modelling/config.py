@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Files
 DATA_PATH = Path("../rotterdam_airport_weather.csv")
-MODEL_PATH = Path("../LSTM_model_id_3_1.keras")
+MODEL_PATH = Path("../LSTM_model_id_3_2.keras")
 SCALER_PATH = Path("../scalers.json")
 
 # Column names
@@ -26,10 +26,10 @@ INPUT_SEQUENCE_LENGTH = 18
 @dataclass(frozen=True)
 class ModelConfig:
     """Hyperparameters for LSTM model"""
-    lstm_neurons: int = 224
-    dropout_rate: float = 0.25
-    dense_neurons: int = 128
+    lstm_neurons: int = 320
+    dropout_rate: float = 0.1
+    dense_neurons: int = 96
     epochs: int = 20
     batch_size: int = 256
     patience: int = 4
-    learning_rate: float = 0.0006447487694793648
+    learning_rate: float = 0.001
