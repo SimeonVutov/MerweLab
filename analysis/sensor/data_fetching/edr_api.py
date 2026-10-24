@@ -1,4 +1,6 @@
 import sys
+import os
+from dotenv import load_dotenv
 
 import pandas as pd
 import requests
@@ -6,8 +8,9 @@ import requests
 api_version = "v1"
 collection = "10-minute-in-situ-meteorological-observations"
 base_url = f"https://api.dataplatform.knmi.nl/edr/{api_version}/collections/{collection}"
-# Paste your token here
-token = None
+# Add token from .env file
+load_dotenv()
+token = os.getenv("EDR_API_TOKEN")
 headers = {"Authorization": token}
 
 
