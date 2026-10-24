@@ -1,0 +1,35 @@
+from dataclasses import dataclass
+from pathlib import Path
+
+# Files
+DATA_PATH = Path("../rotterdam_airport_weather.csv")
+MODEL_PATH = Path("../LSTM_model_id_3_2.keras")
+SCALER_PATH = Path("../scalers.json")
+
+# Column names
+TIMESTAMP_COLUMN = "time"
+FEATURE_COLUMNS = ["temperature", "humidity", "pressure"]
+TARGET_COLUMN = "temperature"
+assert TARGET_COLUMN in FEATURE_COLUMNS, "TARGET_COLUMN must also be listed in FEATURE_COLUMNS"
+
+# Seed
+RANDOM_SEED = 42
+
+# Data Split
+TRAIN_RATIO = 0.7
+VALIDATION_RATIO = 0.2
+
+# Sequence Construction
+FORECAST_HORIZON = 6
+INPUT_SEQUENCE_LENGTH = 18
+
+@dataclass(frozen=True)
+class ModelConfig:
+    """Hyperparameters for LSTM model"""
+    lstm_neurons: int = 320
+    dropout_rate: float = 0.1
+    dense_neurons: int = 96
+    epochs: int = 20
+    batch_size: int = 256
+    patience: int = 4
+    learning_rate: float = 0.001
