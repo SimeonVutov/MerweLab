@@ -135,10 +135,10 @@ castellatedMeshControls
 
 snapControls
 {
-    nSmoothPatch    3;
-    tolerance       2;
+    nSmoothPatch    5;
+    tolerance       1;
     nSolveIter      30;
-    nRelaxIter      5;
+    nRelaxIter      10;
     nFeatureSnapIter 10;
     explicitFeatureSnap true;
     multiRegionFeatureSnap false;
