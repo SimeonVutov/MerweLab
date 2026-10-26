@@ -1,0 +1,119 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           volScalarField;
+    object          p;
+}
+
+dimensions      [ 0 2 -2 0 0 0 0 ];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;
+    }
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    wall
+    {
+        type            zeroGradient;
+    }
+    cyclic
+    {
+        type            cyclic;
+    }
+    cyclicAMI
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    cyclicACMI
+    {
+        type            cyclicACMI;
+        value           uniform 0;
+    }
+    cyclicSlip
+    {
+        type            cyclicSlip;
+    }
+    empty
+    {
+        type            empty;
+    }
+    nonuniformTransformCyclic
+    {
+        type            nonuniformTransformCyclic;
+    }
+    processor
+    {
+        type            processor;
+    }
+    processorCyclic
+    {
+        type            processorCyclic;
+    }
+    symmetryPlane
+    {
+        type            symmetryPlane;
+    }
+    symmetry
+    {
+        type            symmetry;
+    }
+    wedge
+    {
+        type            wedge;
+    }
+    overset
+    {
+        type            overset;
+    }
+    terrain_water
+    {
+        type            zeroGradient;
+    }
+    terrain_outer_water
+    {
+        type            zeroGradient;
+    }
+    terrain_peninsula_paved
+    {
+        type            zeroGradient;
+    }
+    terrain_peninsula_green
+    {
+        type            zeroGradient;
+    }
+    terrain_context_land
+    {
+        type            zeroGradient;
+    }
+    terrain_peninsula_ground
+    {
+        type            zeroGradient;
+    }
+    terrain_existing_platform_rim
+    {
+        type            zeroGradient;
+    }
+
+    #include "include/mappedWalls_p"
+}
+
+
+// ************************************************************************* //

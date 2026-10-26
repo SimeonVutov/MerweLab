@@ -1,0 +1,156 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           volScalarField;
+    object          nut;
+}
+
+dimensions      [ 0 2 -1 0 0 0 0 ];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+    outlet
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+    wall
+    {
+        type            nutkWallFunction;
+        value           uniform 0;
+    }
+    cyclic
+    {
+        type            cyclic;
+    }
+    cyclicAMI
+    {
+        type            cyclicAMI;
+        value           uniform 0;
+    }
+    cyclicACMI
+    {
+        type            cyclicACMI;
+        value           uniform 0;
+    }
+    cyclicSlip
+    {
+        type            cyclicSlip;
+    }
+    empty
+    {
+        type            empty;
+    }
+    nonuniformTransformCyclic
+    {
+        type            nonuniformTransformCyclic;
+    }
+    processor
+    {
+        type            processor;
+    }
+    processorCyclic
+    {
+        type            processorCyclic;
+    }
+    symmetryPlane
+    {
+        type            symmetryPlane;
+    }
+    symmetry
+    {
+        type            symmetry;
+    }
+    wedge
+    {
+        type            wedge;
+    }
+    overset
+    {
+        type            overset;
+    }
+    terrain_water
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.0002;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_outer_water
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.0002;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_peninsula_paved
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.0002;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_peninsula_green
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.03;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_context_land
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.005;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_peninsula_ground
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.005;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+    terrain_existing_platform_rim
+    {
+        type            atmNutkWallFunction;
+        z0              uniform 0.005;
+        Cmu             0.09;
+        kappa           0.4;
+        boundNut        true;
+        value           uniform 0;
+    }
+
+    #include "include/mappedWalls_nut"
+}
+
+
+// ************************************************************************* //

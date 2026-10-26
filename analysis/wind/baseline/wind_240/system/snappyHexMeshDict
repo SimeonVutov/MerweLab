@@ -1,0 +1,252 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          snappyHexMeshDict;
+}
+
+castellatedMesh on;
+
+snap            on;
+
+addLayers       off;
+
+castellatedMeshControls
+{
+    maxLocalCells   4000000;
+    maxGlobalCells  20000000;
+    minRefinementCells 0;
+    maxLoadUnbalance 0.1;
+    nCellsBetweenLevels 3;
+    resolveFeatureAngle 30;
+    allowFreeStandingZoneFaces true;
+    features        ( { file "yellow_buildings_lod12.eMesh" ; level 4 ; } { file "red_buildings_lod12.eMesh" ; level 4 ; } { file "additional_buildings_lod22_review.eMesh" ; level 4 ; } { file "peninsula_buildings.eMesh" ; level 4 ; } { file "terrain_hull.eMesh" ; level 2 ; } );
+    refinementSurfaces
+    {
+        contextYellow
+        {
+            level           ( 4 4 );
+            patchInfo
+            {
+                type            wall;
+            }
+        }
+        contextRed
+        {
+            level           ( 4 4 );
+            patchInfo
+            {
+                type            wall;
+            }
+        }
+        contextAdditional
+        {
+            level           ( 4 4 );
+            patchInfo
+            {
+                type            wall;
+            }
+        }
+        peninsulaBuildings
+        {
+            level           ( 4 4 );
+            patchInfo
+            {
+                type            wall;
+            }
+        }
+        terrain
+        {
+            level           ( 1 1 );
+            patchInfo
+            {
+                type            wall;
+            }
+            regions
+            {
+                context_land
+                {
+                    level           ( 2 2 );
+                }
+                water
+                {
+                    level           ( 2 2 );
+                }
+                peninsula_ground
+                {
+                    level           ( 6 6 );
+                }
+                shore_or_seam_wall
+                {
+                    level           ( 2 2 );
+                }
+            }
+        }
+    }
+    refinementRegions
+    {
+        contextYellow
+        {
+            mode            distance;
+            levels          ( ( 5 4 ) ( 25 2 ) );
+        }
+        contextRed
+        {
+            mode            distance;
+            levels          ( ( 5 4 ) ( 25 2 ) );
+        }
+        contextAdditional
+        {
+            mode            distance;
+            levels          ( ( 5 4 ) ( 25 2 ) );
+        }
+        peninsulaBuildings
+        {
+            mode            distance;
+            levels          ( ( 5 4 ) ( 25 2 ) );
+        }
+        pedestrianBand
+        {
+            mode            inside;
+            levels          ( ( 1e+15 6 ) );
+        }
+        greenRegion
+        {
+            mode            inside;
+            levels          ( ( 1e+15 3 ) );
+        }
+        peninsulaSurroundings
+        {
+            mode            inside;
+            levels          ( ( 1e+15 5 ) );
+        }
+    }
+    locationInMesh  ( -900 -1200 100 );
+}
+
+snapControls
+{
+    nSmoothPatch    3;
+    tolerance       2;
+    nSolveIter      30;
+    nRelaxIter      5;
+    nFeatureSnapIter 10;
+    explicitFeatureSnap true;
+    multiRegionFeatureSnap false;
+    implicitFeatureSnap false;
+}
+
+addLayersControls
+{
+    featureAngle    100;
+    slipFeatureAngle 30;
+    nLayerIter      50;
+    nRelaxedIter    20;
+    nRelaxIter      5;
+    nGrow           0;
+    nSmoothSurfaceNormals 1;
+    nSmoothNormals  3;
+    nSmoothThickness 10;
+    maxFaceThicknessRatio 0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle 90;
+    nMedialAxisIter 10;
+    nBufferCellsNoExtrude 0;
+    additionalReporting false;
+    layers
+    {
+        "CAD.*"
+        {
+            nSurfaceLayers  2;
+        }
+    }
+    relativeSizes   true;
+    expansionRatio  1.2;
+    finalLayerThickness 0.5;
+    minThickness    0.001;
+}
+
+meshQualityControls
+{
+    maxNonOrtho     65;
+    maxBoundarySkewness 20;
+    maxInternalSkewness 4;
+    maxConcave      80;
+    minVol          1e-13;
+    minTetQuality   1e-15;
+    minArea         -1;
+    minTwist        0.02;
+    minDeterminant  0.001;
+    minFaceWeight   0.05;
+    minVolRatio     0.01;
+    minTriangleTwist -1;
+    nSmoothScale    4;
+    errorReduction  0.75;
+    relaxed
+    {
+        maxNonOrtho     75;
+    }
+}
+
+debug           0;
+
+mergeTolerance  1e-08;
+
+geometry
+{
+    yellow_buildings_lod12.obj
+    {
+        type            triSurfaceMesh;
+        name            contextYellow;
+    }
+    red_buildings_lod12.obj
+    {
+        type            triSurfaceMesh;
+        name            contextRed;
+    }
+    additional_buildings_lod22_review.obj
+    {
+        type            triSurfaceMesh;
+        name            contextAdditional;
+    }
+    peninsula_buildings.obj
+    {
+        type            triSurfaceMesh;
+        name            peninsulaBuildings;
+    }
+    terrain_hull.obj
+    {
+        type            triSurfaceMesh;
+        name            terrain;
+    }
+    pedestrian_refinement.obj
+    {
+        type            triSurfaceMesh;
+        name            pedestrianBand;
+    }
+    greenRegion
+    {
+        type            searchableBox;
+        min             ( -350 -300 -10 );
+        max             ( 325 300 30 );
+    }
+    peninsula_surroundings.obj
+    {
+        type            triSurfaceMesh;
+        name            peninsulaSurroundings;
+    }
+}
+
+writeFlags      ( scalarLevels );
+
+
+// ************************************************************************* //

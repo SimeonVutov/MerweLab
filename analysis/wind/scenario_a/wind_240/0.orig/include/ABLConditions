@@ -1,0 +1,23 @@
+// Intended wind FROM 240 degrees relative to true north.
+// Requires the CFD geometry to be transformed so +X points toward 060 degrees.
+flowDir         (1 0 0);
+zDir            (0 0 1);
+
+// Regional strong-wind estimate derived from KNMI WSW P95 potential wind.
+Uref            16.0;
+Zref            60;
+
+// Incoming urban exposure: Peutz Merwehaven report O 17079-2-RA-001.
+// This is NOT the roughness assigned to every ground surface.
+z0              uniform 0.7;
+
+// Neutral atmospheric profile; zero displacement is a modelling assumption.
+d               uniform 0;
+kappa           0.40;
+
+// Coefficients for the inlet formulation.
+Cmu             0.09;
+C1              0;
+C2              1;
+
+initABL         true;
