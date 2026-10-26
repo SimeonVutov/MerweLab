@@ -14,7 +14,7 @@ FoamFile
     object          decomposeParDict;
 }
 
-numberOfSubdomains 9;
+numberOfSubdomains 10;
 
 method          scotch;
 
