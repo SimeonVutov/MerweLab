@@ -83,7 +83,7 @@ castellatedMeshControls
                 }
                 peninsula_ground
                 {
-                    level           ( 6 6 );
+                    level           ( 5 5 );
                 }
                 shore_or_seam_wall
                 {
@@ -97,17 +97,17 @@ castellatedMeshControls
         contextYellow
         {
             mode            distance;
-            levels          ( ( 5 4 ) ( 25 2 ) );
+            levels          ( ( 2 4 ) ( 25 2 ) );
         }
         contextRed
         {
             mode            distance;
-            levels          ( ( 5 4 ) ( 25 2 ) );
+            levels          ( ( 2 4 ) ( 25 2 ) );
         }
         contextAdditional
         {
             mode            distance;
-            levels          ( ( 5 4 ) ( 25 2 ) );
+            levels          ( ( 2 4 ) ( 25 2 ) );
         }
         peninsulaBuildings
         {
@@ -117,7 +117,7 @@ castellatedMeshControls
         pedestrianBand
         {
             mode            inside;
-            levels          ( ( 1e+15 6 ) );
+            levels          ( ( 1e+15 5 ) );
         }
         greenRegion
         {
@@ -127,7 +127,7 @@ castellatedMeshControls
         peninsulaSurroundings
         {
             mode            inside;
-            levels          ( ( 1e+15 5 ) );
+            levels          ( ( 1e+15 4 ) );
         }
     }
     locationInMesh  ( -900 -1200 100 );

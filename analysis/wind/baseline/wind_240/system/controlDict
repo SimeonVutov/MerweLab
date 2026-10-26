@@ -22,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         2000;
+endTime         100;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   100;
+writeInterval   50;
 
 purgeWrite      3;
 
@@ -46,8 +46,92 @@ runTimeModifiable true;
 
 functions
 {
-
-    #include "merwelabMonitoring"
+    solverHistory
+    {
+        type            solverInfo;
+        libs            ( utilityFunctionObjects );
+        fields          ( p U k epsilon );
+        writeResidualFields false;
+        executeControl  timeStep;
+        executeInterval 1;
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+    pedestrianProbes
+    {
+        type            probes;
+        libs            ( sampling );
+        fields          ( U k );
+        interpolationScheme cellPoint;
+        fixedLocations  true;
+        includeOutOfBounds true;
+        writeControl    timeStep;
+        writeInterval   10;
+        probeLocations  ( ( 6.79851 -23.4669 4.93982 ) ( 183.562 32.614 4.62528 ) ( -140.724 -116.175 4.17692 ) ( 64.8507 101.44 4.56805 ) ( -114.78 8.59433 4.87506 ) ( 98.7667 -5.417 4.65978 ) ( -56.175 -87.7187 4.59862 ) ( -18.124 60.2893 4.85873 ) ( 127.693 72.5036 4.81496 ) ( 44.2773 35.7203 4.80352 ) ( -113.478 -56.487 4.8449 ) ( -62.2594 27.1829 4.9909 ) ( 54.73 -27.3133 4.67317 ) ( 136.957 21.7769 4.73122 ) ( -34.9691 -46.6289 4.96598 ) ( 23.7003 79.5837 4.78813 ) );
+    }
+    yPlusMonitor
+    {
+        type            yPlus;
+        libs            ( fieldFunctionObjects );
+        executeControl  timeStep;
+        executeInterval 100;
+        writeControl    writeTime;
+    }
+    pedestrianSurfaces
+    {
+        type            surfaces;
+        libs            ( sampling );
+        writeControl    writeTime;
+        surfaceFormat   vtk;
+        interpolationScheme cellPoint;
+        fields          ( U k p );
+        surfaces
+        {
+            pedestrian1p5m
+            {
+                type            meshedSurface;
+                surface         pedestrian_1p5m.obj;
+                source          insideCells;
+                interpolate     true;
+            }
+        }
+    }
+    flux_inlet
+    {
+        type            surfaceFieldValue;
+        libs            ( fieldFunctionObjects );
+        regionType      patch;
+        name            inlet;
+        operation       sum;
+        fields          ( phi );
+        writeFields     false;
+        writeControl    timeStep;
+        writeInterval   10;
+    }
+    flux_outlet
+    {
+        type            surfaceFieldValue;
+        libs            ( fieldFunctionObjects );
+        regionType      patch;
+        name            outlet;
+        operation       sum;
+        fields          ( phi );
+        writeFields     false;
+        writeControl    timeStep;
+        writeInterval   10;
+    }
+    flux_frontAndBack
+    {
+        type            surfaceFieldValue;
+        libs            ( fieldFunctionObjects );
+        regionType      patch;
+        name            frontAndBack;
+        operation       sum;
+        fields          ( phi );
+        writeFields     false;
+        writeControl    timeStep;
+        writeInterval   10;
+    }
 }
 
 adjustTimeStep  false;
