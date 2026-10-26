@@ -1,0 +1,834 @@
+{
+  "units": "m",
+  "horizontal_crs": "EPSG:28992",
+  "vertical_crs": "EPSG:5709 for AHN/3DBAG; assumed for supplied designs",
+  "compound_crs_if_vertical_datum_confirmed": "EPSG:7415",
+  "RD_origin": [
+    88147.378452921,
+    436355.989496209,
+    0.0
+  ],
+  "blender_local_formula": "vertex_local = vertex_RD - RD_origin; no per-object placement",
+  "axis_order": "X grid east, Y grid north, Z up; local RD is NOT true ENU",
+  "items": [
+    {
+      "name": "CONTEXT_YELLOW_3DBAG_LOD12",
+      "path": "data/scenarios/yellow_buildings_lod12.obj",
+      "group": "shared",
+      "color": "#e5bd53",
+      "status": "Archived supplied source; shape unchanged; current-state flags in inventory",
+      "source": "deliverables/MerweLab-mesh-review/originals/context/Context_Buildings_RD_NAP.obj",
+      "vertices": 2840,
+      "faces": 4764,
+      "bounds_rd": [
+        [
+          87706.53125,
+          435604.90625,
+          -1.93
+        ],
+        [
+          88616.20312,
+          436740.96875,
+          16.024
+        ]
+      ],
+      "material_path": "data/scenarios/yellow_buildings_lod12.mtl",
+      "sha256": "78c9b5c7a11955ecebae7872a58453317b6974d51a2b84652d52fa3d1271b7f3",
+      "material_sha256": "25ba1f86e0051c5d5ce4149c3de4a7625001adb5ea956413e7ee7340bb758662",
+      "foundation_adjustment": {
+        "operation": "MerweLab apply foundation fixes to canonical files v1",
+        "previous_sha256": "f07f28e9022be1f26752d5957ed9c1f6f201f325ac5ebf728f1bb7da93f6344a",
+        "prepared_sha256": "7c909176a93edabb2e924ce4f86097ae24987cd00a7491a02d7e20bcfa82e22f",
+        "result_sha256": "78c9b5c7a11955ecebae7872a58453317b6974d51a2b84652d52fa3d1271b7f3",
+        "counts": {
+          "fixed": 45,
+          "unchanged": 179,
+          "needs_review": 1
+        },
+        "report": "analysis/wind/geometry_review/foundation_report.json",
+        "burial_margin_m": 0.2,
+        "note": "Assumed ground-supported base extension; roof and footprint retained. Not surveyed foundation depth."
+      },
+      "processing_status": "Foundation adjustment saved; see report for skipped buildings and existing topology defects."
+    },
+    {
+      "name": "CONTEXT_RED_3DBAG_LOD12_REVIEWED",
+      "path": "data/scenarios/red_buildings_lod12.obj",
+      "group": "shared",
+      "color": "#c76c6b",
+      "status": "Archived source; 210 retained source parts, unknown release; no CFD foundation/footprint edits",
+      "source": "deliverables/MerweLab-expanded-context/reproduction/work/data/context/wind/baseline/8-296-512-LoD12-3D.obj",
+      "vertices": 3984,
+      "faces": 7128,
+      "bounds_rd": [
+        [
+          87581.14844,
+          435390.96875,
+          -1.325
+        ],
+        [
+          89056.01562,
+          436792.3125,
+          31.939
+        ]
+      ],
+      "material_path": "data/scenarios/red_buildings_lod12.mtl",
+      "sha256": "0444669a32ef1f193a37ba76745fef03941ca45a9c49f9d728c489774c49fb51",
+      "material_sha256": "8bc0312a5cf7314050141d7be3d1256a36c3da6943639c06cccc2a714688b021",
+      "foundation_adjustment": {
+        "operation": "MerweLab apply foundation fixes to canonical files v1",
+        "previous_sha256": "56c4fd0eff6a96073a30bb4638d528b43e7f025b6c1415aa583cc8f2918c7274",
+        "prepared_sha256": "77d3af5b0b73a7630fd719722b242a295217c5e0deb28dc55156894dcbb2af37",
+        "result_sha256": "0444669a32ef1f193a37ba76745fef03941ca45a9c49f9d728c489774c49fb51",
+        "counts": {
+          "unchanged": 157,
+          "fixed": 52,
+          "needs_review": 1
+        },
+        "report": "analysis/wind/geometry_review/foundation_report.json",
+        "burial_margin_m": 0.2,
+        "note": "Assumed ground-supported base extension; roof and footprint retained. Not surveyed foundation depth."
+      },
+      "processing_status": "Foundation adjustment saved; see report for skipped buildings and existing topology defects."
+    },
+    {
+      "name": "CONTEXT_LAND_AHN_DERIVED",
+      "path": "data/scenarios/context_ground.obj",
+      "group": "shared",
+      "color": "#d5d1c4",
+      "status": "Created AHN-derived terrain; original three land partitions combined; open sheet",
+      "source": "deliverables/MerweLab-mesh-review/models/shared/context_ground_continuous.obj",
+      "vertices": 34200,
+      "faces": 66840,
+      "bounds_rd": [
+        [
+          87373.874973917,
+          435340.968805291,
+          -1.837368011
+        ],
+        [
+          89106.015598917,
+          436842.312494256,
+          5.63243103
+        ]
+      ],
+      "material_path": "data/scenarios/context_ground.mtl",
+      "sha256": "de866b6e7e2cac42a3709216b9c5d7f591186332ece36d6d3d379411b99e6d1d",
+      "material_sha256": "2b97159aed51af7b58229a371d2920a911e6616d3e4ed20153d1be2d2ef416a5",
+      "clipping": {
+        "operation": "Clipped in Blender against the common convex preview boundary; no smoothing.",
+        "previous_sha256": "f17b5265e88de5df95d911c575a5556a42efb989ac674d80a7837cded2b494e8",
+        "result_sha256": "de866b6e7e2cac42a3709216b9c5d7f591186332ece36d6d3d379411b99e6d1d",
+        "saved_utc": "2026-10-24T20:22:42.976558+00:00",
+        "export_round_trip_error_m": 5.238689482212067e-10
+      },
+      "processing_status": "Clipped detailed surface; CFD mesh/terrain checks still required."
+    },
+    {
+      "name": "CONTEXT_QUAYS_DERIVED",
+      "path": "data/scenarios/context_quays.obj",
+      "group": "shared",
+      "color": "#a5a69d",
+      "status": "Created land-to-water transitions; not surveyed quay CAD",
+      "source": "deliverables/MerweLab-mesh-review/models/shared/context_quays.obj",
+      "vertices": 1002,
+      "faces": 990,
+      "bounds_rd": [
+        [
+          87688.853886271,
+          435342.373712518,
+          0.0
+        ],
+        [
+          88972.772190714,
+          436501.200006463,
+          5.273489952
+        ]
+      ],
+      "material_path": "data/scenarios/context_quays.mtl",
+      "sha256": "04c2afb456167224c5dbe1652879de6938e46e6e57ac06a25f78487098e2dbbd",
+      "material_sha256": "7badeef2519297ee341a82225f99bb36c251ce149677a1df7e2296aec60e6b8e",
+      "clipping": {
+        "operation": "Clipped in Blender against the common convex preview boundary; no smoothing.",
+        "previous_sha256": "593e322aab8c2b1d9afe3fe411768746862a7191f6092d669f9fc1e0aea27b9d",
+        "result_sha256": "04c2afb456167224c5dbe1652879de6938e46e6e57ac06a25f78487098e2dbbd",
+        "saved_utc": "2026-10-24T20:22:42.990991+00:00",
+        "export_round_trip_error_m": 5.238689482212067e-10
+      },
+      "processing_status": "Clipped detailed surface; CFD mesh/terrain checks still required."
+    },
+    {
+      "name": "WATER_BGT_Z0_ASSUMED",
+      "path": "data/scenarios/water_surface.obj",
+      "group": "shared",
+      "color": "#8dc9de",
+      "status": "Created shoreline surface; constant Z=0 assumed, not a measured tide",
+      "source": "deliverables/MerweLab-mesh-review/models/shared/water.obj",
+      "vertices": 2684,
+      "faces": 4463,
+      "bounds_rd": [
+        [
+          87688.853886271,
+          435342.373712518,
+          0.0
+        ],
+        [
+          88972.772190714,
+          436501.200006463,
+          0.0
+        ]
+      ],
+      "material_path": "data/scenarios/water_surface.mtl",
+      "sha256": "38696410d3149693de87e407362f7b611d37495cf0e2be558c1ead9ab4e02bf8",
+      "material_sha256": "c6bad03c196609fa2bde841f53d83a7d2d068861fb3dbce786e8adae70d44a1d",
+      "clipping": {
+        "operation": "Clipped in Blender against the common convex preview boundary; no smoothing.",
+        "previous_sha256": "d86f7f372cbf6f9636e87d0594f5bb8a6f64c2df4f90b4dfc8e829e76d824b2c",
+        "result_sha256": "38696410d3149693de87e407362f7b611d37495cf0e2be558c1ead9ab4e02bf8",
+        "saved_utc": "2026-10-24T20:22:43.038300+00:00",
+        "export_round_trip_error_m": 5.238689482212067e-10
+      },
+      "processing_status": "Clipped detailed surface; CFD mesh/terrain checks still required."
+    },
+    {
+      "name": "BASELINE_BUILDINGS_3DBAG_LOD12",
+      "path": "data/scenarios/baseline/buildings_existing.obj",
+      "group": "baseline",
+      "color": "#e27d58",
+      "status": "Archived 3DBAG source; two in-use BAG footprint matches; shape unchanged",
+      "source": "deliverables/MerweLab-expanded-context/reproduction/work/data/context/wind/baseline/8-296-512-LoD12-3D.obj",
+      "vertices": 84,
+      "faces": 160,
+      "bounds_rd": [
+        [
+          88051.5625,
+          436262.78125,
+          1.96
+        ],
+        [
+          88268.9375,
+          436486.4375,
+          14.739
+        ]
+      ],
+      "material_path": "data/scenarios/baseline/buildings_existing.mtl",
+      "sha256": "2f796276d7b1d3fbd72162c005f826f6ad045ff261a6d9ee64981a6d744343c0",
+      "material_sha256": "a837f4c347ae74bb34c7859950a4afa16cbe37594c73f740b8a1fa380b8f9e33",
+      "foundation_adjustment": {
+        "operation": "MerweLab apply foundation fixes to canonical files v1",
+        "previous_sha256": "339dcf5854d0004e8d7d4cc056ef3ff2ea9dcd088957b56a24de860a932a1495",
+        "prepared_sha256": "519eafad38d743af29e47a7ce152b1dfa1b242785d99c2d493ebc7793617c2f4",
+        "result_sha256": "2f796276d7b1d3fbd72162c005f826f6ad045ff261a6d9ee64981a6d744343c0",
+        "counts": {
+          "fixed": 2
+        },
+        "report": "analysis/wind/geometry_review/foundation_report.json",
+        "burial_margin_m": 0.2,
+        "note": "Assumed ground-supported base extension; roof and footprint retained. Not surveyed foundation depth."
+      },
+      "processing_status": "Foundation adjustment saved; see report for skipped buildings and existing topology defects."
+    },
+    {
+      "name": "BASELINE_PENINSULA_LAND_AHN_DERIVED",
+      "path": "data/scenarios/baseline/ground_existing.obj",
+      "group": "baseline",
+      "color": "#b7c1c9",
+      "status": "Created existing-ground/quay geometry; not surveyed CAD",
+      "source": "deliverables/MerweLab-mesh-review/models/baseline/peninsula_ground.obj",
+      "vertices": 2155,
+      "faces": 4202,
+      "bounds_rd": [
+        [
+          88040.949999921,
+          436183.000000209,
+          2.015469
+        ],
+        [
+          88295.099999921,
+          436489.200000209,
+          3.647
+        ]
+      ],
+      "material_path": "data/scenarios/baseline/ground_existing.mtl",
+      "sha256": "2e47dd7189e3adc775e51dd8cff89e320d3b813d49ee57d4cbb4fabf5c88e319",
+      "material_sha256": "82baae638d754b478fba6f896b49103a2fd007f97218b652b78466ba138ce6d5"
+    },
+    {
+      "name": "BASELINE_QUAYS_DERIVED",
+      "path": "data/scenarios/baseline/quays_existing.obj",
+      "group": "baseline",
+      "color": "#b7c1c9",
+      "status": "Created existing-ground/quay geometry; not surveyed CAD",
+      "source": "deliverables/MerweLab-mesh-review/models/baseline/peninsula_quays.obj",
+      "vertices": 176,
+      "faces": 174,
+      "bounds_rd": [
+        [
+          88040.949999921,
+          436183.000000209,
+          0.0
+        ],
+        [
+          88295.099999921,
+          436489.200000209,
+          3.387154
+        ]
+      ],
+      "material_path": "data/scenarios/baseline/quays_existing.mtl",
+      "sha256": "695cc2a98d397488d180a98620fc984b70f3701e1667abe66896222bd2daa9d5",
+      "material_sha256": "b755cda91efdc39c6fcbed87495aa8ea5a67d6d45fcd44eed687e2de3a650ea6"
+    },
+    {
+      "name": "V1_BUILDINGS_DESIGN",
+      "path": "data/scenarios/scenario_a/buildings_v1.obj",
+      "group": "scenario_a",
+      "color": "#e27d58",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v1/GCS_FP_V01_Buildings_RD.obj",
+      "vertices": 140,
+      "faces": 82,
+      "bounds_rd": [
+        [
+          88048.579703034,
+          436256.943109831,
+          3.14
+        ],
+        [
+          88221.776114286,
+          436481.727961819,
+          51.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_a/buildings_v1.mtl",
+      "sha256": "140dbacb75a3008c96f7e02c8eb4a6029693a8162cdd33cd7e8e2413f02052e0",
+      "material_sha256": "3e9bec1dff80703eff69e44252774de007e6f662efd46573ed585cdc614765ae"
+    },
+    {
+      "name": "V1_PAVEMENT_DESIGN",
+      "path": "data/scenarios/scenario_a/pavement_v1.obj",
+      "group": "scenario_a",
+      "color": "#b7c1c9",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v1/GCS_FP_V01_Pavement_RD.obj",
+      "vertices": 530,
+      "faces": 333,
+      "bounds_rd": [
+        [
+          88040.932400117,
+          436182.994082105,
+          0.0
+        ],
+        [
+          88295.119566581,
+          436489.185263829,
+          3.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_a/pavement_v1.mtl",
+      "sha256": "4f91e2a4155d5b056dcacc94cc7b6942ae84cadfca1cedc1923a8ccf87d07eb3",
+      "material_sha256": "03f1d5a438597968bc38f07f39503315c2f9948015b6174c787e497a29fe449b"
+    },
+    {
+      "name": "V1_GREEN_AREAS_DESIGN",
+      "path": "data/scenarios/scenario_a/green_areas_v1.obj",
+      "group": "scenario_a",
+      "color": "#8dbb91",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v1/GCS_FP_V01_Greenery_RD.obj",
+      "vertices": 346,
+      "faces": 321,
+      "bounds_rd": [
+        [
+          88048.579703034,
+          436190.399547907,
+          0.0
+        ],
+        [
+          88274.49973276,
+          436481.727961819,
+          3.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_a/green_areas_v1.mtl",
+      "sha256": "69e1016da476e75c4b300d61b3bd25e2de9f0a7d5035bd02f4fd0c0516d1c2e5",
+      "material_sha256": "a45490b640e9e1586d9cc83c23bb598fae8c9097b16a7b613eb97280f57a5594"
+    },
+    {
+      "name": "V2_BUILDINGS_DESIGN",
+      "path": "data/scenarios/scenario_b/buildings_v2.obj",
+      "group": "scenario_b",
+      "color": "#e27d58",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v2/GCS_FP_V02_Buildings_RD.obj",
+      "vertices": 300,
+      "faces": 206,
+      "bounds_rd": [
+        [
+          88048.579703034,
+          436234.148041921,
+          3.14
+        ],
+        [
+          88247.024837296,
+          436481.727961819,
+          51.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_b/buildings_v2.mtl",
+      "sha256": "2c0b6592835c266889ebbcab04098812bdef0204f82e910332dd9ce896f93312",
+      "material_sha256": "0b598e6a472e5015ed8442350c4efa716d02019de29c8545aa64d5697ac70f27"
+    },
+    {
+      "name": "V2_PAVEMENT_DESIGN",
+      "path": "data/scenarios/scenario_b/pavement_v2.obj",
+      "group": "scenario_b",
+      "color": "#b7c1c9",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v2/GCS_FP_V02_Pavement_RD.obj",
+      "vertices": 526,
+      "faces": 330,
+      "bounds_rd": [
+        [
+          88040.932400117,
+          436182.994082105,
+          0.0
+        ],
+        [
+          88295.119566581,
+          436489.185263829,
+          3.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_b/pavement_v2.mtl",
+      "sha256": "c576c0fc20a02702e140bff5016d362d30c586c4d7da00553dc567914a4d795c",
+      "material_sha256": "1e5dc8baac139c9b9fdc0ef25f719d2e59d0877e7149c4a816bd3db1cf4e2ca5"
+    },
+    {
+      "name": "V2_GREEN_AREAS_DESIGN",
+      "path": "data/scenarios/scenario_b/green_areas_v2.obj",
+      "group": "scenario_b",
+      "color": "#8dbb91",
+      "status": "Your original design; vertex positions and polygon faces preserved; NAP datum assumed",
+      "source": "deliverables/MerweLab-mesh-review/originals/v2/GCS_FP_V02_Greenery_RD.obj",
+      "vertices": 324,
+      "faces": 290,
+      "bounds_rd": [
+        [
+          88048.579703034,
+          436190.399547907,
+          0.0
+        ],
+        [
+          88274.499732761,
+          436481.727961819,
+          3.14
+        ]
+      ],
+      "material_path": "data/scenarios/scenario_b/green_areas_v2.mtl",
+      "sha256": "bd70ebac2b4dd16575a0f7f39265e02319646e7a6a3e2fdd2583fbbbdc6dd742",
+      "material_sha256": "9b6d54e8a0c3becbf965193ef63e328628f90e7b5e0de3fcb8f8db2a3c1aec93"
+    },
+    {
+      "name": "CONTEXT_PURPLE_REPLACEMENTS_3DBAG_LOD22_RD_NAP",
+      "path": "data/scenarios/additional_buildings_lod22_review.obj",
+      "material_path": "data/scenarios/additional_buildings_lod22_review.mtl",
+      "group": "shared",
+      "sha256": "15e42709fda0b737131a9caf92adca4f6bab1ebb13b959861c9b1fd1e05b51d5",
+      "material_sha256": "88c56629b5f4e8aec19617ae2345d58609771d11b18ddfdc9a62d58be0d99a4f",
+      "vertices": 1137,
+      "faces": 2134,
+      "bounds_rd": [
+        [
+          87423.875,
+          436207.21875,
+          -0.642
+        ],
+        [
+          87642.0625,
+          436512.1875,
+          41.502
+        ]
+      ],
+      "color": "#a774b6",
+      "review_only": true,
+      "status": "Partial downloaded 3DBAG LoD2.2 source set; not the full 24-building selection; current-state/overlap review pending.",
+      "foundation_adjustment": {
+        "operation": "MerweLab apply foundation fixes to canonical files v1",
+        "previous_sha256": "d271364a767cf2cf23f66957e887659200dc463db46663acdae079a8fd15fd76",
+        "prepared_sha256": "f5b109ea243233300b2e7b3dc6a83e8cfba7c20a7251f10dab72ae81491a67ea",
+        "result_sha256": "15e42709fda0b737131a9caf92adca4f6bab1ebb13b959861c9b1fd1e05b51d5",
+        "counts": {
+          "unchanged": 12,
+          "fixed": 1
+        },
+        "report": "analysis/wind/geometry_review/foundation_report.json",
+        "burial_margin_m": 0.2,
+        "note": "Assumed ground-supported base extension; roof and footprint retained. Not surveyed foundation depth."
+      },
+      "processing_status": "Foundation adjustment saved; see report for skipped buildings and existing topology defects."
+    }
+  ],
+  "group_rules": {
+    "shared": "Load once with exactly one scenario.",
+    "baseline": "Existing peninsula buildings, ground and quays.",
+    "scenario_a": "V1 buildings, pavement and green areas.",
+    "scenario_b": "V2 buildings, pavement and green areas."
+  },
+  "not_final": [
+    "Additional building selection is incomplete; see geometry_review inventory and source reports.",
+    "Current existence, demolition/alteration flags and overlap of source buildings still need review.",
+    "Design vertical datum assumed; water constant Z=0 is not a measured tide.",
+    "Some source LoD1.2 geometry is simplified and its original release is unknown.",
+    "Terrain/quays are derived surfaces; CFD foundation/mesh checks remain separate."
+  ],
+  "organization_version": 1,
+  "simulation_ready": false,
+  "additional_buildings_report": "analysis/wind/geometry_review/inventory/additional_buildings_report.json",
+  "surface_clipping": {
+    "boundary_rd_xy": [
+      [
+        87373.87497391709,
+        436498.9062442559
+      ],
+      [
+        87374.1157576085,
+        436494.00538060843
+      ],
+      [
+        87374.83572831162,
+        436489.15172765433
+      ],
+      [
+        87376.02792801865,
+        436484.3920078057
+      ],
+      [
+        87377.68100419053,
+        436479.77207372367
+      ],
+      [
+        87695.5013472081,
+        435612.27208898246
+      ],
+      [
+        87790.1341597081,
+        435398.74083898246
+      ],
+      [
+        87792.23206009873,
+        435394.30517003714
+      ],
+      [
+        87794.75464310654,
+        435390.0964908379
+      ],
+      [
+        87812.95776810654,
+        435363.1902408379
+      ],
+      [
+        87815.88074173935,
+        435359.24907872855
+      ],
+      [
+        87819.17590775498,
+        435355.6133975762
+      ],
+      [
+        87822.81158890732,
+        435352.3182315606
+      ],
+      [
+        87826.7527510167,
+        435349.39525792777
+      ],
+      [
+        87830.96143021592,
+        435346.87267491996
+      ],
+      [
+        87835.39706864365,
+        435344.77477452933
+      ],
+      [
+        87840.01703324326,
+        435343.12169835746
+      ],
+      [
+        87844.7767378331,
+        435341.9294986504
+      ],
+      [
+        87849.630406046,
+        435341.2095279473
+      ],
+      [
+        87854.53125443467,
+        435340.9687442559
+      ],
+      [
+        87859.43210282334,
+        435341.2095279473
+      ],
+      [
+        88323.16647782334,
+        435403.9907779473
+      ],
+      [
+        88328.02013077744,
+        435404.7107486504
+      ],
+      [
+        88558.42639603623,
+        435447.1482486504
+      ],
+      [
+        88563.18610062607,
+        435448.34044835746
+      ],
+      [
+        88567.80606522568,
+        435449.99352452933
+      ],
+      [
+        88572.24170365342,
+        435452.09142491996
+      ],
+      [
+        88576.45038285264,
+        435454.61400792777
+      ],
+      [
+        88580.39154496201,
+        435457.5369815606
+      ],
+      [
+        88932.54776444443,
+        435732.3807315606
+      ],
+      [
+        88936.18344559678,
+        435735.6758975762
+      ],
+      [
+        88939.58188309678,
+        435738.8946475762
+      ],
+      [
+        88942.8770491124,
+        435742.53032872855
+      ],
+      [
+        88945.80002274521,
+        435746.4714908379
+      ],
+      [
+        88948.32260575303,
+        435750.68017003714
+      ],
+      [
+        88950.42050614365,
+        435755.11583898246
+      ],
+      [
+        89102.20956864365,
+        436140.77207372367
+      ],
+      [
+        89103.86264481553,
+        436145.3920078057
+      ],
+      [
+        89105.05484452256,
+        436150.15172765433
+      ],
+      [
+        89105.77481522568,
+        436155.00538060843
+      ],
+      [
+        89106.01559891709,
+        436159.9062442559
+      ],
+      [
+        89105.77481522568,
+        436164.80710790335
+      ],
+      [
+        89105.05484452256,
+        436169.66076085746
+      ],
+      [
+        89103.86264481553,
+        436174.4204807061
+      ],
+      [
+        89003.95645585068,
+        436478.7642383355
+      ],
+      [
+        89002.30337967881,
+        436483.3841724175
+      ],
+      [
+        88998.77206864365,
+        436491.7904300469
+      ],
+      [
+        88998.32675614365,
+        436492.7904300469
+      ],
+      [
+        88996.22885575303,
+        436497.22608373343
+      ],
+      [
+        88993.70627274521,
+        436501.43476293265
+      ],
+      [
+        88990.7832991124,
+        436505.37590978324
+      ],
+      [
+        88987.48813309678,
+        436509.0115909356
+      ],
+      [
+        88983.85245194443,
+        436512.30677221
+      ],
+      [
+        88979.91128983506,
+        436515.229730584
+      ],
+      [
+        88975.70261063584,
+        436517.75231359183
+      ],
+      [
+        88580.44482865342,
+        436750.09606359183
+      ],
+      [
+        88576.00919022568,
+        436752.19396398246
+      ],
+      [
+        88571.38922562607,
+        436753.84700963675
+      ],
+      [
+        88566.62952103623,
+        436755.03927037894
+      ],
+      [
+        88561.77585282334,
+        436755.75924108207
+      ],
+      [
+        87921.76024308213,
+        436840.72799108207
+      ],
+      [
+        87909.80711808213,
+        436842.07174108207
+      ],
+      [
+        87904.90625443467,
+        436842.3124942559
+      ],
+      [
+        87900.0053907872,
+        436842.07174108207
+      ],
+      [
+        87895.1517378331,
+        436841.35177037894
+      ],
+      [
+        87890.39203324326,
+        436840.15950963675
+      ],
+      [
+        87885.77206864365,
+        436838.50646398246
+      ],
+      [
+        87881.33643021592,
+        436836.40856359183
+      ],
+      [
+        87586.10983719834,
+        436686.50231359183
+      ],
+      [
+        87581.90115799912,
+        436683.979730584
+      ],
+      [
+        87577.95999588975,
+        436681.0567569512
+      ],
+      [
+        87394.50687088975,
+        436541.52552221
+      ],
+      [
+        87390.8711897374,
+        436538.2303409356
+      ],
+      [
+        87387.57602372178,
+        436534.59465978324
+      ],
+      [
+        87384.65305008896,
+        436530.65351293265
+      ],
+      [
+        87382.13046708115,
+        436526.44483373343
+      ],
+      [
+        87379.77890458115,
+        436522.47608373343
+      ],
+      [
+        87377.68100419053,
+        436518.0404147881
+      ],
+      [
+        87376.02792801865,
+        436513.4204807061
+      ],
+      [
+        87374.83572831162,
+        436508.66076085746
+      ],
+      [
+        87374.1157576085,
+        436503.80710790335
+      ]
+    ],
+    "applies_to": [
+      "context_ground",
+      "context_quays",
+      "water_surface"
+    ],
+    "scenario_rule": "The same shared surfaces apply to baseline, V1 and V2.",
+    "note": "Detailed geometry extent only; not the final CFD computational domain."
+  },
+  "building_foundation_promotion": {
+    "operation": "MerweLab apply foundation fixes to canonical files v1",
+    "saved_utc": "2026-10-24T21:10:15.394549+00:00",
+    "canonical_hashes": {
+      "data/scenarios/yellow_buildings_lod12.obj": "78c9b5c7a11955ecebae7872a58453317b6974d51a2b84652d52fa3d1271b7f3",
+      "data/scenarios/red_buildings_lod12.obj": "0444669a32ef1f193a37ba76745fef03941ca45a9c49f9d728c489774c49fb51",
+      "data/scenarios/additional_buildings_lod22_review.obj": "15e42709fda0b737131a9caf92adca4f6bab1ebb13b959861c9b1fd1e05b51d5",
+      "data/scenarios/baseline/buildings_existing.obj": "2f796276d7b1d3fbd72162c005f826f6ad045ff261a6d9ee64981a6d744343c0"
+    },
+    "report": "analysis/wind/geometry_review/foundation_report.json",
+    "backup_directory": "/home/simeon32/Projects/Uni/Year3/Q1/Geo-Spatial-Studio/MerweLab-source-archive/buildings_before_foundation_fix/20261024T211015308006Z"
+  }
+}
