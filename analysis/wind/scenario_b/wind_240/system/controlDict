@@ -16,21 +16,21 @@ FoamFile
 
 application     simpleFoam;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         100;
+endTime         800;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   100;
 
-purgeWrite      3;
+purgeWrite      0;
 
 writeFormat     binary;
 
