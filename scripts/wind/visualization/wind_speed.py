@@ -1,4 +1,4 @@
-"""Wind-speed magnitude from U on the native height-following surface."""
+"""Draw wind speed at the selected height above the ground."""
 
 import settings
 from common import draw_scalar_maps

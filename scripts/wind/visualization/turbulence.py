@@ -1,4 +1,4 @@
-"""Modelled turbulent kinetic energy k, not instantaneous gust speed."""
+"""Draw turbulent kinetic energy from k."""
 
 import settings
 from common import draw_scalar_maps

@@ -1,4 +1,4 @@
-"""Kinematic pressure p; no assumed air-density conversion."""
+"""Draw the saved pressure field. Values are in m²/s², not Pa."""
 
 import settings
 from common import draw_scalar_maps

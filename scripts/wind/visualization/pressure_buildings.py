@@ -1,20 +1,21 @@
-"""Colour actual CFD building boundary faces by their saved pressure."""
+"""Colour the building walls and roofs by pressure."""
 
 import settings
-from common import create_scene, point_fields, read_case, save_scene, view_bounds
+from common import create_scene, point_fields, read_case, save_scene, scene_bounds
 from coordinates import display_mesh
 
 
 def main():
     walls, time = read_case(["p"], buildings_only=True)
-    # Work with surface polygons directly, avoiding volume-cell clipping warnings.
+
+    # Use the building faces for the pressure plot.
     walls = walls.extract_surface(algorithm="dataset_surface")
     if settings.INTERPOLATE:
         walls = point_fields(walls)
+
     for view in settings.VIEWS:
-        visible = walls.clip_box(
-            [*view_bounds(view)[:4], *settings.SCENE_Z_RANGE], invert=False
-        )
+        visible = walls.clip_box(scene_bounds(view), invert=False)
+
         plot = create_scene(view, show_buildings=False)
         plot.add_mesh(
             display_mesh(visible),
@@ -29,6 +30,7 @@ def main():
                 "label_font_size": 15,
             },
         )
+
         save_scene(plot, "pressure_buildings", view, time)
 
 

@@ -1,20 +1,28 @@
-"""2D paths of horizontal velocity on the height-following north-up map."""
+"""Draw 2D streamlines at the selected height above the ground."""
 
 import numpy as np
 from matplotlib.colors import Normalize
 
 import settings
-from common import create_map, point_fields, read_case, sample_map, save_figure
+from common import (
+    add_colorbar,
+    create_map,
+    point_fields,
+    read_case,
+    sample_map,
+    save_figure,
+)
 
 
 def main():
     mesh, time = read_case(["U"])
     flow = point_fields(mesh)
+
     for view in settings.VIEWS:
-        x, y, sampled, valid = sample_map(flow, view)
-        velocity = sampled.point_data["U"].reshape((*valid.shape, 3))
+        x, y, velocity, valid = sample_map(flow, view)
         east = np.ma.array(velocity[:, :, 0], mask=~valid)
         north = np.ma.array(velocity[:, :, 1], mask=~valid)
+
         fig, ax = create_map(view)
         paths = ax.streamplot(
             x,
@@ -29,14 +37,8 @@ def main():
             arrowsize=1.1,
             zorder=3,
         )
-        fig.colorbar(
-            paths.lines,
-            ax=ax,
-            label="Horizontal wind speed [m/s]",
-            fraction=0.035,
-            pad=0.025,
-            extend="both",
-        )
+        add_colorbar(fig, ax, paths.lines, "Horizontal wind speed [m/s]")
+
         save_figure(
             fig,
             "streamlines",

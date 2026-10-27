@@ -1,9 +1,10 @@
-"""North-up velocity arrows over a native-cell wind-speed map."""
+"""Draw wind arrows over the wind-speed map."""
 
 import numpy as np
 
 import settings
 from common import (
+    add_colorbar,
     create_map,
     draw_surface,
     height_surface,
@@ -18,16 +19,18 @@ def main():
     mesh, time = read_case(["U"])
     flow = point_fields(mesh)
     surface = height_surface(flow)
+
     for view in settings.VIEWS:
-        x, y, sampled, valid = sample_map(
+        x, y, velocity, valid = sample_map(
             flow, view, spacing=settings.ARROW_SPACING[view]
         )
-        velocity = sampled.point_data["U"].reshape((*valid.shape, 3))
         xx, yy = np.meshgrid(x, y)
+
         fig, ax = create_map(view)
         image = draw_surface(
             ax, surface, "U", settings.SPEED_COLORS, settings.SPEED_RANGE
         )
+
         arrows = ax.quiver(
             xx[valid],
             yy[valid],
@@ -40,15 +43,10 @@ def main():
             width=0.002,
             zorder=7,
         )
+
         ax.quiverkey(arrows, 0.67, 0.97, 10, "10 m/s", labelpos="E", coordinates="axes")
-        fig.colorbar(
-            image,
-            ax=ax,
-            label="Wind speed |U| [m/s]",
-            fraction=0.035,
-            pad=0.025,
-            extend="both",
-        )
+        add_colorbar(fig, ax, image, "Wind speed |U| [m/s]")
+
         save_figure(
             fig,
             "velocity_arrows",
