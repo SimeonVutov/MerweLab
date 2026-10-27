@@ -1,0 +1,16 @@
+// Additional patch-name mappings; existing conditions reused.
+
+"(contextYellow.*|contextRed.*|contextAdditional.*|peninsulaBuildings.*)"
+{
+    type            zeroGradient;
+}
+
+"terrain_(shore_or_seam_wall|outer_skirt|outer_skirt_seam|buried_bottom|buried_sides)"
+{
+    type            zeroGradient;
+}
+
+terrain_outer_land
+{
+    type            zeroGradient;
+}

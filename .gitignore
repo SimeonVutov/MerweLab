@@ -1,7 +1,5 @@
 # Local downloads and regenerable data
-/Downloads/
 /data/raw/
-/data/cache/
 /outputs/full_runs/
 
 # Downloaded conversion dependencies and generated models
@@ -38,3 +36,13 @@ Thumbs.db
 /logs/
 
 *.log
+
+# Generated OpenFOAM meshes, fields and post-processing data
+/analysis/wind/*/wind_240/[0-9]*/
+!/analysis/wind/*/wind_240/0.orig/
+!/analysis/wind/*/wind_240/0.orig/**
+/analysis/wind/*/wind_240/processor*/
+/analysis/wind/*/wind_240/constant/polyMesh/
+/analysis/wind/*/wind_240/constant/extendedFeatureEdgeMesh/
+/analysis/wind/*/wind_240/constant/triSurface/*.eMesh
+/analysis/wind/*/wind_240/postProcessing/

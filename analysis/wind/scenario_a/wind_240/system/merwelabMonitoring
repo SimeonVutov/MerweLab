@@ -1,0 +1,54 @@
+solverHistory {type solverInfo; libs (utilityFunctionObjects); fields (p U k epsilon); writeResidualFields false; executeControl timeStep; executeInterval 1; writeControl timeStep; writeInterval 1;}
+pedestrianProbes {type probes; libs (sampling); fields (U k); interpolationScheme cellPoint; fixedLocations true; includeOutOfBounds true; writeControl timeStep; writeInterval 10; probeLocations (
+(-3.259222394 -16.865408294 4.640000000)
+(186.798904763 31.266190476 4.640000000)
+(-144.169000000 -115.140333333 3.517405000)
+(66.730333333 105.741000000 4.560360333)
+(-118.369333333 5.209000000 4.640000000)
+(95.326666667 -8.238333333 4.640000000)
+(-57.522333333 -89.895000000 4.640000000)
+(-7.114333333 66.327000000 4.640000000)
+(120.526666667 59.026666667 4.640000000)
+(-55.115185629 22.955078022 4.640000000)
+(-114.649666667 -58.226000000 4.640000000)
+(41.517095832 26.507177277 4.640000000)
+(47.310333333 -34.304666667 4.640000000)
+(-51.019234686 -37.526764475 4.640000000)
+(139.793333333 14.743000000 4.640000000)
+(-12.076000000 -65.361000000 4.640000000)
+);}
+yPlusMonitor {type yPlus; libs (fieldFunctionObjects); executeControl timeStep; executeInterval 100; writeControl writeTime;}
+pedestrianSurfaces
+{
+ type surfaces; libs (sampling);
+ writeControl writeTime;
+ surfaceFormat vtk;
+ interpolationScheme cellPoint;
+ fields (U k p);
+ surfaces
+ {
+  pedestrian1p5m
+  {
+   type meshedSurface;
+   surface pedestrian_1p5m.obj;
+   source insideCells;
+   interpolate true;
+  }
+ }
+}
+flux_inlet {type surfaceFieldValue; libs (fieldFunctionObjects); regionType patch; name inlet; operation sum; fields (phi); writeFields false; writeControl timeStep; writeInterval 10;}
+flux_outlet {type surfaceFieldValue; libs (fieldFunctionObjects); regionType patch; name outlet; operation sum; fields (phi); writeFields false; writeControl timeStep; writeInterval 10;}
+
+
+flux_frontAndBack
+{
+    type surfaceFieldValue;
+    libs (fieldFunctionObjects);
+    regionType patch;
+    name frontAndBack;
+    operation sum;
+    fields (phi);
+    writeFields false;
+    writeControl timeStep;
+    writeInterval 10;
+}

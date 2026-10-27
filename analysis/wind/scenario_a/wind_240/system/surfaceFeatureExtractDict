@@ -1,0 +1,57 @@
+FoamFile
+{
+    version 2.0;
+    format ascii;
+    class dictionary;
+    object surfaceFeatureExtractDict;
+}
+
+yellow_buildings_lod12.obj
+{
+    extractionMethod extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle 150;
+    }
+    writeObj false;
+}
+
+red_buildings_lod12.obj
+{
+    extractionMethod extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle 150;
+    }
+    writeObj false;
+}
+
+additional_buildings_lod22_review.obj
+{
+    extractionMethod extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle 150;
+    }
+    writeObj false;
+}
+
+peninsula_buildings.obj
+{
+    extractionMethod extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle 150;
+    }
+    writeObj false;
+}
+
+terrain_hull.obj
+{
+    extractionMethod extractFromSurface;
+    extractFromSurfaceCoeffs
+    {
+        includedAngle 150;
+    }
+    writeObj false;
+}

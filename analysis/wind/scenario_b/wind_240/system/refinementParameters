@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2606                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          refinementParameters;
+}
+
+contextBuildings
+{
+    outerDistance   25;
+    outerLevel      2;
+    innerDistance   2;
+    innerLevel      4;
+}
+
+peninsulaBuildings
+{
+    innerDistance   5;
+    innerLevel      4;
+}
+
+greenRegion
+{
+    xMin            -350;
+    xMax            325;
+    yMin            -300;
+    yMax            300;
+    level           3;
+    zMin            -10;
+    zMax            30;
+}
+
+peninsulaSurroundings
+{
+    horizontalBuffer 5;
+    level           4;
+    topAbsoluteZ    12;
+}
+
+pedestrianBand
+{
+    level           5;
+    nominalCellSize 0.5;
+    heightAboveLocalGround 3;
+}
+
+
+// ************************************************************************* //

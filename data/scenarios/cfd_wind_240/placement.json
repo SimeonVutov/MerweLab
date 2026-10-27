@@ -1,0 +1,60 @@
+{
+  "RD_origin": [
+    88147.378452921,
+    436355.989496209,
+    0.0
+  ],
+  "flow_unit_vector_RD": [
+    0.8726296913325173,
+    0.4883824544400788,
+    0
+  ],
+  "wind_from_true_degrees": 240,
+  "CFD_X": "downwind toward true 060 degrees",
+  "units": "metres",
+  "files": [
+    {
+      "RD_source": "yellow_buildings_lod12.obj",
+      "source_sha256": "a7327c74d2b4fd56b83c8dc2dfc6c0df525c2f8b79c2875a2b1199d76798a407",
+      "CFD_file": "cfd_wind_240/yellow_buildings_lod12.obj",
+      "CFD_sha256": "55ef8072146da6378cf1b20b0563adc3c82207fb6a19fb02ae43f344a873bdbc",
+      "max_transform_rounding_error_m": 4.994262781110592e-10
+    },
+    {
+      "RD_source": "red_buildings_lod12.obj",
+      "source_sha256": "0444669a32ef1f193a37ba76745fef03941ca45a9c49f9d728c489774c49fb51",
+      "CFD_file": "cfd_wind_240/red_buildings_lod12.obj",
+      "CFD_sha256": "e16fdc67f80ad621045c67466d71ed56a9981c2c0ddf8d691af54dccdb2b2336",
+      "max_transform_rounding_error_m": 4.999947122996673e-10
+    },
+    {
+      "RD_source": "additional_buildings_lod22_review.obj",
+      "source_sha256": "4c774933d0816f28a5b4b8ed108880bf04c98f76a6e2d79aac361d8ad6f0831e",
+      "CFD_file": "cfd_wind_240/additional_buildings_lod22_review.obj",
+      "CFD_sha256": "f95d77ee308ca9c3a35edf1bc24387baef9220e499ad8f3c562259c8cdb6b92c",
+      "max_transform_rounding_error_m": 4.989715307601728e-10
+    },
+    {
+      "RD_source": "baseline/buildings_existing.obj",
+      "source_sha256": "2f796276d7b1d3fbd72162c005f826f6ad045ff261a6d9ee64981a6d744343c0",
+      "CFD_file": "baseline/cfd_wind_240/buildings_existing.obj",
+      "CFD_sha256": "32c96effb695f15df950a4119141c9d49d796177486b0cc074f0a114484509f6",
+      "max_transform_rounding_error_m": 4.998668146072305e-10
+    },
+    {
+      "RD_source": "scenario_a/buildings_v1.obj",
+      "source_sha256": "51f1ff6044960be16e224c1faa39ce4342986032aac879bec5a93dda535368c9",
+      "CFD_file": "scenario_a/cfd_wind_240/buildings_v1.obj",
+      "CFD_sha256": "25cd5833202d27b463c5f64e7619fbab3e7dd29accc2be37ad15a1021f7859be",
+      "max_transform_rounding_error_m": 4.928928376557451e-10
+    },
+    {
+      "RD_source": "scenario_b/buildings_v2.obj",
+      "source_sha256": "a913c220829ba5c7ba660225f2809fc85a4c536cb4feaf5539bd50aac6bee0a0",
+      "CFD_file": "scenario_b/cfd_wind_240/buildings_v2.obj",
+      "CFD_sha256": "73986aa779f90acbbad4ff96091378e2cd1ed637e4d2ade70e3d8fa26d7a0b12",
+      "max_transform_rounding_error_m": 4.998668146072305e-10
+    }
+  ],
+  "surface_validation": "Canonical building sources matched the source hashes of the passing 452-object report; transformation independently checked. Volume-mesh validation remains pending."
+}
