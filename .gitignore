@@ -46,3 +46,11 @@ Thumbs.db
 /analysis/wind/*/wind_240/constant/extendedFeatureEdgeMesh/
 /analysis/wind/*/wind_240/constant/triSurface/*.eMesh
 /analysis/wind/*/wind_240/postProcessing/
+
+# QGIS temporary files
+*.gpkg-shm
+*.gpkg-wal
+
+# OSM downloads, recreated by the script
+data/network/osm_*
+data/network/facilities/
