@@ -13,8 +13,11 @@ import pandas as pd
 CONTEXT = "data/boundaries/context_area.gpkg"
 SITE = "data/boundaries/GCS_FP_Development_Site.gpkg"
 BUURTEN = "data/cbs/cbs_output/buurten.geojson"
-OUT = "data/network"
-os.makedirs(OUT, exist_ok=True)
+OUT = "data/network/baseline"          # results (csv, png)
+OSM = "data/network/osm"               # osm downloads, recreated by the script (not in git)
+FAC = "data/network/facilities"        # one file per facility type, recreated by the script (not in git)
+for folder in [OUT, OSM, FAC]:
+    os.makedirs(folder, exist_ok=True)
 
 WALK_SPEED = 80  # metres per minute, about 4.8 km/h
 STEP = 10        # metres between sample points on the pier
@@ -46,11 +49,11 @@ buurten = gpd.read_file(BUURTEN).to_crs(28992)
 area = context.buffer(500).to_crs(4326).union_all()
 
 # download osm data, only the first time (saved files are used after that)
-if not os.path.exists(f"{OUT}/osm_walk.graphml"):
+if not os.path.exists(f"{OSM}/osm_walk.graphml"):
     print("downloading walking network...")
     G = ox.graph_from_polygon(area, network_type="walk")
     G = ox.project_graph(G, to_crs=28992)
-    ox.save_graphml(G, f"{OUT}/osm_walk.graphml")
+    ox.save_graphml(G, f"{OSM}/osm_walk.graphml")
 
 # the osm server is often busy, so wait and try again (up to 5 times)
 def download(tags):
@@ -66,9 +69,9 @@ def download(tags):
 
 
 # facilities: every type gets its own file, so a failed download does not lose the types already done
-os.makedirs(f"{OUT}/facilities", exist_ok=True)
+os.makedirs(FAC, exist_ok=True)
 for name, (tags, cbs_col) in FACILITIES.items():
-    file = f"{OUT}/facilities/{name}.gpkg"
+    file = f"{FAC}/{name}.gpkg"
     if os.path.exists(file):
         continue
     print(f"downloading {name}...")
@@ -78,16 +81,16 @@ for name, (tags, cbs_col) in FACILITIES.items():
     points = f.geometry.representative_point()
     gpd.GeoDataFrame({"type": name, "geometry": points.values}, crs=28992).to_file(file)
 
-if not os.path.exists(f"{OUT}/osm_homes.gpkg"):
+if not os.path.exists(f"{OSM}/osm_homes.gpkg"):
     print("downloading residential buildings...")
     b = download({"building": ["apartments", "residential", "house", "terrace"]})
     b = b[b.geometry.type.isin(["Polygon", "MultiPolygon"])].to_crs(28992)
-    gpd.GeoDataFrame(geometry=b.geometry.centroid, crs=28992).to_file(f"{OUT}/osm_homes.gpkg")
+    gpd.GeoDataFrame(geometry=b.geometry.centroid, crs=28992).to_file(f"{OSM}/osm_homes.gpkg")
 
-G = ox.load_graphml(f"{OUT}/osm_walk.graphml")
+G = ox.load_graphml(f"{OSM}/osm_walk.graphml")
 G = ox.convert.to_undirected(G)  # walking works in both directions
-facilities = pd.concat([gpd.read_file(f"{OUT}/facilities/{name}.gpkg") for name in FACILITIES])
-homes = gpd.read_file(f"{OUT}/osm_homes.gpkg")
+facilities = pd.concat([gpd.read_file(f"{FAC}/{name}.gpkg") for name in FACILITIES])
+homes = gpd.read_file(f"{OSM}/osm_homes.gpkg")
 print(f"network: {len(G.nodes)} nodes | {len(facilities)} facilities | {len(homes)} homes")
 
 
@@ -180,5 +183,5 @@ for name in ["supermarket", "metro"]:
     plt.close()
 
 # save the network for qgis, used as base map in step 2
-ox.save_graph_geopackage(G, f"{OUT}/osm_walk_network.gpkg")
+ox.save_graph_geopackage(G, f"{OSM}/osm_walk_network.gpkg")
 print("done, results saved in", OUT)

@@ -52,5 +52,5 @@ Thumbs.db
 *.gpkg-wal
 
 # OSM downloads, recreated by the script
-data/network/osm_*
+data/network/osm/
 data/network/facilities/

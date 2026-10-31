@@ -1,0 +1,34 @@
+{
+  "scenario": "scenario_a",
+  "weight_set": "balanced",
+  "weights": {
+    "access": 0.3,
+    "detour": 0.15,
+    "car": 0.2,
+    "wind": 0.15,
+    "green_loss": 0.12,
+    "cost": 0.08
+  },
+  "bridge_in_candidates": true,
+  "bridge_built": false,
+  "built_paths": [
+    "A03",
+    "A04",
+    "A06",
+    "A08",
+    "A12"
+  ],
+  "ramp_rd": [
+    88189.1,
+    436464.9
+  ],
+  "car_trips_per_day": 2333,
+  "indicators": {
+    "access": 1001.3,
+    "detour": 1.08,
+    "wind": 5.63,
+    "car": 80.59,
+    "green_loss": 215.46,
+    "cost": 235.74
+  }
+}
