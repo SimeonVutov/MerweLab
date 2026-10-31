@@ -2,3 +2,4 @@ numpy
 matplotlib
 pyvista
 vtk
+rasterio
