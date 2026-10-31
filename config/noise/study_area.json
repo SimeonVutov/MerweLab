@@ -29,6 +29,15 @@
     "height_above_ground_m": 1.5,
     "building_setback_m": 2,
     "road_setback_m": 2,
-    "map_triangles": "Delaunay; triangles intersecting buildings omitted"
+    "map_triangles": "constrained Delaunay; building setback boundaries retained"
+  },
+  "receiver_mesh": {
+    "scenario_a": {
+      "method": "constrained Delaunay with building setback boundaries",
+      "base_receivers": "existing receiver coordinates and IDs retained",
+      "boundary_maximum_spacing_m": 10.0,
+      "building_setback_m": 2.0,
+      "height_above_ground_m": 1.5
+    }
   }
 }
