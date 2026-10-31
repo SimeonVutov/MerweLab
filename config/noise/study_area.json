@@ -1,11 +1,26 @@
 {
   "crs": "EPSG:28992",
-  "overview_bounds": [86845.25, 435300, 89624.75, 437263.5],
-  "detailed_bounds": [87350, 435300, 89120, 436860],
+  "overview_bounds": [
+    86845.25,
+    435300,
+    89624.75,
+    437263.5
+  ],
+  "detailed_bounds": [
+    87350,
+    435300,
+    89120,
+    436860
+  ],
   "source_margin_m": 2000,
   "margin_note": "Data collection only; not the final sound propagation distance.",
   "source": "DCMR RVMK 2025, reference situation 2024",
   "source_page": "https://www.dcmr.nl/verkeersgegevens-rvmk",
   "download_url": "https://dcmr.gisinternet.nl/downloads/zip/RVMK/RVMK2025j2024.zip",
-  "preparation_note": "Keep original traffic fields and whole intersecting road pieces. Medium-vehicle discrepancies and NoiseModelling field mapping remain unresolved."
+  "preparation_note": "Road fields mapped for NoiseModelling; supplied traffic retained. Medium-heavy traffic discrepancies and pavement assumptions remain documented.",
+  "calculation_bounds_key": "detailed_bounds",
+  "receiver_height_m": 1.5,
+  "receiver_maximum_triangle_area_m2": 2500,
+  "maximum_source_distance_m": 800,
+  "terrain_margin_m": 900
 }
