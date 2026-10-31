@@ -20,7 +20,15 @@
   "preparation_note": "Road fields mapped for NoiseModelling; supplied traffic retained. Medium-heavy traffic discrepancies and pavement assumptions remain documented.",
   "calculation_bounds_key": "detailed_bounds",
   "receiver_height_m": 1.5,
-  "receiver_maximum_triangle_area_m2": 2500,
   "maximum_source_distance_m": 800,
-  "terrain_margin_m": 900
+  "terrain_margin_m": 900,
+  "receiver_grid": {
+    "method": "regular grid with peninsula refinement",
+    "study_spacing_m": 25,
+    "peninsula_spacing_m": 10,
+    "height_above_ground_m": 1.5,
+    "building_setback_m": 2,
+    "road_setback_m": 2,
+    "map_triangles": "Delaunay; triangles intersecting buildings omitted"
+  }
 }
