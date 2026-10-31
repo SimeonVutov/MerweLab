@@ -1,0 +1,20 @@
+{
+  "park_g": 0.7,
+  "mixed_yard_g": 0.5,
+  "partly_paved_g": 0.3,
+  "unknown_g": 0.5,
+  "aerial_reviewed_yards": [
+    "G0599.16fd016bbf2f9cac9e050210a7e24119",
+    "G0599.16fd016cc602ccac9e050210a7e24119"
+  ],
+  "aerial_layer": "PDOK 2026_orthoHR",
+  "repaired_source_geometries": 0,
+  "skipped_non_surface_features": 1090,
+  "collection_bounds": [
+    84845.25,
+    433300.0,
+    91624.75,
+    439263.5
+  ],
+  "note": "ASSUMED=1 identifies interpreted or assumed ground properties. Unmapped ground is filled with the explicit unknown_g assumption; this does not supply missing buildings."
+}
