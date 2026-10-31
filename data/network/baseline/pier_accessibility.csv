@@ -1,0 +1,10 @@
+facility,mean_m,max_m,mean_walk_min
+supermarket,1344.0,1503.0,16.8
+gp,1094.0,1253.0,13.7
+pharmacy,1094.0,1253.0,13.7
+day_care,1571.0,1731.0,19.6
+school,853.0,1012.0,10.7
+park,1337.0,1496.0,16.7
+tram_bus_stop,401.0,574.0,5.0
+metro,1684.0,1857.0,21.0
+train_station,1868.0,2028.0,23.4

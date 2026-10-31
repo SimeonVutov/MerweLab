@@ -1,0 +1,36 @@
+{
+  "scenario": "scenario_b",
+  "weight_set": "balanced",
+  "weights": {
+    "access": 0.3,
+    "detour": 0.15,
+    "car": 0.2,
+    "wind": 0.15,
+    "green_loss": 0.12,
+    "cost": 0.08
+  },
+  "bridge_in_candidates": true,
+  "bridge_built": false,
+  "built_paths": [
+    "B11",
+    "B12",
+    "B13",
+    "B14",
+    "B15",
+    "B16",
+    "B20"
+  ],
+  "ramp_rd": [
+    88148.6,
+    436459.5
+  ],
+  "car_trips_per_day": 2284,
+  "indicators": {
+    "access": 977.32,
+    "detour": 1.13,
+    "wind": 4.58,
+    "car": 56.68,
+    "green_loss": 47.83,
+    "cost": 72.94
+  }
+}
