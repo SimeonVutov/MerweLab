@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "width": 1171,
+  "height": 947,
+  "bounds": [
+    4.391792292401737,
+    51.89475462326247,
+    4.459788739019761,
+    51.928735915013235
+  ],
+  "coreBounds": [
+    4.399792292401737,
+    51.899754623262474,
+    4.451788739019761,
+    51.92373591501323
+  ],
+  "format": "float32-le",
+  "rowOrder": "north-to-south",
+  "heightReference": "WGS84 ellipsoid",
+  "nominalSpacingM": 4,
+  "source": "AHN-based completed terrain from the existing noise preparation",
+  "assumptions": [
+    "Sources include documented water at NAP zero, building-ground estimates and interpolated gaps; not every sample is a measured AHN elevation.",
+    "Approximately 4 m display sampling from approximately 2 m source rasters; bilinear resampling does not improve source accuracy.",
+    "Current terrain is shared across scenarios; local surface models supply the proposal ground.",
+    "Outside coreBounds, the display blends to the ellipsoid at bounds. This transition is outside the CBS context and is not measured terrain."
+  ],
+  "boundary_source": "data/cbs/cbs_output/buurten.geojson",
+  "grids": [
+    {
+      "name": "nl_nsgi_rdtrans2018.tif",
+      "sha256": "7653831191b424e715a906468962fc60071cfb71a3186b2a58f098bab8bf41de",
+      "source": "https://cdn.proj.org/nl_nsgi_rdtrans2018.tif"
+    },
+    {
+      "name": "nl_nsgi_nlgeo2018.tif",
+      "sha256": "f8e32c56bf8940fc3fefbc0e413eb4546633ed598b669c63856cddf8328992c0",
+      "source": "https://cdn.proj.org/nl_nsgi_nlgeo2018.tif"
+    }
+  ],
+  "scenarios": {
+    "baseline": {
+      "url": "/web/terrain/baseline-72ebceafb787.bin",
+      "sha256": "72ebceafb787e5040f90263b55ac4ce750646d4613b2e120c76fd196ec130d32",
+      "source": "data/processed/noise/baseline/terrain.tif",
+      "source_sha256": "33f2b9e77d75b97fe41419c5495e753edb74fb7cff170f5aff054e3e88caa5c7"
+    }
+  }
+}

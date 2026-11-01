@@ -1,0 +1,335 @@
+{
+  "version": 1,
+  "placement": {
+    "origin_rd": [
+      88147.378452921,
+      436355.989496209,
+      0.0
+    ],
+    "origin_ecef_m": [
+      3931024.03454336,
+      303551.76942132204,
+      4996781.449047529
+    ],
+    "origin_lon_lat_height": [
+      4.415589713041048,
+      51.91167834831188,
+      43.610766482539475
+    ],
+    "local_frame": "ENU",
+    "source_crs": "EPSG:7415",
+    "render_crs": "EPSG:4978",
+    "method": "RD inverse projection, RDNAPTRANS2018 horizontal grid, inverse NLGEO2018 vertical shift, WGS84 ECEF, common true ENU",
+    "grids": [
+      {
+        "name": "nl_nsgi_rdtrans2018.tif",
+        "sha256": "7653831191b424e715a906468962fc60071cfb71a3186b2a58f098bab8bf41de",
+        "source": "https://cdn.proj.org/nl_nsgi_rdtrans2018.tif"
+      },
+      {
+        "name": "nl_nsgi_nlgeo2018.tif",
+        "sha256": "f8e32c56bf8940fc3fefbc0e413eb4546633ed598b669c63856cddf8328992c0",
+        "source": "https://cdn.proj.org/nl_nsgi_nlgeo2018.tif"
+      }
+    ],
+    "pyproj_version": "3.8.0",
+    "coordinate_config_sha256": "61423a9784f478edd2a8307fd942c9d2644d83661319b2ccb9900c1961e49e3d",
+    "assumptions": [
+      "Supplied design heights are assumed to use NAP, as recorded in the coordinate configuration.",
+      "ETRS89 is treated as WGS84 for display, following the selected PROJ operation; this is not an epoch-aware survey transformation.",
+      "The imagery lies on the Cesium ellipsoid until terrain is integrated; do not lower models to that surface.",
+      "Additional context includes the available 13 reviewed LoD2.2 parts, not the full requested selection."
+    ]
+  },
+  "models": {
+    "shared": [],
+    "water": [
+      {
+        "source": "data/scenarios/water_surface.obj",
+        "source_sha256": "38696410d3149693de87e407362f7b611d37495cf0e2be558c1ead9ab4e02bf8",
+        "material_sha256": "c6bad03c196609fa2bde841f53d83a7d2d068861fb3dbce786e8adae70d44a1d",
+        "source_vertices": 2684,
+        "source_faces": 4463,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            87688.853886271,
+            435342.373712518,
+            0.0
+          ],
+          [
+            88972.772190714,
+            436501.200006463,
+            0.0
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -448.8132349513386,
+            -1017.3196676222864,
+            -0.07437274875066911
+          ],
+          [
+            832.6490222488851,
+            143.8058334702376,
+            0.0004079620460179302
+          ]
+        ],
+        "round_trip_error_m": 8.012380985982414e-09,
+        "float32_error_m": 4.121694220363851e-05,
+        "coordinate_config_hash_matches": true,
+        "id": "water_surface",
+        "glb_sha256": "ace4a27401233ced362f3d081083c435d7c50ae34fbfcb406eb5da3bb0393a82",
+        "url": "/web/surfaces/water_surface-ace4a2740123.glb",
+        "bytes": 94664
+      }
+    ],
+    "baseline": [
+      {
+        "source": "data/scenarios/baseline/ground_existing.obj",
+        "source_sha256": "2e47dd7189e3adc775e51dd8cff89e320d3b813d49ee57d4cbb4fabf5c88e319",
+        "material_sha256": "82baae638d754b478fba6f896b49103a2fd007f97218b652b78466ba138ce6d5",
+        "source_vertices": 2155,
+        "source_faces": 4202,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88040.949999921,
+            436183.000000209,
+            2.015469
+          ],
+          [
+            88295.099999921,
+            436489.200000209,
+            3.647
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -105.7403353732173,
+            -173.6418756346613,
+            2.0149035109225863
+          ],
+          [
+            146.13391769073647,
+            133.36576916072178,
+            3.647256308179745
+          ]
+        ],
+        "round_trip_error_m": 7.117651360418932e-09,
+        "float32_error_m": 7.98248526714127e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "ground_existing",
+        "glb_sha256": "16dc9336fd5d4e06aa7784e418430cb4f944557643d1618139cc949208130dbe",
+        "url": "/web/surfaces/ground_existing-16dc9336fd5d.glb",
+        "bytes": 321744
+      },
+      {
+        "source": "data/scenarios/baseline/quays_existing.obj",
+        "source_sha256": "695cc2a98d397488d180a98620fc984b70f3701e1667abe66896222bd2daa9d5",
+        "material_sha256": "b755cda91efdc39c6fcbed87495aa8ea5a67d6d45fcd44eed687e2de3a650ea6",
+        "source_vertices": 176,
+        "source_faces": 174,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88040.949999921,
+            436183.000000209,
+            0.0
+          ],
+          [
+            88295.099999921,
+            436489.200000209,
+            3.387154
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -105.7403353732173,
+            -173.6418756346613,
+            -0.0043917856003762
+          ],
+          [
+            146.13391769073647,
+            133.36576916072178,
+            3.38689800659181
+          ]
+        ],
+        "round_trip_error_m": 4.411605698558752e-09,
+        "float32_error_m": 7.67000974339371e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "quays_existing",
+        "glb_sha256": "3d06c23422bab66bedc3b23841a8bb7e078c6445180506be6d58567e9bcdb494",
+        "url": "/web/surfaces/quays_existing-3d06c23422ba.glb",
+        "bytes": 8524
+      }
+    ],
+    "scenario_a": [
+      {
+        "source": "data/scenarios/scenario_a/pavement_v1.obj",
+        "source_sha256": "4f91e2a4155d5b056dcacc94cc7b6942ae84cadfca1cedc1923a8ccf87d07eb3",
+        "material_sha256": "03f1d5a438597968bc38f07f39503315c2f9948015b6174c787e497a29fe449b",
+        "source_vertices": 530,
+        "source_faces": 333,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88040.932400117,
+            436182.994082105,
+            0.0
+          ],
+          [
+            88295.119566581,
+            436489.185263829,
+            3.14
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -105.7576123709412,
+            -173.6475798695497,
+            -0.00439237739407934
+          ],
+          [
+            146.1534338262664,
+            133.35134837555276,
+            3.140428751538945
+          ]
+        ],
+        "round_trip_error_m": 5.844964861944884e-09,
+        "float32_error_m": 7.137491713831577e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "pavement_v1",
+        "glb_sha256": "a683448590939ccf3d52b5b80d9db9f3d5b09a310ccb83d0083bec35276adebc",
+        "url": "/web/surfaces/pavement_v1-a68344859093.glb",
+        "bytes": 16936
+      },
+      {
+        "source": "data/scenarios/scenario_a/green_areas_v1.obj",
+        "source_sha256": "69e1016da476e75c4b300d61b3bd25e2de9f0a7d5035bd02f4fd0c0516d1c2e5",
+        "material_sha256": "a45490b640e9e1586d9cc83c23bb598fae8c9097b16a7b613eb97280f57a5594",
+        "source_vertices": 346,
+        "source_faces": 321,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88048.579703034,
+            436190.399547907,
+            0.0
+          ],
+          [
+            88274.49973276,
+            436481.727961819,
+            3.14
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -98.09652461370521,
+            -166.28982538800145,
+            -0.0037627961835230597
+          ],
+          [
+            125.60560844923062,
+            125.94158741965508,
+            3.140428751538945
+          ]
+        ],
+        "round_trip_error_m": 7.479605552328182e-09,
+        "float32_error_m": 7.259696993748915e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "green_areas_v1",
+        "glb_sha256": "cd2853061a36ff5ab004408d01473f78e829d79830c6faa0a4f419c43e3c69e3",
+        "url": "/web/surfaces/green_areas_v1-cd2853061a36.glb",
+        "bytes": 12092
+      }
+    ],
+    "scenario_b": [
+      {
+        "source": "data/scenarios/scenario_b/pavement_v2.obj",
+        "source_sha256": "c576c0fc20a02702e140bff5016d362d30c586c4d7da00553dc567914a4d795c",
+        "material_sha256": "1e5dc8baac139c9b9fdc0ef25f719d2e59d0877e7149c4a816bd3db1cf4e2ca5",
+        "source_vertices": 526,
+        "source_faces": 330,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88040.932400117,
+            436182.994082105,
+            0.0
+          ],
+          [
+            88295.119566581,
+            436489.185263829,
+            3.14
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -105.7576123709412,
+            -173.6475798695497,
+            -0.00439237739407934
+          ],
+          [
+            146.1534338262664,
+            133.35134837555276,
+            3.14042875158594
+          ]
+        ],
+        "round_trip_error_m": 5.844964861944884e-09,
+        "float32_error_m": 7.137491713831577e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "pavement_v2",
+        "glb_sha256": "45b34b34d278ade50cdc936940192c7d07e3e8e4fbd8731afe25082abad4fa85",
+        "url": "/web/surfaces/pavement_v2-45b34b34d278.glb",
+        "bytes": 16816
+      },
+      {
+        "source": "data/scenarios/scenario_b/green_areas_v2.obj",
+        "source_sha256": "bd70ebac2b4dd16575a0f7f39265e02319646e7a6a3e2fdd2583fbbbdc6dd742",
+        "material_sha256": "9b6d54e8a0c3becbf965193ef63e328628f90e7b5e0de3fcb8f8db2a3c1aec93",
+        "source_vertices": 324,
+        "source_faces": 290,
+        "source_objects": 1,
+        "bag_ids": [],
+        "bounds_rd": [
+          [
+            88048.579703034,
+            436190.399547907,
+            0.0
+          ],
+          [
+            88274.499732761,
+            436481.727961819,
+            3.14
+          ]
+        ],
+        "bounds_enu": [
+          [
+            -98.09652461370521,
+            -166.28982538800145,
+            -0.003762796136527763
+          ],
+          [
+            125.60560845021722,
+            125.94158741965508,
+            3.14042875158594
+          ]
+        ],
+        "round_trip_error_m": 4.538948808334186e-09,
+        "float32_error_m": 6.286054961621457e-06,
+        "coordinate_config_hash_matches": true,
+        "id": "green_areas_v2",
+        "glb_sha256": "83663998dff4adf17c78ad0d1ef5d65ee2ad017ff387ffba1488afe0887a9751",
+        "url": "/web/surfaces/green_areas_v2-83663998dff4.glb",
+        "bytes": 11252
+      }
+    ]
+  }
+}
