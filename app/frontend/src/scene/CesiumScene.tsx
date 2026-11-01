@@ -4,17 +4,25 @@ import { createViewer } from './createViewer';
 import { createAerialImagery, createGlobeImagery } from './imagery';
 import { resetCamera } from './camera';
 import styles from './CesiumScene.module.css';
+import { createModelLayers } from './modelLayers';
+import type { ModelLayers, ModelStatus } from './modelLayers';
+import type { ScenarioId } from '../project';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
   imageryVisible: boolean;
   imageryOpacity: number;
+  scenarioId: ScenarioId;
+  contextVisible: boolean;
+  scenarioVisible: boolean;
+  onBuildingStatus: (status: ModelStatus) => void;
 }
 
-export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity }: CesiumSceneProps) {
+export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
+  const buildings = useRef<ModelLayers | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imageryError, setImageryError] = useState<string | null>(null);
 
@@ -46,6 +54,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     instance.imageryLayers.add(base);
     instance.imageryLayers.add(aerial);
     imagery.current = aerial;
+    buildings.current = createModelLayers(instance, onBuildingStatus);
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -57,18 +66,28 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       removeBaseError();
       removeAerialError();
       removeRenderError();
+      buildings.current?.dispose();
+      buildings.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
     };
-  }, []);
+  }, [onBuildingStatus]);
+
+  useEffect(() => {
+    buildings.current?.setScenario(scenarioId);
+  }, [scenarioId, onBuildingStatus]);
+
+  useEffect(() => {
+    buildings.current?.setVisibility(contextVisible, scenarioVisible);
+  }, [contextVisible, scenarioVisible, onBuildingStatus]);
 
   useEffect(() => {
     if (!viewer.current || !imagery.current) return;
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity]);
+  }, [imageryVisible, imageryOpacity, onBuildingStatus]);
 
   return (
     <>

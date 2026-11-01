@@ -16,6 +16,12 @@ export default defineConfig({
         dest: 'cesium',
       })),
     }),
+    viteStaticCopy({
+      targets: [{
+        src: fileURLToPath(new URL('../../data/web/buildings', import.meta.url)),
+        dest: 'web',
+      }],
+    }),
   ],
   define: {
     CESIUM_BASE_URL: JSON.stringify('/cesium/'),

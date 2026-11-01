@@ -1,5 +1,6 @@
 import type { Mode } from '../project';
 import styles from './DetailsPanel.module.css';
+import type { ModelStatus } from '../scene/modelLayers';
 
 interface DetailsPanelProps {
   open: boolean;
@@ -8,9 +9,10 @@ interface DetailsPanelProps {
   imageryVisible: boolean;
   imageryOpacity: number;
   onOpacityChange: (opacity: number) => void;
+  buildingStatus: ModelStatus;
 }
 
-export default function DetailsPanel({ open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange }: DetailsPanelProps) {
+export default function DetailsPanel({ open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus }: DetailsPanelProps) {
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
       <div>
@@ -18,8 +20,11 @@ export default function DetailsPanel({ open, mode, scenarioLabel, imageryVisible
         {mode === 'Explore' && <>
           <dl className={styles.values}>
             <div><dt>Scenario</dt><dd>{scenarioLabel}</dd></div>
+            <div><dt>Context buildings</dt><dd>{buildingStatus.context}</dd></div>
+            <div><dt>Scenario buildings</dt><dd>{buildingStatus.scenario}</dd></div>
             <div><dt>Terrain</dt><dd>Ellipsoid</dd></div>
           </dl>
+          <p className={styles.note}>Models use RD/NAP heights. Ground and measured terrain follow in the next update.</p>
           <section className={styles.block}>
             <h2>Aerial imagery</h2>
             <p className={styles.note}>PDOK · latest 25 cm imagery</p>
