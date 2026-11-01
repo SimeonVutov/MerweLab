@@ -13,7 +13,7 @@ import { createContextBuildings } from './contextBuildings';
 import type { ContextBuildings } from './contextBuildings';
 import { createWindLayer } from '../features/wind/scene';
 import type { WindLayer } from '../features/wind/scene';
-import type { WindInfo, WindOptions } from '../features/wind/types';
+import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
@@ -29,11 +29,14 @@ interface CesiumSceneProps {
   onTerrainStatus: (status: TerrainStatus) => void;
   wind: WindOptions;
   onWindInfo: (info: WindInfo) => void;
+  onViewerReady?: (viewer: Viewer | null) => void;
+  windProbe?: WindLocation | null;
+  onWindProbe?: (point: WindLocation) => void;
 }
 
 export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus,
   groundVisible, waterVisible, onSurfaceStatus, onTerrainStatus,
-  wind, onWindInfo,
+  wind, onWindInfo, onViewerReady, windProbe, onWindProbe,
 }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
@@ -43,6 +46,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   const terrain = useRef<TerrainLayer | null>(null);
   const context = useRef<ContextBuildings | null>(null);
   const windLayer = useRef<WindLayer | null>(null);
+  const onWindProbeRef = useRef(onWindProbe);
+  onWindProbeRef.current = onWindProbe;
   const [contextError, setContextError] = useState(false);
   const [terrainError, setTerrainError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +65,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     }
 
     viewer.current = instance;
+    onViewerReady?.(instance);
     setError(null);
     setImageryError(null);
     setTerrainError(null);
@@ -85,7 +91,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       terrain.current?.setSiteReady(status.scenario === 'Loaded');
     });
     context.current = createContextBuildings(instance, () => setContextError(true));
-    windLayer.current = createWindLayer(instance, onWindInfo);
+    windLayer.current = createWindLayer(instance, onWindInfo, (point) => onWindProbeRef.current?.(point));
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -93,6 +99,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     resizeObserver.observe(container.current);
 
     return () => {
+      onViewerReady?.(null);
       resizeObserver.disconnect();
       removeBaseError();
       removeAerialError();
@@ -111,34 +118,36 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       viewer.current = null;
       instance.destroy();
     };
-  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
   useEffect(() => {
     buildings.current?.setScenario(scenarioId);
     surfaces.current?.setScenario(scenarioId);
     windLayer.current?.setScenario(scenarioId);
-  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
   useEffect(() => {
     windLayer.current?.setOptions(wind);
-  }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+
+  useEffect(() => { windLayer.current?.setProbe(windProbe ?? null); }, [windProbe, onViewerReady]);
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
     context.current?.setVisible(contextVisible);
-  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
     terrain.current?.setSiteVisible(groundVisible);
-  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
   useEffect(() => {
     if (!viewer.current || !imagery.current) return;
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
   return (
     <>

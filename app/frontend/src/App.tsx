@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { Viewer } from 'cesium';
+import CompareToolbar from './features/compare/CompareToolbar';
+import { synchronizeCameras } from './features/compare/synchronizeCameras';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -9,51 +12,137 @@ import styles from './App.module.css';
 import type { ModelStatus } from './scene/modelLayers';
 import type { TerrainStatus } from './scene/terrain';
 import { initialWindInfo, initialWindOptions } from './features/wind/types';
-import type { WindInfo, WindOptions } from './features/wind/types';
+import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
+  const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
+  const [leftViewer, setLeftViewer] = useState<Viewer | null>(null);
+  const [rightViewer, setRightViewer] = useState<Viewer | null>(null);
+  const [rightTerrainStatus, setRightTerrainStatus] = useState<TerrainStatus>('Loading');
+  const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
+  const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
+  const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
+  const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
   const [layersOpen, setLayersOpen] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(true);
   const [imageryVisible, setImageryVisible] = useState(true);
   const [imageryOpacity, setImageryOpacity] = useState(1);
   const [contextVisible, setContextVisible] = useState(true);
   const [scenarioVisible, setScenarioVisible] = useState(true);
-  const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
   const [groundVisible, setGroundVisible] = useState(true);
   const [waterVisible, setWaterVisible] = useState(false);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
+  const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
   const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
   const [wind, setWind] = useState<WindOptions>(initialWindOptions);
   const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
   const scenario = scenarios.find((item) => item.id === scenarioId)!;
+  const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
+  const comparing = mode === 'Compare';
+  const sceneSettings = {
+    imageryVisible, imageryOpacity, contextVisible, scenarioVisible, groundVisible, waterVisible,
+    wind, windProbe: comparing ? windProbe : undefined, onWindProbe: setWindProbe,
+  };
+
+  useEffect(() => {
+    if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) return;
+    return synchronizeCameras(leftViewer, rightViewer);
+  }, [comparing, leftViewer, rightViewer]);
 
   return (
     <div className={styles.app}>
       <a className={styles.skipLink} href="#scene">Skip to map</a>
-      <Header mode={mode} scenarioId={scenarioId} onModeChange={setMode} onScenarioChange={setScenarioId} />
-      <div className={styles.workspace} data-layers-open={layersOpen} data-details-open={detailsOpen}>
-        <LayerPanel open={layersOpen} imageryVisible={imageryVisible} onImageryChange={setImageryVisible}
-          contextVisible={contextVisible} scenarioVisible={scenarioVisible}
-          onContextChange={setContextVisible} onScenarioChange={setScenarioVisible}
-          groundVisible={groundVisible} waterVisible={waterVisible} onGroundChange={setGroundVisible} onWaterChange={setWaterVisible}
-          wind={wind} onWindChange={setWind} />
+      <Header
+        mode={mode}
+        scenarioId={scenarioId}
+        onModeChange={setMode}
+        onScenarioChange={setScenarioId}
+      />
+      <div
+        className={styles.workspace}
+        data-layers-open={layersOpen}
+        data-details-open={detailsOpen}
+      >
+        <LayerPanel
+          open={layersOpen}
+          imageryVisible={imageryVisible}
+          onImageryChange={setImageryVisible}
+          contextVisible={contextVisible}
+          scenarioVisible={scenarioVisible}
+          onContextChange={setContextVisible}
+          onScenarioChange={setScenarioVisible}
+          groundVisible={groundVisible}
+          waterVisible={waterVisible}
+          onGroundChange={setGroundVisible}
+          onWaterChange={setWaterVisible}
+          wind={wind}
+          onWindChange={setWind}
+        />
         <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
-          <CesiumScene scenarioLabel={scenario.label} scenarioId={scenarioId}
-            imageryVisible={imageryVisible} imageryOpacity={imageryOpacity}
-            contextVisible={contextVisible} scenarioVisible={scenarioVisible} onBuildingStatus={setBuildingStatus}
-            groundVisible={groundVisible} waterVisible={waterVisible} onSurfaceStatus={setSurfaceStatus} onTerrainStatus={setTerrainStatus}
-            wind={wind} onWindInfo={setWindInfo} />
-          <div className={styles.panelControls}>
-            <button aria-expanded={layersOpen} aria-controls="layer-panel" onClick={() => setLayersOpen((open) => !open)}>Layers</button>
-            <button aria-expanded={detailsOpen} aria-controls="details-panel" onClick={() => setDetailsOpen((open) => !open)}>Details</button>
+          {comparing && <CompareToolbar left={scenarioId} right={rightScenarioId}
+            onLeftChange={setScenarioId} onRightChange={setRightScenarioId}
+            onSwap={() => { setScenarioId(rightScenarioId); setRightScenarioId(scenarioId); }} />}
+          <div className={styles.views} data-comparing={comparing}>
+            <section className={styles.view} aria-label={comparing ? `Left map: ${scenario.label}` : `Map: ${scenario.label}`}>
+              <CesiumScene
+                {...sceneSettings}
+                scenarioLabel={scenario.label}
+                scenarioId={scenarioId}
+                onBuildingStatus={setBuildingStatus}
+                onSurfaceStatus={setSurfaceStatus}
+                onTerrainStatus={setTerrainStatus}
+                onWindInfo={setWindInfo}
+                onViewerReady={setLeftViewer}
+              />
+              <div className={styles.panelControls}>
+                <button
+                  aria-expanded={layersOpen}
+                  aria-controls="layer-panel"
+                  onClick={() => setLayersOpen((open) => !open)}
+                >
+                  Layers
+                </button>
+                <button
+                  aria-expanded={detailsOpen}
+                  aria-controls="details-panel"
+                  onClick={() => setDetailsOpen((open) => !open)}
+                >
+                  Details
+                </button>
+              </div>
+            </section>
+            {comparing && <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
+              <CesiumScene
+                {...sceneSettings}
+                scenarioLabel={rightScenario.label}
+                scenarioId={rightScenarioId}
+                onBuildingStatus={setRightBuildingStatus}
+                onSurfaceStatus={setRightSurfaceStatus}
+                onTerrainStatus={setRightTerrainStatus}
+                onWindInfo={setRightWindInfo}
+                onViewerReady={setRightViewer}
+              />
+            </section>}
           </div>
         </main>
-        <DetailsPanel open={detailsOpen} mode={mode} scenarioLabel={scenario.label}
-          imageryVisible={imageryVisible} imageryOpacity={imageryOpacity} onOpacityChange={setImageryOpacity}
-          buildingStatus={buildingStatus} surfaceStatus={surfaceStatus} terrainStatus={terrainStatus}
-          wind={wind} windInfo={windInfo} onWindChange={setWind} />
+        <DetailsPanel
+          open={detailsOpen}
+          mode={mode}
+          scenarioLabel={scenario.label}
+          imageryVisible={imageryVisible}
+          imageryOpacity={imageryOpacity}
+          onOpacityChange={setImageryOpacity}
+          buildingStatus={buildingStatus}
+          surfaceStatus={surfaceStatus}
+          terrainStatus={terrainStatus}
+          wind={wind}
+          windInfo={windInfo}
+          onWindChange={setWind}
+          comparison={comparing ? { scenarioLabel: rightScenario.label, buildingStatus: rightBuildingStatus,
+            surfaceStatus: rightSurfaceStatus, terrainStatus: rightTerrainStatus, windInfo: rightWindInfo } : undefined}
+        />
       </div>
     </div>
   );

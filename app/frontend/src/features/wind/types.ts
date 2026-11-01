@@ -30,6 +30,8 @@ export interface WindSample {
   flagged: boolean;
 }
 
+export interface WindLocation { longitude: number; latitude: number }
+
 export interface WindInfo {
   status: 'Off' | 'Loading' | 'Loaded' | 'Unavailable';
   metric: WindMetricInfo | null;

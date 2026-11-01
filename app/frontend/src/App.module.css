@@ -31,6 +31,17 @@
   flex-direction: column;
 }
 
+.views { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 570px; }
+.views[data-comparing='true'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.view { position: relative; min-width: 0; min-height: 570px; }
+.view + .view { border-left: 1px solid var(--line); }
+
+@media (max-width: 700px) {
+  .views[data-comparing='true'] { grid-template-columns: minmax(0, 1fr); }
+  .views[data-comparing='true'] .view { min-height: 48dvh; }
+  .view + .view { border-left: 0; border-top: 1px solid var(--line); }
+}
+
 .panelControls {
   position: absolute;
   top: 12px;
