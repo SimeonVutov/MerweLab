@@ -7,6 +7,8 @@ import styles from './CesiumScene.module.css';
 import { createModelLayers } from './modelLayers';
 import type { ModelLayers, ModelStatus } from './modelLayers';
 import type { ScenarioId } from '../project';
+import { createTerrainLayer } from './terrain';
+import type { TerrainLayer, TerrainStatus } from './terrain';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
@@ -16,13 +18,22 @@ interface CesiumSceneProps {
   contextVisible: boolean;
   scenarioVisible: boolean;
   onBuildingStatus: (status: ModelStatus) => void;
+  groundVisible: boolean;
+  waterVisible: boolean;
+  onSurfaceStatus: (status: ModelStatus) => void;
+  onTerrainStatus: (status: TerrainStatus) => void;
 }
 
-export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus }: CesiumSceneProps) {
+export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus,
+  groundVisible, waterVisible, onSurfaceStatus, onTerrainStatus,
+}: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
   const buildings = useRef<ModelLayers | null>(null);
+  const surfaces = useRef<ModelLayers | null>(null);
+  const terrain = useRef<TerrainLayer | null>(null);
+  const [terrainError, setTerrainError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imageryError, setImageryError] = useState<string | null>(null);
 
@@ -40,6 +51,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     viewer.current = instance;
     setError(null);
     setImageryError(null);
+    setTerrainError(null);
     const base = createGlobeImagery();
     const aerial = createAerialImagery();
     const removeBaseError = base.errorEvent.addEventListener(() => {
@@ -54,7 +66,12 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     instance.imageryLayers.add(base);
     instance.imageryLayers.add(aerial);
     imagery.current = aerial;
-    buildings.current = createModelLayers(instance, onBuildingStatus);
+    buildings.current = createModelLayers(instance, 'buildings', onBuildingStatus);
+    terrain.current = createTerrainLayer(instance, onTerrainStatus, setTerrainError);
+    surfaces.current = createModelLayers(instance, 'surfaces', (status) => {
+      onSurfaceStatus(status);
+      terrain.current?.setSiteReady(status.scenario === 'Loaded');
+    });
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -68,26 +85,36 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       removeRenderError();
       buildings.current?.dispose();
       buildings.current = null;
+      surfaces.current?.dispose();
+      surfaces.current = null;
+      terrain.current?.dispose();
+      terrain.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
     };
-  }, [onBuildingStatus]);
+  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   useEffect(() => {
     buildings.current?.setScenario(scenarioId);
-  }, [scenarioId, onBuildingStatus]);
+    surfaces.current?.setScenario(scenarioId);
+  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
-  }, [contextVisible, scenarioVisible, onBuildingStatus]);
+  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+
+  useEffect(() => {
+    surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
+    terrain.current?.setSiteVisible(groundVisible);
+  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   useEffect(() => {
     if (!viewer.current || !imagery.current) return;
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity, onBuildingStatus]);
+  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   return (
     <>
@@ -96,7 +123,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
         <button disabled={error !== null} onClick={() => viewer.current && resetCamera(viewer.current)}>Reset view</button>
       </div>
       <div className={styles.location}>Merwehaven · {scenarioLabel}</div>
-      {imageryError && imageryVisible && !error && <p className={styles.message} role="status">{imageryError}</p>}
+      {terrainError && !error && <p className={styles.message} role="alert">{terrainError}</p>}
+      {imageryError && imageryVisible && !terrainError && !error && <p className={styles.message} role="status">{imageryError}</p>}
       {error && <p className={styles.message} role="alert">{error}</p>}
     </>
   );

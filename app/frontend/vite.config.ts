@@ -17,10 +17,10 @@ export default defineConfig({
       })),
     }),
     viteStaticCopy({
-      targets: [{
-        src: normalizePath(fileURLToPath(new URL('../../data/web/buildings', import.meta.url))),
+      targets: ['buildings', 'surfaces', 'terrain'].map((directory) => ({
+        src: normalizePath(fileURLToPath(new URL(`../../data/web/${directory}`, import.meta.url))),
         dest: 'web',
-      }],
+      })),
     }),
   ],
   define: {
