@@ -1,4 +1,6 @@
 import type { Mode } from '../project';
+import CbsPanel from '../features/cbs/CbsPanel';
+import type { CbsOptions } from '../features/cbs/data';
 import styles from './DetailsPanel.module.css';
 import type { ModelStatus } from '../scene/modelLayers';
 import type { TerrainStatus } from '../scene/terrain';
@@ -6,6 +8,8 @@ import WindPanel from '../features/wind/WindPanel';
 import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
+  cbs: CbsOptions;
+  onCbsChange: (options: CbsOptions) => void;
   open: boolean;
   mode: Mode;
   scenarioLabel: string;
@@ -53,6 +57,7 @@ function SceneSummary({ title, buildingStatus, surfaceStatus, terrainStatus, win
 export default function DetailsPanel({
   open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus, surfaceStatus,
   terrainStatus, wind, windInfo, onWindChange, comparison,
+  cbs, onCbsChange,
 }: DetailsPanelProps) {
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
@@ -60,6 +65,7 @@ export default function DetailsPanel({
         <h2>{mode === 'Explore' ? scenarioLabel : mode}</h2>
         {mode !== 'Weather' && (
           <>
+            <CbsPanel options={cbs} onChange={onCbsChange} />
             <SceneSummary title={comparison ? `Left · ${scenarioLabel}` : scenarioLabel}
               scenarioLabel={scenarioLabel} buildingStatus={buildingStatus} surfaceStatus={surfaceStatus}
               terrainStatus={terrainStatus} windInfo={windInfo} showWind={Boolean(comparison)} />

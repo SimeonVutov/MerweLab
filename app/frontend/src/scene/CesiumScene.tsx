@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ImageryLayer, Viewer } from 'cesium';
 import { createViewer } from './createViewer';
+import { createCbsLayer } from '../features/cbs/scene';
+import type { CbsOptions } from '../features/cbs/data';
 import { createAerialImagery, createGlobeImagery } from './imagery';
 import { resetCamera } from './camera';
 import styles from './CesiumScene.module.css';
@@ -16,6 +18,8 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  cbs: CbsOptions;
+  onCbsSelect: (id: string) => void;
   scenarioLabel: string;
   imageryVisible: boolean;
   imageryOpacity: number;
@@ -34,9 +38,25 @@ interface CesiumSceneProps {
   onWindProbe?: (point: WindLocation) => void;
 }
 
-export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus,
-  groundVisible, waterVisible, onSurfaceStatus, onTerrainStatus,
-  wind, onWindInfo, onViewerReady, windProbe, onWindProbe,
+export default function CesiumScene({
+  scenarioLabel,
+  imageryVisible,
+  imageryOpacity,
+  scenarioId,
+  contextVisible,
+  scenarioVisible,
+  onBuildingStatus,
+  groundVisible,
+  waterVisible,
+  onSurfaceStatus,
+  onTerrainStatus,
+  wind,
+  onWindInfo,
+  onViewerReady,
+  windProbe,
+  onWindProbe,
+  cbs,
+  onCbsSelect,
 }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
@@ -46,6 +66,12 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   const terrain = useRef<TerrainLayer | null>(null);
   const context = useRef<ContextBuildings | null>(null);
   const windLayer = useRef<WindLayer | null>(null);
+  const cbsLayer = useRef<ReturnType<typeof createCbsLayer> | null>(null);
+  const cbsSelect = useRef(onCbsSelect);
+
+  cbsSelect.current = onCbsSelect;
+
+  const [cbsError, setCbsError] = useState<string | null>(null);
   const onWindProbeRef = useRef(onWindProbe);
   onWindProbeRef.current = onWindProbe;
   const [contextError, setContextError] = useState(false);
@@ -92,6 +118,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     });
     context.current = createContextBuildings(instance, () => setContextError(true));
     windLayer.current = createWindLayer(instance, onWindInfo, (point) => onWindProbeRef.current?.(point));
+    cbsLayer.current = createCbsLayer(instance, (id) => cbsSelect.current(id), setCbsError);
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -114,6 +141,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       context.current = null;
       windLayer.current?.dispose();
       windLayer.current = null;
+      cbsLayer.current?.dispose();
+      cbsLayer.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
@@ -130,7 +159,13 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     windLayer.current?.setOptions(wind);
   }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
 
-  useEffect(() => { windLayer.current?.setProbe(windProbe ?? null); }, [windProbe, onViewerReady]);
+  useEffect(() => {
+    cbsLayer.current?.setOptions(cbs);
+  }, [cbs, onViewerReady]);
+
+  useEffect(() => {
+    windLayer.current?.setProbe(windProbe ?? null);
+  }, [windProbe, onViewerReady]);
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
@@ -160,6 +195,9 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       {imageryError && imageryVisible && !terrainError && !error && <p className={styles.message} role="status">{imageryError}</p>}
       {contextError && contextVisible && !imageryError && !terrainError && !error && <p className={styles.message} role="status">Some surrounding buildings could not load.</p>}
       {error && <p className={styles.message} role="alert">{error}</p>}
+      {cbsError && cbs.enabled && !error && (
+        <p className={styles.message} role="alert">{cbsError}</p>
+      )}
     </>
   );
 }

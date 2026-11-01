@@ -205,3 +205,40 @@ export function cbsColour(value: unknown, range: [number, number] | null) {
   const index = Math.min(cbsColours.length - 1, Math.max(0, Math.floor(fraction * cbsColours.length)));
   return cbsColours[index]!;
 }
+
+function ringContainsPoint(ring: CbsRing, longitude: number, latitude: number) {
+  let inside = false;
+  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index++) {
+    const start = ring[previous]!;
+    const end = ring[index]!;
+    const crossesLatitude = (start[1]! > latitude) !== (end[1]! > latitude);
+    if (!crossesLatitude) {
+      continue;
+    }
+
+    const intersection = (end[0]! - start[0]!) * (latitude - start[1]!)
+      / (end[1]! - start[1]!) + start[0]!;
+    if (longitude < intersection) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
+}
+
+export function cbsFeatureAt(data: CbsData, longitude: number, latitude: number) {
+  return data.neighbourhoods.features.find((feature) => {
+    let polygons: CbsPolygon[];
+    if (feature.geometry.type === 'MultiPolygon') {
+      polygons = feature.geometry.coordinates;
+    } else {
+      polygons = [feature.geometry.coordinates];
+    }
+
+    return polygons.some(([outer, ...holes]) => {
+      const inOuter = ringContainsPoint(outer!, longitude, latitude);
+      const inHole = holes.some((hole) => ringContainsPoint(hole, longitude, latitude));
+      return inOuter && !inHole;
+    });
+  });
+}
