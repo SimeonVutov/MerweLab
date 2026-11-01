@@ -1,0 +1,487 @@
+{
+  "type": "RGBA geographic imagery, not numeric analysis rasters",
+  "crs": "EPSG:28992",
+  "boundary_colour": "red",
+  "boundary_width_m": 2.0,
+  "missing_colour": "#bdbdbd",
+  "building_outlines": false,
+  "notes": [
+    "Buildings are retained as filled black polygons in introduction maps only.",
+    "No titles, axes, labels, legends or chart furniture are burned into GeoTIFFs.",
+    "25 m fine H/W support retains building-shaped holes; no outlines are added.",
+    "Outside-research-area pixels are transparent.",
+    "The 1 m rendering resolution does not change the 50 m / 25 m analysis supports."
+  ],
+  "layers": {
+    "introduction/1_research_boundary_and_existing_buildings": {
+      "kind": "intro_buildings",
+      "scenario": "Existing",
+      "result": null,
+      "field": null,
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": null,
+      "colours": null
+    },
+    "introduction/2_development_site_with_v1": {
+      "kind": "intro_buildings",
+      "scenario": "V1",
+      "result": null,
+      "field": null,
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": null,
+      "colours": null
+    },
+    "introduction/3_development_site_with_v2": {
+      "kind": "intro_buildings",
+      "scenario": "V2",
+      "result": null,
+      "field": null,
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": null,
+      "colours": null
+    },
+    "introduction/4_universal_50_x_50_m_analytical_grid": {
+      "kind": "intro_grid",
+      "scenario": null,
+      "result": null,
+      "field": null,
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": null,
+      "colours": null
+    },
+    "V1/factor1_height_classes_extended": {
+      "kind": "factor",
+      "scenario": "V1",
+      "result": "height_grid",
+      "field": "height_class",
+      "factor": "height",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Normal (\u2264 20 m)",
+        "Tall (> 20 m)"
+      ],
+      "colours": [
+        "#9ecae1",
+        "#de2d26"
+      ]
+    },
+    "V1/factor2_density_classes_extended": {
+      "kind": "factor",
+      "scenario": "V1",
+      "result": "grid",
+      "field": "density_class",
+      "factor": "density",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.2)",
+        "Medium (0.2\u2013<0.4)",
+        "High (\u2265 0.4)"
+      ],
+      "colours": [
+        "#fee8c8",
+        "#fdbb84",
+        "#e34a33"
+      ]
+    },
+    "V1/factor3_hw_50m_classes_extended": {
+      "kind": "factor",
+      "scenario": "V1",
+      "result": "hw_grid",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "V1/factor3_hw_classes_extended": {
+      "kind": "factor",
+      "scenario": "V1",
+      "result": "hw_fine",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "V1/factor4_svf_classes_extended": {
+      "kind": "factor",
+      "scenario": "V1",
+      "result": "svf_grid",
+      "field": "SVF_class",
+      "factor": "svf",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.3)",
+        "Medium (0.3\u2013<0.6)",
+        "High (\u2265 0.6)"
+      ],
+      "colours": [
+        "#d73027",
+        "#fee08b",
+        "#1a9850"
+      ]
+    },
+    "V1/factor4_svf_continuous_extended": {
+      "kind": "continuous",
+      "scenario": "V1",
+      "result": "svf_grid",
+      "field": "SVF",
+      "factor": null,
+      "cmap": "viridis",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V1/factor5_heat_ventilation_risk_extended": {
+      "kind": "continuous",
+      "scenario": "V1",
+      "result": "risk_grid",
+      "field": "R",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V1/factor5_priority": {
+      "kind": "categorical",
+      "scenario": "V1",
+      "result": "risk_grid",
+      "field": "priority_old",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "V1/factor6_final_risk_extended": {
+      "kind": "continuous",
+      "scenario": "V1",
+      "result": "risk_grid",
+      "field": "R_final",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V1/factor6_priority": {
+      "kind": "categorical",
+      "scenario": "V1",
+      "result": "risk_grid",
+      "field": "priority_new",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "V1/factor6_priority_change": {
+      "kind": "categorical",
+      "scenario": "V1",
+      "result": "risk_grid",
+      "field": "priority_change",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "down",
+        "unchanged",
+        "up"
+      ],
+      "colours": [
+        "#4575b4",
+        "#eeeeee",
+        "#d73027"
+      ]
+    },
+    "V1/svf_change_vs_existing_extended": {
+      "kind": "svf_difference",
+      "scenario": "V1",
+      "result": null,
+      "field": "change",
+      "factor": null,
+      "cmap": "RdBu",
+      "limits": [
+        -0.6247258755582267,
+        0.6247258755582267
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V2/factor1_height_classes_extended": {
+      "kind": "factor",
+      "scenario": "V2",
+      "result": "height_grid",
+      "field": "height_class",
+      "factor": "height",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Normal (\u2264 20 m)",
+        "Tall (> 20 m)"
+      ],
+      "colours": [
+        "#9ecae1",
+        "#de2d26"
+      ]
+    },
+    "V2/factor2_density_classes_extended": {
+      "kind": "factor",
+      "scenario": "V2",
+      "result": "grid",
+      "field": "density_class",
+      "factor": "density",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.2)",
+        "Medium (0.2\u2013<0.4)",
+        "High (\u2265 0.4)"
+      ],
+      "colours": [
+        "#fee8c8",
+        "#fdbb84",
+        "#e34a33"
+      ]
+    },
+    "V2/factor3_hw_50m_classes_extended": {
+      "kind": "factor",
+      "scenario": "V2",
+      "result": "hw_grid",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "V2/factor3_hw_classes_extended": {
+      "kind": "factor",
+      "scenario": "V2",
+      "result": "hw_fine",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "V2/factor4_svf_classes_extended": {
+      "kind": "factor",
+      "scenario": "V2",
+      "result": "svf_grid",
+      "field": "SVF_class",
+      "factor": "svf",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.3)",
+        "Medium (0.3\u2013<0.6)",
+        "High (\u2265 0.6)"
+      ],
+      "colours": [
+        "#d73027",
+        "#fee08b",
+        "#1a9850"
+      ]
+    },
+    "V2/factor4_svf_continuous_extended": {
+      "kind": "continuous",
+      "scenario": "V2",
+      "result": "svf_grid",
+      "field": "SVF",
+      "factor": null,
+      "cmap": "viridis",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V2/factor5_heat_ventilation_risk_extended": {
+      "kind": "continuous",
+      "scenario": "V2",
+      "result": "risk_grid",
+      "field": "R",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V2/factor5_priority": {
+      "kind": "categorical",
+      "scenario": "V2",
+      "result": "risk_grid",
+      "field": "priority_old",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "V2/factor6_final_risk_extended": {
+      "kind": "continuous",
+      "scenario": "V2",
+      "result": "risk_grid",
+      "field": "R_final",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "V2/factor6_priority": {
+      "kind": "categorical",
+      "scenario": "V2",
+      "result": "risk_grid",
+      "field": "priority_new",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "V2/factor6_priority_change": {
+      "kind": "categorical",
+      "scenario": "V2",
+      "result": "risk_grid",
+      "field": "priority_change",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "down",
+        "unchanged",
+        "up"
+      ],
+      "colours": [
+        "#4575b4",
+        "#eeeeee",
+        "#d73027"
+      ]
+    },
+    "V2/svf_change_vs_existing_extended": {
+      "kind": "svf_difference",
+      "scenario": "V2",
+      "result": null,
+      "field": "change",
+      "factor": null,
+      "cmap": "RdBu",
+      "limits": [
+        -0.6247258755582267,
+        0.6247258755582267
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "shared/factor6_age_45plus_introduction": {
+      "kind": "age",
+      "scenario": null,
+      "result": null,
+      "field": "percentage_45plus",
+      "factor": null,
+      "cmap": "OrRd",
+      "limits": [
+        0,
+        100
+      ],
+      "categories": null,
+      "colours": null
+    }
+  }
+}
