@@ -1,5 +1,6 @@
 from download_grids import ROOT
 from prepare_buildings import prepare_models
+from prepare_water_mask import prepare_water_mask
 
 
 SOURCES = {
@@ -13,3 +14,4 @@ SOURCES = {
 
 if __name__ == "__main__":
     prepare_models(SOURCES, ROOT / "data/web/surfaces")
+    prepare_water_mask()

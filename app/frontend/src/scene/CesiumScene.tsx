@@ -71,6 +71,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     surfaces.current = createModelLayers(instance, 'surfaces', (status) => {
       onSurfaceStatus(status);
       terrain.current?.setSiteReady(status.scenario === 'Loaded');
+      terrain.current?.setWaterReady(status.water === 'Loaded');
     });
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
@@ -107,6 +108,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
     terrain.current?.setSiteVisible(groundVisible);
+    terrain.current?.setWaterVisible(waterVisible);
   }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   useEffect(() => {
