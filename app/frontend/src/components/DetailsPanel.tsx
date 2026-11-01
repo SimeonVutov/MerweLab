@@ -66,6 +66,7 @@ export default function DetailsPanel({
             {comparison && <>
               <SceneSummary {...comparison} title={`Right · ${comparison.scenarioLabel}`} showWind />
               <p className={styles.note}>Layer visibility and opacity apply to both maps. Move either view to navigate both.</p>
+              {wind.metric && <p className={styles.note}>Select a location on either map to read both scenarios at the same coordinates. Missing data is not zero.</p>}
             </>}
             <WindPanel info={comparison && !windInfo.metric && !windInfo.flowLegend ? comparison.windInfo : windInfo}
               options={wind} onChange={onWindChange} showSample={!comparison} />

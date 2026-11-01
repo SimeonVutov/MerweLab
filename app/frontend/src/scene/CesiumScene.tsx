@@ -13,7 +13,7 @@ import { createContextBuildings } from './contextBuildings';
 import type { ContextBuildings } from './contextBuildings';
 import { createWindLayer } from '../features/wind/scene';
 import type { WindLayer } from '../features/wind/scene';
-import type { WindInfo, WindOptions } from '../features/wind/types';
+import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
@@ -30,11 +30,13 @@ interface CesiumSceneProps {
   wind: WindOptions;
   onWindInfo: (info: WindInfo) => void;
   onViewerReady?: (viewer: Viewer | null) => void;
+  windProbe?: WindLocation | null;
+  onWindProbe?: (point: WindLocation) => void;
 }
 
 export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus,
   groundVisible, waterVisible, onSurfaceStatus, onTerrainStatus,
-  wind, onWindInfo, onViewerReady,
+  wind, onWindInfo, onViewerReady, windProbe, onWindProbe,
 }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
@@ -44,6 +46,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   const terrain = useRef<TerrainLayer | null>(null);
   const context = useRef<ContextBuildings | null>(null);
   const windLayer = useRef<WindLayer | null>(null);
+  const onWindProbeRef = useRef(onWindProbe);
+  onWindProbeRef.current = onWindProbe;
   const [contextError, setContextError] = useState(false);
   const [terrainError, setTerrainError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +91,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       terrain.current?.setSiteReady(status.scenario === 'Loaded');
     });
     context.current = createContextBuildings(instance, () => setContextError(true));
-    windLayer.current = createWindLayer(instance, onWindInfo);
+    windLayer.current = createWindLayer(instance, onWindInfo, (point) => onWindProbeRef.current?.(point));
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -125,6 +129,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   useEffect(() => {
     windLayer.current?.setOptions(wind);
   }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+
+  useEffect(() => { windLayer.current?.setProbe(windProbe ?? null); }, [windProbe, onViewerReady]);
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);

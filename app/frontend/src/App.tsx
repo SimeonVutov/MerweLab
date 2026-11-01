@@ -12,7 +12,7 @@ import styles from './App.module.css';
 import type { ModelStatus } from './scene/modelLayers';
 import type { TerrainStatus } from './scene/terrain';
 import { initialWindInfo, initialWindOptions } from './features/wind/types';
-import type { WindInfo, WindOptions } from './features/wind/types';
+import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
@@ -24,6 +24,7 @@ export default function App() {
   const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
   const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
   const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
+  const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
   const [layersOpen, setLayersOpen] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(true);
   const [imageryVisible, setImageryVisible] = useState(true);
@@ -42,7 +43,7 @@ export default function App() {
   const comparing = mode === 'Compare';
   const sceneSettings = {
     imageryVisible, imageryOpacity, contextVisible, scenarioVisible, groundVisible, waterVisible,
-    wind,
+    wind, windProbe: comparing ? windProbe : undefined, onWindProbe: setWindProbe,
   };
 
   useEffect(() => {

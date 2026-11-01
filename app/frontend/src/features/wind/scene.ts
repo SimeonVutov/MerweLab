@@ -7,7 +7,7 @@ import {
 import type { Cartesian2, Viewer } from 'cesium';
 import type { ScenarioId } from '../../project';
 import { initialWindInfo, initialWindOptions } from './types';
-import type { WindInfo, WindMetric, WindMetricInfo, WindOptions, WindOverlay } from './types';
+import type { WindInfo, WindLocation, WindMetric, WindMetricInfo, WindOptions, WindOverlay } from './types';
 
 interface CaseData {
   width: number;
@@ -24,7 +24,7 @@ interface Line { points: number[][]; speed: number[] }
 interface Surface { primitive: Primitive; material: Material; values: Float32Array; info: WindMetricInfo; data: CaseData }
 interface Mesh { positions: Float64Array; st: Float32Array; indices: Uint32Array }
 
-export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void) {
+export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void, onProbe?: (point: WindLocation) => void) {
   const collection = viewer.scene.primitives.add(new PrimitiveCollection());
   const abort = new AbortController();
   const maps = new Map<string, Promise<Surface>>();
@@ -38,6 +38,7 @@ export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void
   let generation = 0;
   let current: Surface | null = null;
   let info: WindInfo = initialWindInfo;
+  let probeLocation: WindLocation | null = null;
 
   function publish(update: Partial<WindInfo>) {
     if (disposed) return;
@@ -182,6 +183,7 @@ export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void
         surface.material.uniforms.color = Color.WHITE.withAlpha(wanted.opacity);
         surface.primitive.show = true;
         publish({ metric: surface.info });
+        if (probeLocation) sampleAt(probeLocation);
         viewer.scene.requestRender();
       }));
       for (const kind of ['arrows', 'streamlines_2d', 'streamlines_3d'] as const) {
@@ -211,7 +213,7 @@ export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void
   const removeUpdate = viewer.scene.postUpdate.addEventListener(() => {
     if ([...rendered].some((primitive) => primitive.show && primitive instanceof Primitive && !primitive.ready)) viewer.scene.requestRender();
   });
-  function sampleAt(point: { longitude: number; latitude: number }) {
+  function sampleAt(point: WindLocation) {
     if (!current || disposed) return;
     const [west, south, east, north] = current.data.bounds;
     const lon = point.longitude, lat = point.latitude;
@@ -235,11 +237,13 @@ export function createWindLayer(viewer: Viewer, onInfo: (info: WindInfo) => void
     }
     if (!position) return;
     const point = Cartographic.fromCartesian(position);
-    const probeLocation = { longitude: CesiumMath.toDegrees(point.longitude), latitude: CesiumMath.toDegrees(point.latitude) };
+    probeLocation = { longitude: CesiumMath.toDegrees(point.longitude), latitude: CesiumMath.toDegrees(point.latitude) };
     sampleAt(probeLocation);
+    onProbe?.(probeLocation);
   }, ScreenSpaceEventType.LEFT_CLICK);
 
   return {
+    setProbe(point: WindLocation | null) { probeLocation = point; if (point) sampleAt(point); else publish({ sample: null }); },
     setScenario(value: ScenarioId) { scenario = value; void refresh(); },
     setOptions(value: WindOptions) {
       const styleOnly = options.metric === value.metric && options.arrows === value.arrows
