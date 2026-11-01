@@ -18,7 +18,7 @@ export default defineConfig({
     }),
     viteStaticCopy({
       targets: [{
-        src: fileURLToPath(new URL('../../data/web/buildings', import.meta.url)),
+        src: normalizePath(fileURLToPath(new URL('../../data/web/buildings', import.meta.url))),
         dest: 'web',
       }],
     }),
