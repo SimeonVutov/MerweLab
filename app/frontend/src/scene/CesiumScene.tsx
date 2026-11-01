@@ -9,6 +9,8 @@ import type { ModelLayers, ModelStatus } from './modelLayers';
 import type { ScenarioId } from '../project';
 import { createTerrainLayer } from './terrain';
 import type { TerrainLayer, TerrainStatus } from './terrain';
+import { createContextBuildings } from './contextBuildings';
+import type { ContextBuildings } from './contextBuildings';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
@@ -33,6 +35,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   const buildings = useRef<ModelLayers | null>(null);
   const surfaces = useRef<ModelLayers | null>(null);
   const terrain = useRef<TerrainLayer | null>(null);
+  const context = useRef<ContextBuildings | null>(null);
+  const [contextError, setContextError] = useState(false);
   const [terrainError, setTerrainError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imageryError, setImageryError] = useState<string | null>(null);
@@ -52,6 +56,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
     setError(null);
     setImageryError(null);
     setTerrainError(null);
+    setContextError(false);
     const base = createGlobeImagery();
     const aerial = createAerialImagery();
     const removeBaseError = base.errorEvent.addEventListener(() => {
@@ -72,6 +77,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       onSurfaceStatus(status);
       terrain.current?.setSiteReady(status.scenario === 'Loaded');
     });
+    context.current = createContextBuildings(instance, () => setContextError(true));
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -89,6 +95,8 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       surfaces.current = null;
       terrain.current?.dispose();
       terrain.current = null;
+      context.current?.dispose();
+      context.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
@@ -102,6 +110,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
+    context.current?.setVisible(contextVisible);
   }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
 
   useEffect(() => {
@@ -125,6 +134,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       <div className={styles.location}>Merwehaven · {scenarioLabel}</div>
       {terrainError && !error && <p className={styles.message} role="alert">{terrainError}</p>}
       {imageryError && imageryVisible && !terrainError && !error && <p className={styles.message} role="status">{imageryError}</p>}
+      {contextError && contextVisible && !imageryError && !terrainError && !error && <p className={styles.message} role="status">Some surrounding buildings could not load.</p>}
       {error && <p className={styles.message} role="alert">{error}</p>}
     </>
   );
