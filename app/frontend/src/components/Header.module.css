@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 600;
+  margin-right: 14px;
+}
+
+.modes, .scenarios {
+  display: flex;
+  gap: 3px;
+}
+
+.scenarios {
+  margin-left: auto;
+  background: var(--soft);
+  padding: 3px;
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .header {
+    gap: 8px;
+    padding: 10px;
+  }
+  .brand {
+    width: 100%;
+    margin: 0;
+  }
+  .scenarios {
+    margin-left: 0;
+  }
+}
