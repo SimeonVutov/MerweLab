@@ -10,17 +10,17 @@ The planned Cesium application will integrate existing buildings, proposed desig
 
 ## Project status
 
-The repository currently contains spatial inputs, surrounding-building geometry, CBS analysis and course-provided conversion utilities. The Cesium frontend, backend and remaining analysis workflows are planned.
+The repository contains spatial inputs, building geometry and analysis/simulation workflows. Road-traffic noise runs are complete for V1 and V2, with exported results and study-area PNG figures. Baseline noise inputs and a matching workflow are prepared; its simulation results will follow separately. See the [noise workflow README](analysis/noise/README.md) for setup, required data and current limitations.
 
 ## Design scenarios
 
 | Identifier | Description |
 | --- | --- |
 | `baseline` | Existing buildings and infrastructure |
-| `scenario_a` | Three larger building volumes with associated circulation routes |
-| `scenario_b` | Smaller building volumes arranged around a central road |
+| `scenario_a` | V1: three proposed building volumes |
+| `scenario_b` | V2: six proposed building volumes with a central gap |
 
-The proposed building models and detailed infrastructure layouts are still being developed. Surrounding buildings provide a shared context for comparison.
+Scenario-specific building and ground inputs are prepared for the noise simulations. Surrounding buildings provide a shared context for comparison.
 
 Scenario identifiers are used consistently across input data, simulation configurations and results.
 
@@ -37,6 +37,8 @@ Scenario identifiers are used consistently across input data, simulation configu
 | `data/scenarios/` | Inputs specific to `baseline`, `scenario_a` and `scenario_b` |
 | `data/cbs/` | CBS analysis inputs, tables, charts and GeoJSON exports |
 | `data/web/` | Prepared spatial layers for application integration |
+| `data/processed/noise/` | Prepared baseline/V1/V2 noise inputs and shared calculation boundary |
+| `outputs/data/noise/` | Exported scenario noise contours and available receiver levels |
 | `gis/` | Working QGIS projects |
 | `outputs/figures/` | Selected analysis figures |
 | `outputs/summaries/` | Result tables and scenario-comparison summaries |
@@ -59,6 +61,14 @@ Run from the repository root:
 
 Results are written to `data/cbs/cbs_output/`.
 
+### Road-traffic noise simulation
+
+Saved NoiseModelling 6.0.0 workflows are in `analysis/noise/{scenario}/workflow.json`. V1 and V2 outputs include day, evening, night and Lden contours. The baseline setup is ready for a future run.
+
+Retrieve large ground files with `git lfs pull`. The common prepared road file, `data/processed/noise/roads/roads.geojson`, is committed alongside the scenario inputs. No raw RVMK download is needed to rerun the saved workflows.
+
+The [noise workflow README](analysis/noise/README.md) describes imports, block order, required files, calculation settings and PNG visualization commands.
+
 ### 3DBAG conversion
 
 The course-provided conversion tool prepares 3DBAG CityJSON tiles for import into Cesium ion.
@@ -77,3 +87,4 @@ Before using it, repair the layer paths to reference the corresponding files und
 - Keep `data/context/Context_Placement.json` alongside the context geometry. It records the transformation and placement information for the local East–North–Up model.
 - Treat the development site, surrounding-building selection and wider accessibility context as separate spatial extents. The context-selection buffer does not define the complete CFD domain.
 - Keep scenario-specific geometry separate from the surrounding context so that designs can be compared using consistent inputs.
+
