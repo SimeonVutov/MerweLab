@@ -7,8 +7,10 @@ import {
 // The OBJ footprint is preserved; the display follows terrain rather than a second plane.
 export async function loadWaterSurface(signal: AbortSignal): Promise<GroundPrimitive> {
   const response = await fetch('/web/surfaces/water-mask.geojson', { signal });
-  if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
-    throw new Error('Water footprint is unavailable');
+  const contentType = response.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase();
+  if (!response.ok) throw new Error(`Water footprint returned HTTP ${response.status}`);
+  if (contentType !== 'application/json' && contentType !== 'application/geo+json') {
+    throw new Error(`Water footprint returned ${contentType ?? 'no content type'} instead of GeoJSON. Restart the frontend server.`);
   }
   const mask: { geometry: { type: string; coordinates: number[][][][] } } = await response.json();
   const polygons = mask.geometry?.coordinates;
