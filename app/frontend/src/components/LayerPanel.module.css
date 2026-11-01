@@ -1,0 +1,55 @@
+.panel {
+  padding: 16px 14px;
+  border-right: 1px solid var(--line);
+  max-height: calc(100dvh - 70px);
+  overflow-y: auto;
+}
+
+.layer, .unavailable {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 0;
+  line-height: 1.4;
+}
+
+.layer {
+  cursor: pointer;
+}
+
+.unavailable {
+  color: var(--muted);
+}
+
+.layer input, .unavailable input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+.panel details {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel summary {
+  font-weight: 500;
+  cursor: pointer;
+  padding: 3px 0;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    max-height: 260px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}

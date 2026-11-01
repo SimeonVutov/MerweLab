@@ -1,0 +1,39 @@
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.toolbar button {
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.location {
+  position: absolute;
+  top: 58px;
+  left: 14px;
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.message {
+  position: absolute;
+  top: 100px;
+  left: 14px;
+  right: 14px;
+  width: fit-content;
+  max-width: 420px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+}
