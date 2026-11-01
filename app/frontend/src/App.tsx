@@ -8,6 +8,8 @@ import type { Mode, ScenarioId } from './project';
 import styles from './App.module.css';
 import type { ModelStatus } from './scene/modelLayers';
 import type { TerrainStatus } from './scene/terrain';
+import { initialWindInfo, initialWindOptions } from './features/wind/types';
+import type { WindInfo, WindOptions } from './features/wind/types';
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
@@ -23,6 +25,8 @@ export default function App() {
   const [waterVisible, setWaterVisible] = useState(false);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
   const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
+  const [wind, setWind] = useState<WindOptions>(initialWindOptions);
+  const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
   const scenario = scenarios.find((item) => item.id === scenarioId)!;
 
   return (
@@ -33,12 +37,14 @@ export default function App() {
         <LayerPanel open={layersOpen} imageryVisible={imageryVisible} onImageryChange={setImageryVisible}
           contextVisible={contextVisible} scenarioVisible={scenarioVisible}
           onContextChange={setContextVisible} onScenarioChange={setScenarioVisible}
-          groundVisible={groundVisible} waterVisible={waterVisible} onGroundChange={setGroundVisible} onWaterChange={setWaterVisible} />
+          groundVisible={groundVisible} waterVisible={waterVisible} onGroundChange={setGroundVisible} onWaterChange={setWaterVisible}
+          wind={wind} onWindChange={setWind} />
         <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
           <CesiumScene scenarioLabel={scenario.label} scenarioId={scenarioId}
             imageryVisible={imageryVisible} imageryOpacity={imageryOpacity}
             contextVisible={contextVisible} scenarioVisible={scenarioVisible} onBuildingStatus={setBuildingStatus}
-            groundVisible={groundVisible} waterVisible={waterVisible} onSurfaceStatus={setSurfaceStatus} onTerrainStatus={setTerrainStatus} />
+            groundVisible={groundVisible} waterVisible={waterVisible} onSurfaceStatus={setSurfaceStatus} onTerrainStatus={setTerrainStatus}
+            wind={wind} onWindInfo={setWindInfo} />
           <div className={styles.panelControls}>
             <button aria-expanded={layersOpen} aria-controls="layer-panel" onClick={() => setLayersOpen((open) => !open)}>Layers</button>
             <button aria-expanded={detailsOpen} aria-controls="details-panel" onClick={() => setDetailsOpen((open) => !open)}>Details</button>
@@ -46,7 +52,8 @@ export default function App() {
         </main>
         <DetailsPanel open={detailsOpen} mode={mode} scenarioLabel={scenario.label}
           imageryVisible={imageryVisible} imageryOpacity={imageryOpacity} onOpacityChange={setImageryOpacity}
-          buildingStatus={buildingStatus} surfaceStatus={surfaceStatus} terrainStatus={terrainStatus} />
+          buildingStatus={buildingStatus} surfaceStatus={surfaceStatus} terrainStatus={terrainStatus}
+          wind={wind} windInfo={windInfo} onWindChange={setWind} />
       </div>
     </div>
   );

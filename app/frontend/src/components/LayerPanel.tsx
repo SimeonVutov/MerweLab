@@ -1,6 +1,7 @@
 import { layerGroups } from '../project';
 import type { LayerId } from '../project';
 import styles from './LayerPanel.module.css';
+import type { WindOptions } from '../features/wind/types';
 
 interface LayerPanelProps {
   open: boolean;
@@ -14,10 +15,13 @@ interface LayerPanelProps {
   waterVisible: boolean;
   onGroundChange: (visible: boolean) => void;
   onWaterChange: (visible: boolean) => void;
+  wind: WindOptions;
+  onWindChange: (options: WindOptions) => void;
 }
 
 export default function LayerPanel({ open, imageryVisible, onImageryChange, contextVisible, scenarioVisible, onContextChange, onScenarioChange,
   groundVisible, waterVisible, onGroundChange, onWaterChange,
+  wind, onWindChange,
 }: LayerPanelProps) {
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
     aerial: { checked: imageryVisible, change: onImageryChange },
@@ -25,6 +29,12 @@ export default function LayerPanel({ open, imageryVisible, onImageryChange, cont
     'scenario-buildings': { checked: scenarioVisible, change: onScenarioChange },
     'site-surfaces': { checked: groundVisible, change: onGroundChange },
     water: { checked: waterVisible, change: onWaterChange },
+    'wind-speed': { checked: wind.metric === 'speed', change: (checked) => onWindChange({ ...wind, metric: checked ? 'speed' : null }) },
+    turbulence: { checked: wind.metric === 'turbulence', change: (checked) => onWindChange({ ...wind, metric: checked ? 'turbulence' : null }) },
+    'wind-pressure': { checked: wind.metric === 'pressure', change: (checked) => onWindChange({ ...wind, metric: checked ? 'pressure' : null }) },
+    'wind-arrows': { checked: wind.arrows, change: (checked) => onWindChange({ ...wind, arrows: checked }) },
+    'streamlines-2d': { checked: wind.streamlines_2d, change: (checked) => onWindChange({ ...wind, streamlines_2d: checked }) },
+    'streamlines-3d': { checked: wind.streamlines_3d, change: (checked) => onWindChange({ ...wind, streamlines_3d: checked }) },
   };
   return (
     <aside id="layer-panel" className={styles.panel} hidden={!open} aria-label="Layers">

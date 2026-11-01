@@ -1,0 +1,38 @@
+.panel {
+  margin: 28px 0;
+}
+
+.panel h3 {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 16px 0 10px;
+}
+
+.panel label, .limits {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.legend {
+  display: flex;
+  height: 12px;
+  margin-bottom: 6px;
+}
+
+.legend span {
+  flex: 1;
+}
+
+.limits, .note, .warning {
+  font-size: 12px;
+}
+
+.note {
+  color: var(--muted);
+}
+
+.warning {
+  display: block;
+  margin-top: 5px;
+}
