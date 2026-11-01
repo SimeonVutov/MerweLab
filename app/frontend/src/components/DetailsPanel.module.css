@@ -3,6 +3,8 @@
   border-left: 1px solid var(--line);
 }
 
+.summary + .summary { margin-top: 24px; }
+
 .values {
   margin: 0;
 }
