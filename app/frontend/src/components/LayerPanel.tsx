@@ -10,13 +10,21 @@ interface LayerPanelProps {
   scenarioVisible: boolean;
   onContextChange: (visible: boolean) => void;
   onScenarioChange: (visible: boolean) => void;
+  groundVisible: boolean;
+  waterVisible: boolean;
+  onGroundChange: (visible: boolean) => void;
+  onWaterChange: (visible: boolean) => void;
 }
 
-export default function LayerPanel({ open, imageryVisible, onImageryChange, contextVisible, scenarioVisible, onContextChange, onScenarioChange }: LayerPanelProps) {
+export default function LayerPanel({ open, imageryVisible, onImageryChange, contextVisible, scenarioVisible, onContextChange, onScenarioChange,
+  groundVisible, waterVisible, onGroundChange, onWaterChange,
+}: LayerPanelProps) {
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
     aerial: { checked: imageryVisible, change: onImageryChange },
     'context-buildings': { checked: contextVisible, change: onContextChange },
     'scenario-buildings': { checked: scenarioVisible, change: onScenarioChange },
+    'site-surfaces': { checked: groundVisible, change: onGroundChange },
+    water: { checked: waterVisible, change: onWaterChange },
   };
   return (
     <aside id="layer-panel" className={styles.panel} hidden={!open} aria-label="Layers">

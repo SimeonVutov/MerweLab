@@ -7,6 +7,7 @@ import { scenarios } from './project';
 import type { Mode, ScenarioId } from './project';
 import styles from './App.module.css';
 import type { ModelStatus } from './scene/modelLayers';
+import type { TerrainStatus } from './scene/terrain';
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
@@ -18,6 +19,10 @@ export default function App() {
   const [contextVisible, setContextVisible] = useState(true);
   const [scenarioVisible, setScenarioVisible] = useState(true);
   const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
+  const [groundVisible, setGroundVisible] = useState(true);
+  const [waterVisible, setWaterVisible] = useState(false);
+  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
+  const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
   const scenario = scenarios.find((item) => item.id === scenarioId)!;
 
   return (
@@ -27,11 +32,13 @@ export default function App() {
       <div className={styles.workspace} data-layers-open={layersOpen} data-details-open={detailsOpen}>
         <LayerPanel open={layersOpen} imageryVisible={imageryVisible} onImageryChange={setImageryVisible}
           contextVisible={contextVisible} scenarioVisible={scenarioVisible}
-          onContextChange={setContextVisible} onScenarioChange={setScenarioVisible} />
+          onContextChange={setContextVisible} onScenarioChange={setScenarioVisible}
+          groundVisible={groundVisible} waterVisible={waterVisible} onGroundChange={setGroundVisible} onWaterChange={setWaterVisible} />
         <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
           <CesiumScene scenarioLabel={scenario.label} scenarioId={scenarioId}
             imageryVisible={imageryVisible} imageryOpacity={imageryOpacity}
-            contextVisible={contextVisible} scenarioVisible={scenarioVisible} onBuildingStatus={setBuildingStatus} />
+            contextVisible={contextVisible} scenarioVisible={scenarioVisible} onBuildingStatus={setBuildingStatus}
+            groundVisible={groundVisible} waterVisible={waterVisible} onSurfaceStatus={setSurfaceStatus} onTerrainStatus={setTerrainStatus} />
           <div className={styles.panelControls}>
             <button aria-expanded={layersOpen} aria-controls="layer-panel" onClick={() => setLayersOpen((open) => !open)}>Layers</button>
             <button aria-expanded={detailsOpen} aria-controls="details-panel" onClick={() => setDetailsOpen((open) => !open)}>Details</button>
@@ -39,7 +46,7 @@ export default function App() {
         </main>
         <DetailsPanel open={detailsOpen} mode={mode} scenarioLabel={scenario.label}
           imageryVisible={imageryVisible} imageryOpacity={imageryOpacity} onOpacityChange={setImageryOpacity}
-          buildingStatus={buildingStatus} />
+          buildingStatus={buildingStatus} surfaceStatus={surfaceStatus} terrainStatus={terrainStatus} />
       </div>
     </div>
   );
