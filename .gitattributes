@@ -6,3 +6,4 @@ data/processed/noise/scenario_a/ground.gpkg filter=lfs diff=lfs merge=lfs -text
 data/processed/noise/scenario_b/ground.gpkg filter=lfs diff=lfs merge=lfs -text
 data/processed/noise/scenario_a/ground.geojson.gz filter=lfs diff=lfs merge=lfs -text
 data/processed/noise/scenario_b/ground.geojson.gz filter=lfs diff=lfs merge=lfs -text
+data/processed/noise/baseline/ground.geojson.gz filter=lfs diff=lfs merge=lfs -text
