@@ -1,5 +1,7 @@
 import { Axis, Cartesian2, Cartesian3, Model, PrimitiveCollection, Transforms } from 'cesium';
-import type { Viewer } from 'cesium';
+import type { GroundPrimitive, Viewer } from 'cesium';
+import { loadWaterSurface } from './waterSurface';
+type Renderable = Model | GroundPrimitive;
 import type { ScenarioId } from '../project';
 
 type Group = 'shared' | 'water' | ScenarioId;
@@ -46,8 +48,8 @@ export function createModelLayers(
   const collection = viewer.scene.primitives.add(new PrimitiveCollection());
   const abort = new AbortController();
   const manifest = loadManifest(dataset, abort.signal);
-  const groups = new Map<Group, Model[]>();
-  const pending = new Map<Group, Promise<Model[]>>();
+  const groups = new Map<Group, Renderable[]>();
+  const pending = new Map<Group, Promise<Renderable[]>>();
   let disposed = false;
   let activeScenario: ScenarioId | null = null;
   let contextVisible = true;
@@ -74,11 +76,19 @@ export function createModelLayers(
     viewer.scene.requestRender();
   }
 
-  function loadGroup(group: Group): Promise<Model[]> {
+  function loadGroup(group: Group): Promise<Renderable[]> {
     const existing = pending.get(group);
     if (existing) return existing;
     const request = manifest.then(async (data) => {
       if (disposed) return [];
+      if (dataset === 'surfaces' && group === 'water') {
+        const water = await loadWaterSurface(abort.signal);
+        if (disposed) { water.destroy(); return []; }
+        collection.add(water);
+        groups.set(group, [water]);
+        updateVisibility();
+        return [water];
+      }
       const matrix = Transforms.eastNorthUpToFixedFrame(Cartesian3.fromArray(data.placement.origin_ecef_m));
       const assets = data.models[group];
       const results = await Promise.allSettled(assets.map((asset) => Model.fromGltfAsync({

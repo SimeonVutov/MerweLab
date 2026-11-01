@@ -97,23 +97,11 @@ export function createTerrainLayer(
   let clipping: ClippingPolygonCollection | undefined;
   let clippingError: string | null = null;
   let siteVisible = true;
-  let waterVisible = false;
-  let waterReady = false;
-  let sitePolygon: ClippingPolygon | undefined;
-  let waterPolygons: ClippingPolygon[] = [];
   let siteReady = false;
   let disposed = false;
-  let clippingState = "";
 
   function updateClipping() {
-    const state = `${siteVisible && siteReady}:${waterVisible && waterReady}:${waterPolygons.length}`;
-    if (clipping && state !== clippingState) {
-      clippingState = state;
-      clipping.removeAll();
-      if (siteVisible && siteReady && sitePolygon) clipping.add(sitePolygon);
-      if (waterVisible && waterReady) waterPolygons.forEach((polygon) => clipping!.add(polygon));
-      clipping.enabled = clipping.length > 0;
-    }
+    if (clipping) clipping.enabled = siteVisible && siteReady;
     viewer.scene.requestRender();
   }
 
@@ -128,25 +116,11 @@ export function createTerrainLayer(
     }
     if (disposed) throw new Error('Terrain disposed');
     if (!ClippingPolygonCollection.isSupported(viewer.scene)) throw new Error('Local terrain clipping requires WebGL 2 support');
-    sitePolygon = new ClippingPolygon({ positions: Cartesian3.fromDegreesArray(ring.slice(0, -1).flat()) });
-    clipping = new ClippingPolygonCollection({ enabled: false });
+    clipping = new ClippingPolygonCollection({
+      polygons: [new ClippingPolygon({ positions: Cartesian3.fromDegreesArray(ring.slice(0, -1).flat()) })],
+      enabled: false,
+    });
     viewer.scene.globe.clippingPolygons = clipping;
-    updateClipping();
-    // Remove the terrain under the real water mesh rather than biasing its height.
-    const response = await fetch('/web/surfaces/water-mask.geojson', { signal: abort.signal });
-    if (!response.ok) throw new Error(`Water mask returned HTTP ${response.status}`);
-    const mask: { geometry: { type: string; coordinates: number[][][][] } } = await response.json();
-    const polygons = mask.geometry?.coordinates;
-    if (mask.geometry?.type !== 'MultiPolygon' || !polygons?.length
-      || !polygons.every((polygon) => polygon.length > 0 && polygon.every((ring) => ring.length >= 4
-        && ring.every((point) => point.length === 2 && point.every(Number.isFinite))))) {
-      throw new Error('Invalid water terrain mask');
-    }
-    if (disposed) return;
-    waterPolygons = polygons.map(([outer, ...holes]) => new ClippingPolygon({
-      positions: Cartesian3.fromDegreesArray(outer!.slice(0, -1).flat()),
-      holes: holes.map((ring) => Cartesian3.fromDegreesArray(ring.slice(0, -1).flat())),
-    }));
     updateClipping();
   }
 
@@ -171,7 +145,7 @@ export function createTerrainLayer(
     void loadClipping().catch((cause: unknown) => {
       if (disposed) return;
       console.error('Local terrain clipping unavailable', cause);
-      clippingError = 'A surface terrain mask is unavailable; site surfaces or water may overlap the terrain.';
+      clippingError = 'Local terrain mask is unavailable; site surfaces may overlap the terrain.';
       onError(clippingError);
     });
     return provider;
@@ -195,8 +169,6 @@ export function createTerrainLayer(
   return {
     setSiteVisible(value: boolean) { siteVisible = value; updateClipping(); },
     setSiteReady(value: boolean) { siteReady = value; updateClipping(); },
-    setWaterVisible(value: boolean) { waterVisible = value; updateClipping(); },
-    setWaterReady(value: boolean) { waterReady = value; updateClipping(); },
     dispose() {
       disposed = true;
       abort.abort();
