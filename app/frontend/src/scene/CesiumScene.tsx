@@ -11,6 +11,9 @@ import { createTerrainLayer } from './terrain';
 import type { TerrainLayer, TerrainStatus } from './terrain';
 import { createContextBuildings } from './contextBuildings';
 import type { ContextBuildings } from './contextBuildings';
+import { createWindLayer } from '../features/wind/scene';
+import type { WindLayer } from '../features/wind/scene';
+import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
   scenarioLabel: string;
@@ -24,10 +27,13 @@ interface CesiumSceneProps {
   waterVisible: boolean;
   onSurfaceStatus: (status: ModelStatus) => void;
   onTerrainStatus: (status: TerrainStatus) => void;
+  wind: WindOptions;
+  onWindInfo: (info: WindInfo) => void;
 }
 
 export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpacity, scenarioId, contextVisible, scenarioVisible, onBuildingStatus,
   groundVisible, waterVisible, onSurfaceStatus, onTerrainStatus,
+  wind, onWindInfo,
 }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
@@ -36,6 +42,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
   const surfaces = useRef<ModelLayers | null>(null);
   const terrain = useRef<TerrainLayer | null>(null);
   const context = useRef<ContextBuildings | null>(null);
+  const windLayer = useRef<WindLayer | null>(null);
   const [contextError, setContextError] = useState(false);
   const [terrainError, setTerrainError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +85,7 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       terrain.current?.setSiteReady(status.scenario === 'Loaded');
     });
     context.current = createContextBuildings(instance, () => setContextError(true));
+    windLayer.current = createWindLayer(instance, onWindInfo);
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -97,33 +105,40 @@ export default function CesiumScene({ scenarioLabel, imageryVisible, imageryOpac
       terrain.current = null;
       context.current?.dispose();
       context.current = null;
+      windLayer.current?.dispose();
+      windLayer.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
     };
-  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
 
   useEffect(() => {
     buildings.current?.setScenario(scenarioId);
     surfaces.current?.setScenario(scenarioId);
-  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+    windLayer.current?.setScenario(scenarioId);
+  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
+
+  useEffect(() => {
+    windLayer.current?.setOptions(wind);
+  }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
 
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
     context.current?.setVisible(contextVisible);
-  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
 
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
     terrain.current?.setSiteVisible(groundVisible);
-  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
 
   useEffect(() => {
     if (!viewer.current || !imagery.current) return;
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus]);
+  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo]);
 
   return (
     <>

@@ -2,6 +2,8 @@ import type { Mode } from '../project';
 import styles from './DetailsPanel.module.css';
 import type { ModelStatus } from '../scene/modelLayers';
 import type { TerrainStatus } from '../scene/terrain';
+import WindPanel from '../features/wind/WindPanel';
+import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
   open: boolean;
@@ -13,10 +15,14 @@ interface DetailsPanelProps {
   buildingStatus: ModelStatus;
   surfaceStatus: ModelStatus;
   terrainStatus: TerrainStatus;
+  wind: WindOptions;
+  windInfo: WindInfo;
+  onWindChange: (options: WindOptions) => void;
 }
 
 export default function DetailsPanel({ open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus,
   surfaceStatus, terrainStatus,
+  wind, windInfo, onWindChange,
 }: DetailsPanelProps) {
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
@@ -31,6 +37,7 @@ export default function DetailsPanel({ open, mode, scenarioLabel, imageryVisible
             <div><dt>Site surfaces</dt><dd>{surfaceStatus.scenario}</dd></div>
             <div><dt>Water</dt><dd>{surfaceStatus.water}</dd></div>
           </dl>
+          <WindPanel info={windInfo} options={wind} onChange={onWindChange} />
           <section className={styles.block}>
             <h2>Aerial imagery</h2>
             <p className={styles.note}>PDOK · latest 25 cm imagery</p>
