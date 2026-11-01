@@ -1,11 +1,11 @@
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, normalizePath } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-const cesiumSource = fileURLToPath(
+const cesiumSource = normalizePath(fileURLToPath(
   new URL('./node_modules/cesium/Build/Cesium/', import.meta.url),
-);
+));
 
 export default defineConfig({
   plugins: [
