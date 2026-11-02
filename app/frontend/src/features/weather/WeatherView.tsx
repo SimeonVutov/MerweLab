@@ -29,6 +29,7 @@ export default function WeatherView({ hidden }: Props) {
         observations={observations}
         loading={loading}
         totalCount={page?.history.observationCount}
+        downloading={page?.sync.checking ?? false}
       />
       <WeatherForecast page={page} latest={latest} />
     </main>

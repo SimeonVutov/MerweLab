@@ -8,9 +8,10 @@ interface Props {
   observations: Observation[];
   loading: boolean;
   totalCount?: number;
+  downloading: boolean;
 }
 
-export default function WeatherHistory({ observations, loading, totalCount }: Props) {
+export default function WeatherHistory({ observations, loading, totalCount, downloading }: Props) {
   const [period, setPeriod] = useState<Period>('all');
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
   const first = observations[0]?.time;
@@ -100,10 +101,14 @@ export default function WeatherHistory({ observations, loading, totalCount }: Pr
       )}
       {!range && (
         <div className={styles.empty} role="status">
-          {loading ? 'Loading station history…' : 'Weather history is unavailable. Retrying automatically.'}
+          {loading || downloading ? 'Loading station history…' : 'Weather history is unavailable. Retrying automatically.'}
         </div>
       )}
-      {loading && totalCount && <p className={styles.muted}>Loading {totalCount.toLocaleString()} observations…</p>}
+      {(loading || downloading) && range && (
+        <p className={styles.muted} role="status">
+          Updating history… {(totalCount ?? observations.length).toLocaleString()} observations available
+        </p>
+      )}
     </section>
   );
 }

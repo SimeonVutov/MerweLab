@@ -21,13 +21,14 @@ export interface WeatherPage {
   columns: string[];
   rows: (string | number | null)[][];
   hasMore: boolean;
-  history: { start: string; lastObservation: string; observationCount: number };
+  history: { start: string | null; lastObservation: string | null; observationCount: number };
   sync: {
     enabled: boolean;
     checking: boolean;
     lastChecked: string | null;
     lastSuccessfulCheck: string | null;
     error: string | null;
+    downloadedThrough: string | null;
   };
   forecast: Forecast;
 }

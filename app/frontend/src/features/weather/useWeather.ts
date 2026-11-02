@@ -27,6 +27,7 @@ export function useWeather() {
     let cursor: string | undefined;
     let accumulated: Observation[] = [];
     let refreshing = false;
+    let pollDelay = 60_000;
 
     async function refresh() {
       if (refreshing || controller.signal.aborted) return;
@@ -52,7 +53,7 @@ export function useWeather() {
 
           const next: WeatherPage = await response.json();
           const additions = decodeRows(next);
-          if (!through) through = next.history.lastObservation;
+          if (!through) through = next.history.lastObservation ?? undefined;
           if (next.hasMore && additions.length === 0) {
             throw new Error('Weather server returned an empty page');
           }
@@ -60,8 +61,12 @@ export function useWeather() {
           accumulated = accumulated.concat(additions);
           if (additions.length > 0) {
             cursor = new Date(additions[additions.length - 1]!.time).toISOString();
+            setObservations(accumulated);
           }
 
+          // Use a short interval while the server publishes historical batches.
+          // Normal live updates remain a one-minute poll.
+          pollDelay = next.sync.checking ? 5_000 : 60_000;
           setPage(next);
           setConnected(true);
           setLastFetched(Date.now());
@@ -79,7 +84,7 @@ export function useWeather() {
       } finally {
         refreshing = false;
         if (!controller.signal.aborted) {
-          timer = setTimeout(refresh, 60_000);
+          timer = setTimeout(refresh, pollDelay);
         }
       }
     }
