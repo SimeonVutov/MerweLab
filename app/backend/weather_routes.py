@@ -1,7 +1,8 @@
 """HTTP routes for historical weather resources."""
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, jsonify, request
 
 from weather_data import STATION, archive_metadata, get_archive
+from weather_feed import observation_page
 from weather_queries import (
     AGGREGATIONS,
     MAX_POINTS,
@@ -28,8 +29,7 @@ def weather_metadata():
             'default': 'Last seven archive days, aggregated hourly',
             'dateConvention': 'UTC; start inclusive and end exclusive',
         },
-        'live': {'available': False, 'reason': 'Not integrated yet'},
-        'forecast': {'available': False, 'reason': 'Not integrated yet'},
+        **current_app.extensions['weather_service'].snapshot(),
     })
 
 
@@ -43,3 +43,15 @@ def weather_history():
     result['station'] = STATION
 
     return jsonify(result)
+
+
+@weather_api.get('/observations')
+def weather_observations():
+    archive = get_archive()
+    page = observation_page(request.args, archive)
+
+    return jsonify({
+        **page,
+        'history': archive_metadata(archive),
+        **current_app.extensions['weather_service'].snapshot(),
+    })

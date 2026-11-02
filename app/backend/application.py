@@ -3,6 +3,7 @@ from flask import Flask, jsonify
 
 from api_errors import register_error_handlers
 from weather_routes import weather_api
+from weather_service import WeatherService
 
 
 def index():
@@ -26,6 +27,7 @@ def create_app(config=None):
     if config is not None:
         app.config.update(config)
 
+    app.extensions['weather_service'] = WeatherService(app.logger)
     app.register_blueprint(weather_api)
     app.add_url_rule('/', view_func=index, methods=['GET'])
     app.add_url_rule('/api/health', view_func=health, methods=['GET'])

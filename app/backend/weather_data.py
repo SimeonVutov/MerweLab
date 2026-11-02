@@ -1,4 +1,4 @@
-"""Read the committed station archive without changing or filling observations."""
+"""Read station observations and publish immutable archive snapshots."""
 from array import array
 from bisect import bisect_left
 import csv
@@ -137,7 +137,7 @@ def archive_metadata(archive):
         'missingTimestamps': archive.missing_timestamps,
         'variables': VARIABLES,
         'notes': [
-            'Historical station observations, not live weather.',
+            'Station observations are retained at their original ten-minute resolution.',
             'Rotterdam Airport represents regional conditions, not measurements on the development site.',
             'No missing observations or values are interpolated.',
         ],
