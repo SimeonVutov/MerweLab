@@ -7,7 +7,7 @@ import type { CbsOptions } from './features/cbs/data';
 import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
 import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
 import MorphologyPanel from './features/morphology/MorphologyPanel';
-import { initialMorphologyOptions } from './features/morphology/data';
+import { hasMorphologyLayers, initialMorphologyOptions } from './features/morphology/data';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -87,43 +87,24 @@ export default function App() {
 
   function changeMorphology(options: typeof morphology) {
     setMorphology(options);
-    if (options.enabled) {
-      if (!morphology.enabled) {
+    if (hasMorphologyLayers(options)) {
+      if (!hasMorphologyLayers(morphology)) {
         // Site meshes cover globe imagery and mask the terrain beneath the proposal.
         setGroundVisible(false);
       }
       setDetailsOpen(true);
-      setNoise((current) => ({ ...current, enabled: false }));
-      setWind((current) => ({ ...current, metric: null }));
-      setCbs((current) => ({ ...current, enabled: false }));
     }
   }
 
   function changeNoise(options: NoiseOptions) {
     setNoise(options);
     if (options.enabled) {
-      setMorphology((current) => ({ ...current, enabled: false }));
       setDetailsOpen(true);
-      setWind((current) => {
-        if (current.metric === null) {
-          return current;
-        }
-        return { ...current, metric: null };
-      });
     }
   }
 
   function changeWind(options: WindOptions) {
     setWind(options);
-    if (options.metric !== null) {
-      setMorphology((current) => ({ ...current, enabled: false }));
-      setNoise((current) => {
-        if (!current.enabled) {
-          return current;
-        }
-        return { ...current, enabled: false };
-      });
-    }
   }
 
   useEffect(() => {
@@ -221,14 +202,6 @@ export default function App() {
         <DetailsPanel
           morphologyPanel={(
             <>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={morphology.enabled}
-                  onChange={(event) => changeMorphology({ ...morphology, enabled: event.target.checked })}
-                />
-                Urban morphological indicators
-              </label>
               <MorphologyPanel
                 options={morphology}
                 onChange={changeMorphology}

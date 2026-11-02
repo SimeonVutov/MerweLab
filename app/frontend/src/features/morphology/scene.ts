@@ -5,72 +5,83 @@ import { initialMorphologyOptions, loadMorphology, selectMorphologyLayer } from 
 import type { MorphologyOptions } from './data';
 
 export function createMorphologyLayer(viewer: Viewer, onError: (message: string | null) => void) {
+  const loaded = new Map<string, ImageryLayer>();
+  const pending = new Map<string, Promise<ImageryLayer>>();
   let options = initialMorphologyOptions;
   let scenario: ScenarioId = 'baseline';
-  let current: ImageryLayer | undefined;
-  let currentId: string | undefined;
   let generation = 0;
   let focusRequest: number | undefined;
   let disposed = false;
 
-  async function update() {
-    const request = ++generation;
-    if (current) {
-      current.show = options.enabled;
-      current.alpha = options.opacity;
-    }
-    if (!options.enabled) {
-      viewer.scene.requestRender();
-      return;
+  function requestLayer(id: string, url: string, bounds: number[]) {
+    const existing = pending.get(id);
+    if (existing) {
+      return existing;
     }
 
+    const rectangle = Rectangle.fromDegrees(bounds[0]!, bounds[1]!, bounds[2]!, bounds[3]!);
+    const request = SingleTileImageryProvider.fromUrl(url, { rectangle }).then((provider) => {
+      const layer = new ImageryLayer(provider, { show: false });
+      if (disposed) {
+        layer.destroy();
+        return layer;
+      }
+
+      viewer.imageryLayers.add(layer);
+      loaded.set(id, layer);
+      return layer;
+    }).catch((error: unknown) => {
+      pending.delete(id);
+      throw error;
+    });
+
+    pending.set(id, request);
+    return request;
+  }
+
+  async function update() {
+    const request = ++generation;
     try {
       const data = await loadMorphology();
       if (disposed || request !== generation) {
         return;
       }
 
-      const selected = selectMorphologyLayer(data, options.indicator, scenario);
-      if (!selected) {
-        if (current) {
-          current.show = false;
+      const wanted = options.order.filter((id) => options.layers[id]?.enabled);
+      const definitions = wanted.map((id) => ({ id, map: selectMorphologyLayer(data, id, scenario) }));
+      const wantedIds = new Set(definitions.flatMap(({ map }) => map ? [map.id] : []));
+      for (const [id, layer] of loaded) {
+        layer.show = wantedIds.has(id);
+      }
+
+      await Promise.all(definitions.map(async ({ id, map }) => {
+        if (!map) {
+          return;
         }
-        onError('This indicator was not supplied for Current. Select V1 or V2.');
-        viewer.scene.requestRender();
+        const layer = loaded.get(map.id) ?? await requestLayer(map.id, map.url, map.bounds);
+        if (!disposed && request === generation) {
+          layer.show = true;
+          layer.alpha = options.layers[id]!.opacity;
+        }
+      }));
+      if (disposed || request !== generation) {
         return;
       }
 
-      const rectangle = Rectangle.fromDegrees(...selected.bounds);
-      if (selected.id !== currentId) {
-        if (current) {
-          current.show = false;
+      // Bottom-to-top ordering is explicit and identical in both comparison panes.
+      for (const { map } of definitions) {
+        const layer = map && loaded.get(map.id);
+        if (layer) {
+          viewer.imageryLayers.raiseToTop(layer);
         }
-        const provider = await SingleTileImageryProvider.fromUrl(selected.url, { rectangle });
-        if (disposed || request !== generation) {
-          return;
-        }
-
-        const replacement = new ImageryLayer(provider, { alpha: options.opacity });
-        viewer.imageryLayers.add(replacement);
-        if (current) {
-          viewer.imageryLayers.remove(current, true);
-        }
-        current = replacement;
-        currentId = selected.id;
       }
 
-      current!.show = true;
-      current!.alpha = options.opacity;
-      if (focusRequest !== options.focusRequest) {
-        viewer.camera.cancelFlight();
-        viewer.camera.setView({ destination: rectangle });
-        focusRequest = options.focusRequest;
-      }
-      onError(null);
+      const missing = definitions.filter(({ map }) => !map);
+      onError(missing.length ? 'Some enabled indicators were not supplied for Current; their selections are retained for V1/V2.' : null);
       viewer.scene.requestRender();
     } catch (error) {
       if (!disposed && request === generation) {
-        onError(error instanceof Error ? error.message : 'Morphology map could not load');
+        onError(error instanceof Error ? error.message : 'Morphology maps could not load');
       }
     }
   }
@@ -80,31 +91,43 @@ export function createMorphologyLayer(viewer: Viewer, onError: (message: string 
       if (focusRequest === undefined) {
         focusRequest = value.focusRequest;
       }
-      const styleOnly = options.enabled === value.enabled && options.indicator === value.indicator
-        && options.focusRequest === value.focusRequest;
+      const focusChanged = focusRequest !== value.focusRequest;
+      focusRequest = value.focusRequest;
       options = value;
-      if (styleOnly) {
-        if (current) {
-          current.alpha = value.opacity;
-        }
-        viewer.scene.requestRender();
-        return;
+      if (focusChanged) {
+        const requested = value.focusRequest;
+        void loadMorphology().then((data) => {
+          if (disposed || focusRequest !== requested) {
+            return;
+          }
+          const selected = value.order.find((id) => value.layers[id]?.enabled);
+          const map = selected ? selectMorphologyLayer(data, selected, scenario) : undefined;
+          const bounds = map?.bounds ?? data.layers[0]?.bounds;
+          if (bounds) {
+            viewer.camera.cancelFlight();
+            viewer.camera.setView({ destination: Rectangle.fromDegrees(...bounds) });
+            viewer.scene.requestRender();
+          }
+        }).catch((error: unknown) => {
+          if (!disposed) {
+            onError(error instanceof Error ? error.message : 'Analysis area unavailable');
+          }
+        });
       }
-
       void update();
     },
     setScenario(value: ScenarioId) {
       scenario = value;
-      if (current) {
-        current.show = false;
+      for (const layer of loaded.values()) {
+        layer.show = false;
       }
       void update();
     },
     dispose() {
       disposed = true;
       generation++;
-      if (current) {
-        viewer.imageryLayers.remove(current, true);
+      for (const layer of loaded.values()) {
+        viewer.imageryLayers.remove(layer, true);
       }
     },
   };

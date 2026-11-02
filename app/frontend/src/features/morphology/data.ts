@@ -1,10 +1,13 @@
 import type { ScenarioId } from '../../project';
 
 export interface MorphologyOptions {
-  enabled: boolean;
-  indicator: string;
-  opacity: number;
+  layers: Record<string, { enabled: boolean; opacity: number }>;
+  order: string[];
   focusRequest: number;
+}
+
+export function hasMorphologyLayers(options: MorphologyOptions) {
+  return Object.values(options.layers).some((layer) => layer.enabled);
 }
 
 export interface MorphologyLayer {
@@ -28,13 +31,6 @@ export interface MorphologyData {
   layers: MorphologyLayer[];
 }
 
-export const initialMorphologyOptions: MorphologyOptions = {
-  enabled: false,
-  indicator: 'factor1_height_classes_extended',
-  opacity: 0.7,
-  focusRequest: 0,
-};
-
 export const morphologyIndicators = [
   ['factor1_height_classes_extended', 'Height classes'],
   ['factor2_density_classes_extended', 'Building density'],
@@ -52,6 +48,12 @@ export const morphologyIndicators = [
   ['introduction-buildings', 'Introduction · boundary and buildings'],
   ['4_universal_50_x_50_m_analytical_grid', 'Introduction · universal 50 m grid'],
 ] as const;
+
+export const initialMorphologyOptions: MorphologyOptions = {
+  layers: Object.fromEntries(morphologyIndicators.map(([id]) => [id, { enabled: false, opacity: 0.7 }])),
+  order: morphologyIndicators.map(([id]) => id),
+  focusRequest: 0,
+};
 
 let request: Promise<MorphologyData> | undefined;
 

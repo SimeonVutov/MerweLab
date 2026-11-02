@@ -1,3 +1,4 @@
+import { morphologyIndicators } from '../features/morphology/data';
 import type { MorphologyOptions } from '../features/morphology/data';
 import { layerGroups } from '../project';
 import type { CbsOptions } from '../features/cbs/data';
@@ -49,22 +50,7 @@ export default function LayerPanel({
   noise,
   onNoiseChange,
 }: LayerPanelProps) {
-  function indicatorControl(indicator: string) {
-    return {
-      checked: morphology.enabled && morphology.indicator === indicator,
-      change: (enabled: boolean) => onMorphologyChange({ ...morphology, indicator, enabled }),
-    };
-  }
-
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
-    height: indicatorControl('factor1_height_classes_extended'),
-    density: indicatorControl('factor2_density_classes_extended'),
-    svf: indicatorControl('factor4_svf_classes_extended'),
-    hw: indicatorControl('factor3_hw_50m_classes_extended'),
-    'morphology-maps': {
-      checked: morphology.enabled,
-      change: (enabled) => onMorphologyChange({ ...morphology, enabled }),
-    },
     noise: {
       checked: noise.enabled,
       change: (enabled) => onNoiseChange({ ...noise, enabled }),
@@ -90,7 +76,23 @@ export default function LayerPanel({
     <aside id="layer-panel" className={styles.panel} hidden={!open} aria-label="Layers">
       <h2>Layers</h2>
       <p className={styles.note}>Greyed layers are not connected yet.</p>
-      {layerGroups.map((group) => (
+      <details open>
+        <summary>Morphology</summary>
+        {morphologyIndicators.map(([id, label]) => (
+          <label key={id} className={styles.layer}>
+            <input
+              type="checkbox"
+              checked={morphology.layers[id]?.enabled ?? false}
+              onChange={(event) => onMorphologyChange({
+                ...morphology,
+                layers: { ...morphology.layers, [id]: { ...morphology.layers[id]!, enabled: event.target.checked } },
+              })}
+            />
+            {label}
+          </label>
+        ))}
+      </details>
+      {layerGroups.filter((group) => group.label !== 'Morphology').map((group) => (
         <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise'].includes(group.label)}>
           <summary>{group.label}</summary>
           {group.layers.map((layer) => {
