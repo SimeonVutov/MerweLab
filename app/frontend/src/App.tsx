@@ -24,6 +24,7 @@ import type { WindInfo, WindLocation, WindOptions } from './features/wind/types'
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
   const [viewMode, setViewMode] = useState<ViewMode>('3d');
+  const [viewRequest, setViewRequest] = useState(0);
   const [morphology, setMorphology] = useState(initialMorphologyOptions);
   const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
@@ -60,6 +61,7 @@ export default function App() {
   const sceneSettings = {
     morphology,
     viewMode,
+    viewRequest,
     onViewModeChange: changeViewMode,
     imageryVisible,
     imageryOpacity,
@@ -103,8 +105,9 @@ export default function App() {
   }
 
   function changeWind(options: WindOptions) {
-    if (options.streamlines_3d) {
+    if (options.streamlines_3d && !wind.streamlines_3d) {
       setViewMode('3d');
+      setViewRequest((current) => current + 1);
     }
     setWind(options);
   }

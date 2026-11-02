@@ -27,6 +27,7 @@ import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types
 
 interface CesiumSceneProps {
   viewMode: ViewMode;
+  viewRequest: number;
   onViewModeChange: (mode: ViewMode) => void;
   morphology: MorphologyOptions;
   noise: NoiseOptions;
@@ -56,6 +57,7 @@ interface CesiumSceneProps {
 export default function CesiumScene({
   morphology,
   viewMode,
+  viewRequest,
   onViewModeChange,
   scenarioLabel,
   imageryVisible,
@@ -85,6 +87,7 @@ export default function CesiumScene({
   const outlines = useRef<ReturnType<typeof createBuildingOutlines> | null>(null);
   const [outlineError, setOutlineError] = useState<string | null>(null);
   const cameraMode = useRef<ViewMode | null>(null);
+  const cameraRequest = useRef<number | null>(null);
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
@@ -202,11 +205,12 @@ export default function CesiumScene({
   }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
-    if (viewer.current && cameraMode.current !== viewMode) {
+    if (viewer.current && (cameraMode.current !== viewMode || cameraRequest.current !== viewRequest)) {
       cameraMode.current = viewMode;
+      cameraRequest.current = viewRequest;
       resetCamera(viewer.current, viewMode);
     }
-  }, [viewMode, onViewerReady]);
+  }, [viewMode, viewRequest, onViewerReady]);
 
   useEffect(() => {
     morphologyLayer.current?.setOptions(morphology);
