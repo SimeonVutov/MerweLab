@@ -1,5 +1,5 @@
 """HTTP routes for historical weather resources."""
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, abort, current_app, jsonify, request
 
 from weather_data import STATION, archive_metadata, get_archive
 from weather_feed import observation_page
@@ -36,6 +36,8 @@ def weather_metadata():
 @weather_api.get('/history')
 def weather_history():
     archive = get_archive()
+    if not archive.timestamps:
+        abort(503, description='Station history is being prepared; retry shortly')
 
     start, end, aggregation, fields = parse_history_query(request.args, archive)
 

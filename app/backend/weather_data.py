@@ -98,6 +98,9 @@ def read_archive():
     values = {field: array('d') for field in VARIABLES}
     missing_counts = dict.fromkeys(VARIABLES, 0)
 
+    if not HISTORY_PATH.exists():
+        return WeatherArchive(timestamps, values, missing_counts, 0, 0)
+
     with HISTORY_PATH.open(newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         required_columns = {'time', *VARIABLES}
@@ -106,9 +109,6 @@ def read_archive():
 
         for row in reader:
             append_observation(row, timestamps, values, missing_counts)
-
-    if not timestamps:
-        raise ValueError('Weather archive is empty')
 
     gap_count, missing_timestamps = count_observation_gaps(timestamps)
 
@@ -123,12 +123,20 @@ def get_archive():
 
 
 def archive_metadata(archive):
+    start = None
+    latest = None
+    end = None
+    if archive.timestamps:
+        start = format_time(archive.timestamps[0])
+        latest = format_time(archive.timestamps[-1])
+        end = format_time(archive.timestamps[-1] + OBSERVATION_INTERVAL)
+
     return {
         'source': HISTORY_PATH.relative_to(ROOT).as_posix(),
         'station': STATION,
-        'start': format_time(archive.timestamps[0]),
-        'lastObservation': format_time(archive.timestamps[-1]),
-        'endExclusive': format_time(archive.timestamps[-1] + OBSERVATION_INTERVAL),
+        'start': start,
+        'lastObservation': latest,
+        'endExclusive': end,
         'observationCount': len(archive.timestamps),
         'intervalMinutes': 10,
         'timezone': 'UTC',

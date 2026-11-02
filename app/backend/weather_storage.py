@@ -18,7 +18,7 @@ def validate_additions(rows, latest_timestamp):
 
     for row in rows:
         timestamp = datetime.fromisoformat(row['time']).timestamp()
-        if timestamp <= latest_timestamp:
+        if latest_timestamp is not None and timestamp <= latest_timestamp:
             continue
 
         previous = parse_observation_time(row['time'], previous)
@@ -30,9 +30,26 @@ def validate_additions(rows, latest_timestamp):
     return additions
 
 
-def write_updated_archive(additions):
+def copy_existing_archive(temporary):
+    with HISTORY_PATH.open('rb') as source:
+        shutil.copyfileobj(source, temporary)
+        source.seek(-1, os.SEEK_END)
+        if source.read(1) != b'\n':
+            temporary.write(b'\n')
+
+
+def archive_columns():
+    if not HISTORY_PATH.exists():
+        return ['time', *VARIABLES]
+
     with HISTORY_PATH.open(encoding='utf-8', newline='') as source:
-        columns = next(csv.reader(source))
+        return next(csv.reader(source))
+
+
+def write_updated_archive(additions):
+    existing = HISTORY_PATH.exists()
+    columns = archive_columns()
+    HISTORY_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     temporary_path = None
     try:
@@ -40,14 +57,13 @@ def write_updated_archive(additions):
         # if fetching, validation or writing fails before publication.
         with NamedTemporaryFile(dir=HISTORY_PATH.parent, delete=False) as temporary:
             temporary_path = Path(temporary.name)
-            with HISTORY_PATH.open('rb') as source:
-                shutil.copyfileobj(source, temporary)
-                source.seek(-1, os.SEEK_END)
-                if source.read(1) != b'\n':
-                    temporary.write(b'\n')
+            if existing:
+                copy_existing_archive(temporary)
 
         with temporary_path.open('a', encoding='utf-8', newline='') as output:
             writer = csv.DictWriter(output, fieldnames=columns)
+            if not existing:
+                writer.writeheader()
             writer.writerows(additions)
 
         os.replace(temporary_path, HISTORY_PATH)
@@ -64,7 +80,8 @@ def append_observations(rows):
     # the next one. New requests see the new cache after publication.
     with ARCHIVE_LOCK:
         archive = read_archive()
-        additions = validate_additions(rows, archive.timestamps[-1])
+        latest = archive.timestamps[-1] if archive.timestamps else None
+        additions = validate_additions(rows, latest)
         if not additions:
             return 0
 

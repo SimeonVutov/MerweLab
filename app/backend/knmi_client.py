@@ -60,8 +60,7 @@ def fetch_window(session, token, start, end):
     return observations
 
 
-def fetch_new_observations(token, start, end):
-    observations = {}
+def fetch_observation_batches(token, start, end):
     current = start
 
     # Small requests also allow a server that was offline for months to catch up.
@@ -73,9 +72,11 @@ def fetch_new_observations(token, start, end):
                 following = current.replace(month=current.month + 1, day=1)
 
             window_end = min(following, end)
+            observations = {}
             for row in fetch_window(session, token, current, window_end):
                 observations[row['time']] = row
 
+            # Publish one month at a time so requests can read partial history
+            # and an interrupted initial download can resume from saved data.
+            yield window_end, [observations[key] for key in sorted(observations)]
             current = window_end
-
-    return [observations[key] for key in sorted(observations)]

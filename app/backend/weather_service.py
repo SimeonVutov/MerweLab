@@ -7,14 +7,13 @@ from time import monotonic
 
 from dotenv import load_dotenv
 
-from knmi_client import fetch_new_observations
+from knmi_client import fetch_observation_batches
 from weather_data import (
     OBSERVATION_INTERVAL, ROOT, UTC, format_time, get_archive,
 )
 from weather_predictions import WeatherPredictor
 from weather_storage import append_observations
-
-UPDATE_INTERVAL_SECONDS = 600
+from weather_settings import HISTORY_START, UPDATE_INTERVAL_SECONDS
 
 
 class WeatherService:
@@ -30,6 +29,7 @@ class WeatherService:
             'lastChecked': None,
             'lastSuccessfulCheck': None,
             'error': None,
+            'downloadedThrough': None,
         }
         self.forecast = {'available': False, 'reason': 'Forecasts are being prepared'}
 
@@ -43,6 +43,9 @@ class WeatherService:
 
     def refresh_forecast(self):
         archive = get_archive()
+        if not archive.timestamps:
+            return
+
         based_on = format_time(archive.timestamps[-1])
         if self.forecast.get('basedOn') == based_on:
             return
@@ -63,10 +66,19 @@ class WeatherService:
         self.set_state(checking=True)
         try:
             archive = get_archive()
-            start = datetime.fromtimestamp(archive.timestamps[-1] + OBSERVATION_INTERVAL, UTC)
+            start = HISTORY_START
+            if archive.timestamps:
+                start = datetime.fromtimestamp(archive.timestamps[-1] + OBSERVATION_INTERVAL, UTC)
+
             end = datetime.now(UTC)
-            rows = fetch_new_observations(token, start, end)
-            added = append_observations(rows)
+            added = 0
+            for window_end, rows in fetch_observation_batches(token, start, end):
+                if self.stop_event.is_set():
+                    return
+
+                added += append_observations(rows)
+                self.set_state(downloadedThrough=format_time(window_end.timestamp()))
+
             self.set_state(lastSuccessfulCheck=format_time(end.timestamp()), error=None)
             self.logger.info('KNMI synchronization added %s observations', added)
         except Exception as error:
