@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ViewMode } from './scene/camera';
 import type { Viewer } from 'cesium';
 import CompareToolbar from './features/compare/CompareToolbar';
 import { synchronizeCameras } from './features/compare/synchronizeCameras';
@@ -7,7 +8,7 @@ import type { CbsOptions } from './features/cbs/data';
 import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
 import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
 import MorphologyPanel from './features/morphology/MorphologyPanel';
-import { hasMorphologyLayers, initialMorphologyOptions } from './features/morphology/data';
+import { initialMorphologyOptions } from './features/morphology/data';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -22,6 +23,7 @@ import type { WindInfo, WindLocation, WindOptions } from './features/wind/types'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
+  const [viewMode, setViewMode] = useState<ViewMode>('3d');
   const [morphology, setMorphology] = useState(initialMorphologyOptions);
   const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
@@ -57,6 +59,8 @@ export default function App() {
   const comparing = mode === 'Compare';
   const sceneSettings = {
     morphology,
+    viewMode,
+    onViewModeChange: changeViewMode,
     imageryVisible,
     imageryOpacity,
     contextVisible,
@@ -80,30 +84,28 @@ export default function App() {
 
   function changeCbs(options: CbsOptions) {
     setCbs(options);
-    if (options.enabled) {
-      setDetailsOpen(true);
-    }
   }
 
   function changeMorphology(options: typeof morphology) {
     setMorphology(options);
-    if (hasMorphologyLayers(options)) {
-      if (!hasMorphologyLayers(morphology)) {
-        // Site meshes cover globe imagery and mask the terrain beneath the proposal.
-        setGroundVisible(false);
-      }
-      setDetailsOpen(true);
-    }
   }
 
   function changeNoise(options: NoiseOptions) {
     setNoise(options);
-    if (options.enabled) {
-      setDetailsOpen(true);
+  }
+
+  function changeViewMode(value: ViewMode) {
+    setViewMode(value);
+    if (value === '2d') {
+      setGroundVisible(false);
+      setWind((current) => ({ ...current, streamlines_3d: false }));
     }
   }
 
   function changeWind(options: WindOptions) {
+    if (options.streamlines_3d) {
+      setViewMode('3d');
+    }
     setWind(options);
   }
 

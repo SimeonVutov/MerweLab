@@ -98,7 +98,7 @@ export default function MorphologyPanel({ options, onChange, scenario }: Props) 
           </section>
         );
       })}
-      <p>Site surfaces are hidden when enabling these terrain maps. Buildings remain visible. Re-enable Site surfaces to view the design pavement, which can cover the map.</p>
+      <p>2D hides solid buildings and site surfaces. In 3D, disable Site surfaces if design pavement covers a terrain map. Map toggles preserve the camera.</p>
       <p>Grey: missing observations. Outside the research boundary is transparent.</p>
       <p>Analysis uses 50 m cells; fine H/W uses 25 m open-space support. Image pixels do not increase analytical resolution.</p>
       <p>These are rendered maps. Exact cell values and numerical threshold filters require numerical exports.</p>
