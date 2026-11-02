@@ -43,7 +43,11 @@ VIEW_TITLES = {
     "study_area": "Study area",
     "peninsula": "Peninsula",
 }
-SCENARIO_TITLES = {"scenario_a": "V1", "scenario_b": "V2"}
+SCENARIO_TITLES = {
+    "baseline": "Baseline",
+    "scenario_a": "V1",
+    "scenario_b": "V2",
+}
 CLASS_LABELS = (
     [f"<{CLASS_LIMITS[0]}"]
     + [f"{a}–{b}" for a, b in zip(CLASS_LIMITS[:-1], CLASS_LIMITS[1:])]
