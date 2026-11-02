@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "groups": {
+    "shared": "/web/building-outlines/shared-ae6fc56d1922.json.gz",
+    "baseline": "/web/building-outlines/baseline-7a1fbd222243.json.gz",
+    "scenario_a": "/web/building-outlines/scenario_a-e82c0bd3c0c8.json.gz",
+    "scenario_b": "/web/building-outlines/scenario_b-64275d1bc613.json.gz"
+  }
+}
