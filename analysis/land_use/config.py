@@ -5,7 +5,7 @@ from pathlib import Path
 # ---- Paths ----
 DATA_LAND_USE_DIR = Path("../../data/land_use")
 LAND_USE_PATH = DATA_LAND_USE_DIR.joinpath("land_use_in_context_area_smaller.tif")
-PREDICTED_MAP_PATH = DATA_LAND_USE_DIR.joinpath("results/predicted_map_corrected.tif")
+PREDICTED_MAP_PATH = DATA_LAND_USE_DIR.joinpath("predicted_map_corrected.tif")
 MODEL_PATH = DATA_LAND_USE_DIR.joinpath("results/land_use_prediction_corrected.keras")
 
 # ---- Raw land-use codes, grouped by category ----
