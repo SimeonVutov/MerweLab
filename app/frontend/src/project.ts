@@ -21,6 +21,7 @@ export const layerGroups = [
     { id: 'study-boundary', label: 'Study boundary' },
   ] },
   { label: 'Morphology', layers: [
+    { id: 'morphology-maps', label: 'Indicator maps' },
     { id: 'height', label: 'Building height' },
     { id: 'density', label: 'Density' },
     { id: 'svf', label: 'Sky view factor' },

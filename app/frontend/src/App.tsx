@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ViewMode } from './scene/camera';
 import type { Viewer } from 'cesium';
 import CompareToolbar from './features/compare/CompareToolbar';
 import { synchronizeCameras } from './features/compare/synchronizeCameras';
@@ -6,6 +7,8 @@ import { initialCbsOptions } from './features/cbs/data';
 import type { CbsOptions } from './features/cbs/data';
 import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
 import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
+import MorphologyPanel from './features/morphology/MorphologyPanel';
+import { initialMorphologyOptions } from './features/morphology/data';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -20,6 +23,9 @@ import type { WindInfo, WindLocation, WindOptions } from './features/wind/types'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
+  const [viewMode, setViewMode] = useState<ViewMode>('3d');
+  const [viewRequest, setViewRequest] = useState(0);
+  const [morphology, setMorphology] = useState(initialMorphologyOptions);
   const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
   const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
@@ -53,6 +59,10 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    morphology,
+    viewMode,
+    viewRequest,
+    onViewModeChange: changeViewMode,
     imageryVisible,
     imageryOpacity,
     contextVisible,
@@ -76,34 +86,30 @@ export default function App() {
 
   function changeCbs(options: CbsOptions) {
     setCbs(options);
-    if (options.enabled) {
-      setDetailsOpen(true);
-    }
+  }
+
+  function changeMorphology(options: typeof morphology) {
+    setMorphology(options);
   }
 
   function changeNoise(options: NoiseOptions) {
     setNoise(options);
-    if (options.enabled) {
-      setDetailsOpen(true);
-      setWind((current) => {
-        if (current.metric === null) {
-          return current;
-        }
-        return { ...current, metric: null };
-      });
+  }
+
+  function changeViewMode(value: ViewMode) {
+    setViewMode(value);
+    if (value === '2d') {
+      setGroundVisible(false);
+      setWind((current) => ({ ...current, streamlines_3d: false }));
     }
   }
 
   function changeWind(options: WindOptions) {
-    setWind(options);
-    if (options.metric !== null) {
-      setNoise((current) => {
-        if (!current.enabled) {
-          return current;
-        }
-        return { ...current, enabled: false };
-      });
+    if (options.streamlines_3d && !wind.streamlines_3d) {
+      setViewMode('3d');
+      setViewRequest((current) => current + 1);
     }
+    setWind(options);
   }
 
   useEffect(() => {
@@ -129,6 +135,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          morphology={morphology}
+          onMorphologyChange={changeMorphology}
           noise={noise}
           onNoiseChange={changeNoise}
           cbs={cbs}
@@ -197,6 +205,15 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          morphologyPanel={(
+            <>
+              <MorphologyPanel
+                options={morphology}
+                onChange={changeMorphology}
+                scenario={scenarioId}
+              />
+            </>
+          )}
           noise={noise}
           noiseInfo={noiseInfo}
           onNoiseChange={changeNoise}

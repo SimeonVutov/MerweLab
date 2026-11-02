@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ImageryLayer, Viewer } from 'cesium';
+import { createMorphologyLayer } from '../features/morphology/scene';
+import { hasMorphologyLayers } from '../features/morphology/data';
+import type { MorphologyOptions } from '../features/morphology/data';
 import { createViewer } from './createViewer';
 import { createNoiseLayer } from '../features/noise/scene';
 import type { NoiseLayer } from '../features/noise/scene';
@@ -7,6 +10,8 @@ import type { NoiseInfo, NoiseLocation, NoiseOptions } from '../features/noise/t
 import { createCbsLayer } from '../features/cbs/scene';
 import type { CbsOptions } from '../features/cbs/data';
 import { createAerialImagery, createGlobeImagery } from './imagery';
+import { createBuildingOutlines } from './buildingOutlines';
+import type { ViewMode } from './camera';
 import { resetCamera } from './camera';
 import styles from './CesiumScene.module.css';
 import { createModelLayers } from './modelLayers';
@@ -21,6 +26,10 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  viewMode: ViewMode;
+  viewRequest: number;
+  onViewModeChange: (mode: ViewMode) => void;
+  morphology: MorphologyOptions;
   noise: NoiseOptions;
   onNoiseInfo: (info: NoiseInfo) => void;
   noiseProbe?: NoiseLocation | null;
@@ -46,6 +55,10 @@ interface CesiumSceneProps {
 }
 
 export default function CesiumScene({
+  morphology,
+  viewMode,
+  viewRequest,
+  onViewModeChange,
   scenarioLabel,
   imageryVisible,
   imageryOpacity,
@@ -69,6 +82,12 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
+  const morphologyLayer = useRef<ReturnType<typeof createMorphologyLayer> | null>(null);
+  const [morphologyError, setMorphologyError] = useState<string | null>(null);
+  const outlines = useRef<ReturnType<typeof createBuildingOutlines> | null>(null);
+  const [outlineError, setOutlineError] = useState<string | null>(null);
+  const cameraMode = useRef<ViewMode | null>(null);
+  const cameraRequest = useRef<number | null>(null);
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
@@ -105,6 +124,8 @@ export default function CesiumScene({
     }
 
     viewer.current = instance;
+    outlines.current = createBuildingOutlines(instance, setOutlineError);
+    morphologyLayer.current = createMorphologyLayer(instance, setMorphologyError);
     onViewerReady?.(instance);
     setError(null);
     setImageryError(null);
@@ -142,6 +163,10 @@ export default function CesiumScene({
 
     return () => {
       onViewerReady?.(null);
+      morphologyLayer.current?.dispose();
+      morphologyLayer.current = null;
+      outlines.current?.dispose();
+      outlines.current = null;
       resizeObserver.disconnect();
       removeBaseError();
       removeAerialError();
@@ -162,11 +187,13 @@ export default function CesiumScene({
       noiseLayer.current = null;
       imagery.current = null;
       viewer.current = null;
+      cameraMode.current = null;
       instance.destroy();
     };
   }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
+    morphologyLayer.current?.setScenario(scenarioId);
     buildings.current?.setScenario(scenarioId);
     surfaces.current?.setScenario(scenarioId);
     windLayer.current?.setScenario(scenarioId);
@@ -176,6 +203,18 @@ export default function CesiumScene({
   useEffect(() => {
     windLayer.current?.setOptions(wind);
   }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+
+  useEffect(() => {
+    if (viewer.current && (cameraMode.current !== viewMode || cameraRequest.current !== viewRequest)) {
+      cameraMode.current = viewMode;
+      cameraRequest.current = viewRequest;
+      resetCamera(viewer.current, viewMode);
+    }
+  }, [viewMode, viewRequest, onViewerReady]);
+
+  useEffect(() => {
+    morphologyLayer.current?.setOptions(morphology);
+  }, [morphology, onViewerReady]);
 
   useEffect(() => {
     noiseLayer.current?.setOptions(noise);
@@ -194,9 +233,10 @@ export default function CesiumScene({
   }, [windProbe, onViewerReady]);
 
   useEffect(() => {
-    buildings.current?.setVisibility(contextVisible, scenarioVisible);
-    context.current?.setVisible(contextVisible);
-  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+    buildings.current?.setVisibility(contextVisible && viewMode === '3d', scenarioVisible && viewMode === '3d');
+    context.current?.setVisible(contextVisible && viewMode === '3d');
+    outlines.current?.setOptions(viewMode === '2d', scenarioId, contextVisible, scenarioVisible);
+  }, [contextVisible, scenarioVisible, viewMode, scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
@@ -212,9 +252,19 @@ export default function CesiumScene({
 
   return (
     <>
+      {morphologyError && hasMorphologyLayers(morphology) && (
+        <p className={styles.message} role="alert">{morphologyError}</p>
+      )}
+      {outlineError && viewMode === '2d' && (
+        <p className={styles.message} role="alert">{outlineError}</p>
+      )}
       <div ref={container} className={styles.canvas} />
       <div className={styles.toolbar}>
-        <button disabled={error !== null} onClick={() => viewer.current && resetCamera(viewer.current)}>Reset view</button>
+        <button disabled={error !== null} onClick={() => viewer.current && resetCamera(viewer.current, viewMode)}>Reset view</button>
+        <div role="group" aria-label="Building view mode">
+          <button aria-pressed={viewMode === '2d'} onClick={() => onViewModeChange('2d')}>2D</button>
+          <button aria-pressed={viewMode === '3d'} onClick={() => onViewModeChange('3d')}>3D</button>
+        </div>
       </div>
       <div className={styles.location}>Merwehaven · {scenarioLabel}</div>
       {terrainError && !error && <p className={styles.message} role="alert">{terrainError}</p>}

@@ -4,6 +4,9 @@
 }
 
 .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   position: absolute;
   top: 12px;
   right: 12px;
@@ -36,4 +39,9 @@
   border: 1px solid var(--line);
   border-radius: 5px;
   background: var(--surface);
+}
+
+.toolbar button[aria-pressed='true'] {
+  background: var(--accent, #8fc9ae);
+  color: #17211c;
 }

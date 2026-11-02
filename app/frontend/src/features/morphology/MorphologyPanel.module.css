@@ -1,0 +1,25 @@
+.panel {
+  margin-top: 24px;
+  font-size: 12px;
+}
+
+.panel label {
+  display: block;
+  margin: 14px 0;
+}
+
+.panel select {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  margin-top: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  border: 1px solid var(--line);
+}
+
+.gradient {
+  height: 14px;
+  margin-top: 14px;
+}

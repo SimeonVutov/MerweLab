@@ -1,3 +1,5 @@
+import { morphologyIndicators } from '../features/morphology/data';
+import type { MorphologyOptions } from '../features/morphology/data';
 import { layerGroups } from '../project';
 import type { CbsOptions } from '../features/cbs/data';
 import type { NoiseOptions } from '../features/noise/types';
@@ -6,6 +8,8 @@ import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
 
 interface LayerPanelProps {
+  morphology: MorphologyOptions;
+  onMorphologyChange: (options: MorphologyOptions) => void;
   noise: NoiseOptions;
   onNoiseChange: (options: NoiseOptions) => void;
   cbs: CbsOptions;
@@ -26,6 +30,8 @@ interface LayerPanelProps {
 }
 
 export default function LayerPanel({
+  morphology,
+  onMorphologyChange,
   open,
   imageryVisible,
   onImageryChange,
@@ -70,7 +76,23 @@ export default function LayerPanel({
     <aside id="layer-panel" className={styles.panel} hidden={!open} aria-label="Layers">
       <h2>Layers</h2>
       <p className={styles.note}>Greyed layers are not connected yet.</p>
-      {layerGroups.map((group) => (
+      <details open>
+        <summary>Morphology</summary>
+        {morphologyIndicators.map(([id, label]) => (
+          <label key={id} className={styles.layer}>
+            <input
+              type="checkbox"
+              checked={morphology.layers[id]?.enabled ?? false}
+              onChange={(event) => onMorphologyChange({
+                ...morphology,
+                layers: { ...morphology.layers, [id]: { ...morphology.layers[id]!, enabled: event.target.checked } },
+              })}
+            />
+            {label}
+          </label>
+        ))}
+      </details>
+      {layerGroups.filter((group) => group.label !== 'Morphology').map((group) => (
         <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise'].includes(group.label)}>
           <summary>{group.label}</summary>
           {group.layers.map((layer) => {

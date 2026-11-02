@@ -55,7 +55,6 @@ export function createCbsLayer(
       return;
     }
 
-    focusArea();
     const range = cbsRange(data, options.metric);
     const featuresByCode = new Map(data.neighbourhoods.features.map((feature) => [feature.id, feature]));
 
@@ -199,7 +198,21 @@ export function createCbsLayer(
         lastFocusRequest = value.focusRequest;
       }
 
+      const focusChanged = lastFocusRequest !== value.focusRequest;
       options = value;
+      if (focusChanged) {
+        if (data) {
+          focusArea();
+        } else {
+          const requested = value.focusRequest;
+          void loadCbs().then((prepared) => {
+            if (!disposed && options.enabled && options.focusRequest === requested) {
+              data = prepared;
+              focusArea();
+            }
+          }).catch(() => {});
+        }
+      }
       if (value.enabled && !source && !pending) {
         void load();
       }

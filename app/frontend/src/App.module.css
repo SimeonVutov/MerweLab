@@ -1,5 +1,6 @@
 .app {
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -8,7 +9,9 @@
   flex: 1;
   display: grid;
   grid-template-columns: 218px minmax(0, 1fr) 210px;
-  min-height: 570px;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  min-height: 0;
 }
 
 .workspace[data-layers-open='false'] {
@@ -26,19 +29,19 @@
 .scene {
   position: relative;
   min-width: 0;
-  min-height: 570px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-.views { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 570px; }
+.views { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 0; }
 .views[data-comparing='true'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.view { position: relative; min-width: 0; min-height: 570px; }
+.view { position: relative; min-width: 0; min-height: 0; }
 .view + .view { border-left: 1px solid var(--line); }
 
 @media (max-width: 700px) {
   .views[data-comparing='true'] { grid-template-columns: minmax(0, 1fr); }
-  .views[data-comparing='true'] .view { min-height: 48dvh; }
+  .views[data-comparing='true'] { grid-template-rows: repeat(2, minmax(0, 1fr)); }
   .view + .view { border-left: 0; border-top: 1px solid var(--line); }
 }
 
@@ -72,9 +75,13 @@
 @media (max-width: 1000px) {
   .workspace, .workspace[data-details-open='false'] {
     grid-template-columns: 190px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 28dvh);
   }
   .workspace[data-layers-open='false'] {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace[data-details-open='false'] {
+    grid-template-rows: minmax(0, 1fr);
   }
 }
 
@@ -84,7 +91,7 @@
     flex-direction: column;
   }
   .scene {
-    min-height: 65dvh;
+    min-height: 0;
     flex: 1;
   }
 }
