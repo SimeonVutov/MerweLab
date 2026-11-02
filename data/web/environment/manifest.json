@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "trees": {
+    "tiles": [
+      {
+        "url": "/web/environment/trees-663-12978-84bb5694ac97.glb",
+        "origin": [
+          4.425566584064124,
+          51.91209573401702,
+          46.706321716308594
+        ],
+        "centre": [
+          4.421717485104556,
+          51.91400465558061
+        ],
+        "count": 48
+      },
+      {
+        "url": "/web/environment/trees-663-12977-50b2a337234b.glb",
+        "origin": [
+          4.425927089357966,
+          51.91184000342549,
+          47.12109375
+        ],
+        "centre": [
+          4.425678721808707,
+          51.91178121196066
+        ],
+        "count": 7
+      },
+      {
+        "url": "/web/environment/trees-661-12978-7f31c03191ac.glb",
+        "origin": [
+          4.411937035553132,
+          51.91422966549278,
+          47.834251403808594
+        ],
+        "centre": [
+          4.412129594506863,
+          51.91412475629868
+        ],
+        "count": 23
+      },
+      {
+        "url": "/web/environment/trees-665-12977-1ced080ee919.glb",
+        "origin": [
+          4.433515441599682,
+          51.911084365454826,
+          46.82927703857422
+        ],
+        "centre": [
+          4.433637651725001,
+          51.910854233284844
+        ],
+        "count": 4
+      },
+      {
+        "url": "/web/environment/trees-664-12978-52c83968d4ee.glb",
+        "origin": [
+          4.42857853002249,
+          51.9129425133546,
+          47.05832290649414
+        ],
+        "centre": [
+          4.429177240897552,
+          51.91290622648742
+        ],
+        "count": 9
+      },
+      {
+        "url": "/web/environment/trees-662-12978-d4f08d468acf.glb",
+        "origin": [
+          4.4166383932737325,
+          51.91456756425936,
+          42.200016021728516
+        ],
+        "centre": [
+          4.416885012395127,
+          51.91425928991881
+        ],
+        "count": 82
+      },
+      {
+        "url": "/web/environment/trees-661-12976-275f1e9d5b22.glb",
+        "origin": [
+          4.408982181489386,
+          51.90616895662403,
+          44.95603561401367
+        ],
+        "centre": [
+          4.408803543670175,
+          51.90701408381071
+        ],
+        "count": 12
+      },
+      {
+        "url": "/web/environment/trees-661-12977-078efc8370ad.glb",
+        "origin": [
+          4.408477009199757,
+          51.9080603576208,
+          43.616172790527344
+        ],
+        "centre": [
+          4.407617554930302,
+          51.909330301178365
+        ],
+        "count": 18
+      },
+      {
+        "url": "/web/environment/trees-660-12977-3016ebc0774b.glb",
+        "origin": [
+          4.406593596411508,
+          51.91073663963921,
+          43.612823486328125
+        ],
+        "centre": [
+          4.406146843630777,
+          51.91136628193142
+        ],
+        "count": 8
+      },
+      {
+        "url": "/web/environment/trees-660-12978-ba6f3c859226.glb",
+        "origin": [
+          4.405601709272027,
+          51.91205280085895,
+          43.80988693237305
+        ],
+        "centre": [
+          4.4042105150919335,
+          51.91316844385739
+        ],
+        "count": 17
+      }
+    ],
+    "locations": "/web/environment/tree-locations-75bf77bd115c.json",
+    "count": 228,
+    "source": "data/context/vegetation/GCS_FP_Trees_2.kmz",
+    "sourceSha256": "ca3ee9bd77a52bc68d0892dc51881056a250727e7f6b98c03038374b7fde1845",
+    "notes": "OSM-derived locations from the supplied Rhino model. Simplified illustrative crowns and trunks retain source dimensions; heights and crown sizes are not measurements. Bases follow the shared numerical terrain."
+  },
+  "elevation": {
+    "url": "/web/environment/elevation-colours-2406964fc871.png",
+    "bounds": [
+      4.4015790176894685,
+      51.90196611992011,
+      4.43444410955295,
+      51.91534812253884
+    ],
+    "source": "data/context/elevation/GCS_FP_DTM_Elevation_Colours.tif",
+    "sourceSha256": "8f156a1a5529382ae08b8af62cbd68e85bfdd12551e171186182aead0cf63837",
+    "notes": "Supplied rendered AHN elevation colours. No numerical colour legend was supplied; colours cannot provide exact height readings."
+  }
+}
