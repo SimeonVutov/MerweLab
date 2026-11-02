@@ -1,5 +1,7 @@
 import type { Mode } from '../project';
 import CbsPanel from '../features/cbs/CbsPanel';
+import NoisePanel from '../features/noise/NoisePanel';
+import type { NoiseInfo, NoiseOptions } from '../features/noise/types';
 import type { CbsOptions } from '../features/cbs/data';
 import styles from './DetailsPanel.module.css';
 import type { ModelStatus } from '../scene/modelLayers';
@@ -8,6 +10,9 @@ import WindPanel from '../features/wind/WindPanel';
 import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
+  noise: NoiseOptions;
+  noiseInfo: NoiseInfo;
+  onNoiseChange: (options: NoiseOptions) => void;
   cbs: CbsOptions;
   onCbsChange: (options: CbsOptions) => void;
   open: boolean;
@@ -31,6 +36,7 @@ interface SceneDetails {
   surfaceStatus: ModelStatus;
   terrainStatus: TerrainStatus;
   windInfo: WindInfo;
+  noiseInfo: NoiseInfo;
 }
 
 function SceneSummary({ title, buildingStatus, surfaceStatus, terrainStatus, windInfo, showWind }: SceneDetails & { title: string; showWind: boolean }) {
@@ -58,6 +64,7 @@ export default function DetailsPanel({
   open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus, surfaceStatus,
   terrainStatus, wind, windInfo, onWindChange, comparison,
   cbs, onCbsChange,
+  noise, noiseInfo, onNoiseChange,
 }: DetailsPanelProps) {
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
@@ -66,9 +73,26 @@ export default function DetailsPanel({
         {mode !== 'Weather' && (
           <>
             <CbsPanel options={cbs} onChange={onCbsChange} />
-            <SceneSummary title={comparison ? `Left · ${scenarioLabel}` : scenarioLabel}
-              scenarioLabel={scenarioLabel} buildingStatus={buildingStatus} surfaceStatus={surfaceStatus}
-              terrainStatus={terrainStatus} windInfo={windInfo} showWind={Boolean(comparison)} />
+            <NoisePanel
+              options={noise}
+              onChange={onNoiseChange}
+              info={noiseInfo}
+              scenarioLabel={scenarioLabel}
+              comparison={comparison && {
+                scenarioLabel: comparison.scenarioLabel,
+                info: comparison.noiseInfo,
+              }}
+            />
+            <SceneSummary
+              title={comparison ? `Left · ${scenarioLabel}` : scenarioLabel}
+              scenarioLabel={scenarioLabel}
+              buildingStatus={buildingStatus}
+              surfaceStatus={surfaceStatus}
+              terrainStatus={terrainStatus}
+              windInfo={windInfo}
+              noiseInfo={noiseInfo}
+              showWind={Boolean(comparison)}
+            />
             {comparison && <>
               <SceneSummary {...comparison} title={`Right · ${comparison.scenarioLabel}`} showWind />
               <p className={styles.note}>Layer visibility and opacity apply to both maps. Move either view to navigate both.</p>

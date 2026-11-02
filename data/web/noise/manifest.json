@@ -1,0 +1,213 @@
+{
+  "version": 1,
+  "encoding": "uint8-class-code",
+  "noData": 0,
+  "nominalSpacingM": 2,
+  "samplingHeightM": 1.5,
+  "classes": [
+    {
+      "code": 1,
+      "label": "<35",
+      "lower": null,
+      "upper": 35,
+      "colour": "#440154"
+    },
+    {
+      "code": 2,
+      "label": "35\u201340",
+      "lower": 35,
+      "upper": 40,
+      "colour": "#482475"
+    },
+    {
+      "code": 3,
+      "label": "40\u201345",
+      "lower": 40,
+      "upper": 45,
+      "colour": "#414487"
+    },
+    {
+      "code": 4,
+      "label": "45\u201350",
+      "lower": 45,
+      "upper": 50,
+      "colour": "#355f8d"
+    },
+    {
+      "code": 5,
+      "label": "50\u201355",
+      "lower": 50,
+      "upper": 55,
+      "colour": "#2a788e"
+    },
+    {
+      "code": 6,
+      "label": "55\u201360",
+      "lower": 55,
+      "upper": 60,
+      "colour": "#21918c"
+    },
+    {
+      "code": 7,
+      "label": "60\u201365",
+      "lower": 60,
+      "upper": 65,
+      "colour": "#22a884"
+    },
+    {
+      "code": 8,
+      "label": "65\u201370",
+      "lower": 65,
+      "upper": 70,
+      "colour": "#44bf70"
+    },
+    {
+      "code": 9,
+      "label": "70\u201375",
+      "lower": 70,
+      "upper": 75,
+      "colour": "#7ad151"
+    },
+    {
+      "code": 10,
+      "label": "75\u201380",
+      "lower": 75,
+      "upper": 80,
+      "colour": "#bddf26"
+    },
+    {
+      "code": 11,
+      "label": "80+",
+      "lower": 80,
+      "upper": null,
+      "colour": "#fde725"
+    }
+  ],
+  "periods": [
+    "D",
+    "E",
+    "N",
+    "DEN"
+  ],
+  "threshold": {
+    "minimum": 35,
+    "maximum": 80,
+    "step": 5
+  },
+  "scenarios": {
+    "baseline": {
+      "source": "outputs/data/noise/baseline/noise_map.geojson",
+      "sourceSha256": "17bea6ac8352a85d3360c47910a340785a5ca25445b48e046b4e734bbebb7e2f",
+      "bounds": [
+        4.403903397633185,
+        51.90209164078242,
+        4.429925720416569,
+        51.916323987812866
+      ],
+      "width": 896,
+      "height": 792,
+      "maps": {
+        "D": {
+          "image": "/web/noise/baseline/D-17cdc2d13475.png"
+        },
+        "E": {
+          "image": "/web/noise/baseline/E-e5245b6ef257.png"
+        },
+        "N": {
+          "image": "/web/noise/baseline/N-1baa623287d6.png"
+        },
+        "DEN": {
+          "image": "/web/noise/baseline/DEN-1a1ad2df81f0.png"
+        }
+      },
+      "receivers": {
+        "url": "/web/noise/baseline/receivers-3472038f10fc.json.gz",
+        "count": 21291,
+        "source": "outputs/data/noise/baseline/receiver_levels.geojson",
+        "sourceSha256": "e613f8795b2c9fe8a4fe268ea7581fb3e77fda458d52a208cd65e3e35784b75b",
+        "valueField": "LAEQ"
+      }
+    },
+    "scenario_a": {
+      "source": "outputs/data/noise/scenario_a/noise_map.geojson",
+      "sourceSha256": "8e2b1ae12b0434dd8871dd4e70dc6142008d78b7e5166b4f957a0cc64ba0ca02",
+      "bounds": [
+        4.403903397633185,
+        51.90209164078242,
+        4.429925720416569,
+        51.916323987812866
+      ],
+      "width": 896,
+      "height": 792,
+      "maps": {
+        "D": {
+          "image": "/web/noise/scenario_a/D-fee9dbdddedb.png"
+        },
+        "E": {
+          "image": "/web/noise/scenario_a/E-ace0e26c6efb.png"
+        },
+        "N": {
+          "image": "/web/noise/scenario_a/N-17e5ec3b5d5d.png"
+        },
+        "DEN": {
+          "image": "/web/noise/scenario_a/DEN-fb90ae77147b.png"
+        }
+      },
+      "receivers": null
+    },
+    "scenario_b": {
+      "source": "outputs/data/noise/scenario_b/noise_map.geojson",
+      "sourceSha256": "e76e8d817fcd94f8e009a3d1fb29c84f5eb7768b5115299fbb14461da22fa569",
+      "bounds": [
+        4.403903397633185,
+        51.90209164078242,
+        4.429925720416569,
+        51.916323987812866
+      ],
+      "width": 896,
+      "height": 792,
+      "maps": {
+        "D": {
+          "image": "/web/noise/scenario_b/D-2ab5e23c57ff.png"
+        },
+        "E": {
+          "image": "/web/noise/scenario_b/E-7043ecce69c4.png"
+        },
+        "N": {
+          "image": "/web/noise/scenario_b/N-d96d22915e8a.png"
+        },
+        "DEN": {
+          "image": "/web/noise/scenario_b/DEN-025a75e2c1cb.png"
+        }
+      },
+      "receivers": {
+        "url": "/web/noise/scenario_b/receivers-41d3e22aa3ba.json.gz",
+        "count": 21324,
+        "source": "outputs/data/noise/scenario_b/receiver_levels.geojson",
+        "sourceSha256": "5b05a824f362e5cac54ec9bb95ef516dcf9c9ec6a0ef0aec1f7417e102c80e6e",
+        "valueField": "LAEQ"
+      }
+    }
+  },
+  "mesh": {
+    "positions": "/web/noise/shared/positions-ba31954e9ab2.bin.gz",
+    "st": "/web/noise/shared/st-7e1c29d71d35.bin.gz",
+    "indices": "/web/noise/shared/indices-3a29f23e3419.bin.gz",
+    "vertexCount": 178253,
+    "indexCount": 1064448,
+    "originEcef": [
+      3931024.03454336,
+      303551.76942132204,
+      4996781.449047529
+    ]
+  },
+  "notes": [
+    "Colours represent exported NoiseModelling contour bands, not exact point levels.",
+    "Thresholds use the available 5 dB band boundaries without inventing within-band values.",
+    "Two-metre display rasterization does not increase acoustic resolution; missing coverage stays transparent.",
+    "Class-code GeoTIFFs are generated under outputs/data/noise/app in EPSG:28992; browser PNGs preserve those integer classes with nearest-neighbour reprojection.",
+    "One continuous approximately 4 m display mesh clears a local upper envelope of shared AHN and all three scenario ground rasters by 1.5 m. This avoids clipping holes and overlaps with local site surfaces. Display heights do not change the exported acoustic results or receiver heights.",
+    "V1 receiver levels are explicitly untrusted and excluded from all preparation and browser assets.",
+    "Trusted receiver values retain LAEQ from their D/E/N/DEN export rows; DEN is the exported Lden indicator."
+  ]
+}
