@@ -1,5 +1,8 @@
 .panel {
   padding: 16px 14px;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
   border-left: 1px solid var(--line);
 }
 
@@ -56,5 +59,11 @@
   .values, .block {
     min-width: 180px;
     margin-top: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .panel {
+    flex: 0 0 28dvh;
   }
 }
