@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ImageryLayer, Viewer } from 'cesium';
+import { createEnvironmentLayers } from '../features/environment/scene';
+import type { EnvironmentInfo, EnvironmentOptions } from '../features/environment/types';
 import { createMorphologyLayer } from '../features/morphology/scene';
 import { hasMorphologyLayers } from '../features/morphology/data';
 import type { MorphologyOptions } from '../features/morphology/data';
@@ -26,6 +28,8 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  environment: EnvironmentOptions;
+  onEnvironmentInfo: (info: EnvironmentInfo) => void;
   viewMode: ViewMode;
   viewRequest: number;
   onViewModeChange: (mode: ViewMode) => void;
@@ -55,6 +59,8 @@ interface CesiumSceneProps {
 }
 
 export default function CesiumScene({
+  environment,
+  onEnvironmentInfo,
   morphology,
   viewMode,
   viewRequest,
@@ -82,6 +88,10 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
+  const environmentLayers = useRef<ReturnType<typeof createEnvironmentLayers> | null>(null);
+  const environmentInfoCallback = useRef(onEnvironmentInfo);
+  environmentInfoCallback.current = onEnvironmentInfo;
+
   const morphologyLayer = useRef<ReturnType<typeof createMorphologyLayer> | null>(null);
   const [morphologyError, setMorphologyError] = useState<string | null>(null);
   const outlines = useRef<ReturnType<typeof createBuildingOutlines> | null>(null);
@@ -124,6 +134,7 @@ export default function CesiumScene({
     }
 
     viewer.current = instance;
+    environmentLayers.current = createEnvironmentLayers(instance, (info) => environmentInfoCallback.current(info));
     outlines.current = createBuildingOutlines(instance, setOutlineError);
     morphologyLayer.current = createMorphologyLayer(instance, setMorphologyError);
     onViewerReady?.(instance);
@@ -163,6 +174,8 @@ export default function CesiumScene({
 
     return () => {
       onViewerReady?.(null);
+      environmentLayers.current?.dispose();
+      environmentLayers.current = null;
       morphologyLayer.current?.dispose();
       morphologyLayer.current = null;
       outlines.current?.dispose();
@@ -211,6 +224,10 @@ export default function CesiumScene({
       resetCamera(viewer.current, viewMode);
     }
   }, [viewMode, viewRequest, onViewerReady]);
+
+  useEffect(() => {
+    environmentLayers.current?.setOptions(environment, viewMode);
+  }, [environment, viewMode, onViewerReady]);
 
   useEffect(() => {
     morphologyLayer.current?.setOptions(morphology);

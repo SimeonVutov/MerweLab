@@ -1,3 +1,4 @@
+import type { EnvironmentOptions } from '../features/environment/types';
 import { morphologyIndicators } from '../features/morphology/data';
 import type { MorphologyOptions } from '../features/morphology/data';
 import { layerGroups } from '../project';
@@ -8,6 +9,8 @@ import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
 
 interface LayerPanelProps {
+  environment: EnvironmentOptions;
+  onEnvironmentChange: (options: EnvironmentOptions) => void;
   morphology: MorphologyOptions;
   onMorphologyChange: (options: MorphologyOptions) => void;
   noise: NoiseOptions;
@@ -30,6 +33,8 @@ interface LayerPanelProps {
 }
 
 export default function LayerPanel({
+  environment,
+  onEnvironmentChange,
   morphology,
   onMorphologyChange,
   open,
@@ -51,6 +56,14 @@ export default function LayerPanel({
   onNoiseChange,
 }: LayerPanelProps) {
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
+    trees: {
+      checked: environment.trees,
+      change: (trees) => onEnvironmentChange({ ...environment, trees }),
+    },
+    'elevation-colours': {
+      checked: environment.elevation,
+      change: (elevation) => onEnvironmentChange({ ...environment, elevation }),
+    },
     noise: {
       checked: noise.enabled,
       change: (enabled) => onNoiseChange({ ...noise, enabled }),
