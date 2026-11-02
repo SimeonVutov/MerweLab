@@ -4,6 +4,8 @@ import CompareToolbar from './features/compare/CompareToolbar';
 import { synchronizeCameras } from './features/compare/synchronizeCameras';
 import { initialCbsOptions } from './features/cbs/data';
 import type { CbsOptions } from './features/cbs/data';
+import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
+import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -28,6 +30,12 @@ export default function App() {
   const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
   const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
   const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
+
+  const [noise, setNoise] = useState<NoiseOptions>(initialNoiseOptions);
+  const [noiseInfo, setNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
+  const [rightNoiseInfo, setRightNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
+  const [noiseProbe, setNoiseProbe] = useState<NoiseLocation | null>(null);
+
   const [layersOpen, setLayersOpen] = useState(true);
   const [detailsOpen, setDetailsOpen] = useState(true);
   const [imageryVisible, setImageryVisible] = useState(true);
@@ -45,12 +53,20 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
-    imageryVisible, imageryOpacity, contextVisible, scenarioVisible, groundVisible, waterVisible,
+    imageryVisible,
+    imageryOpacity,
+    contextVisible,
+    scenarioVisible,
+    groundVisible,
+    waterVisible,
     wind,
     windProbe: comparing ? windProbe : undefined,
     onWindProbe: setWindProbe,
     cbs,
     onCbsSelect: selectNeighbourhood,
+    noise,
+    noiseProbe: comparing ? noiseProbe : undefined,
+    onNoiseProbe: setNoiseProbe,
   };
 
   function selectNeighbourhood(id: string) {
@@ -62,6 +78,31 @@ export default function App() {
     setCbs(options);
     if (options.enabled) {
       setDetailsOpen(true);
+    }
+  }
+
+  function changeNoise(options: NoiseOptions) {
+    setNoise(options);
+    if (options.enabled) {
+      setDetailsOpen(true);
+      setWind((current) => {
+        if (current.metric === null) {
+          return current;
+        }
+        return { ...current, metric: null };
+      });
+    }
+  }
+
+  function changeWind(options: WindOptions) {
+    setWind(options);
+    if (options.metric !== null) {
+      setNoise((current) => {
+        if (!current.enabled) {
+          return current;
+        }
+        return { ...current, enabled: false };
+      });
     }
   }
 
@@ -88,6 +129,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          noise={noise}
+          onNoiseChange={changeNoise}
           cbs={cbs}
           onCbsChange={changeCbs}
           open={layersOpen}
@@ -102,7 +145,7 @@ export default function App() {
           onGroundChange={setGroundVisible}
           onWaterChange={setWaterVisible}
           wind={wind}
-          onWindChange={setWind}
+          onWindChange={changeWind}
         />
         <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
           {comparing && <CompareToolbar left={scenarioId} right={rightScenarioId}
@@ -118,6 +161,7 @@ export default function App() {
                 onSurfaceStatus={setSurfaceStatus}
                 onTerrainStatus={setTerrainStatus}
                 onWindInfo={setWindInfo}
+                onNoiseInfo={setNoiseInfo}
                 onViewerReady={setLeftViewer}
               />
               <div className={styles.panelControls}>
@@ -146,12 +190,16 @@ export default function App() {
                 onSurfaceStatus={setRightSurfaceStatus}
                 onTerrainStatus={setRightTerrainStatus}
                 onWindInfo={setRightWindInfo}
+                onNoiseInfo={setRightNoiseInfo}
                 onViewerReady={setRightViewer}
               />
             </section>}
           </div>
         </main>
         <DetailsPanel
+          noise={noise}
+          noiseInfo={noiseInfo}
+          onNoiseChange={changeNoise}
           cbs={cbs}
           onCbsChange={setCbs}
           open={detailsOpen}
@@ -165,9 +213,15 @@ export default function App() {
           terrainStatus={terrainStatus}
           wind={wind}
           windInfo={windInfo}
-          onWindChange={setWind}
-          comparison={comparing ? { scenarioLabel: rightScenario.label, buildingStatus: rightBuildingStatus,
-            surfaceStatus: rightSurfaceStatus, terrainStatus: rightTerrainStatus, windInfo: rightWindInfo } : undefined}
+          onWindChange={changeWind}
+          comparison={comparing ? {
+            scenarioLabel: rightScenario.label,
+            buildingStatus: rightBuildingStatus,
+            surfaceStatus: rightSurfaceStatus,
+            terrainStatus: rightTerrainStatus,
+            windInfo: rightWindInfo,
+            noiseInfo: rightNoiseInfo,
+          } : undefined}
         />
       </div>
     </div>

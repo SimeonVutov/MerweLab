@@ -1,10 +1,13 @@
 import { layerGroups } from '../project';
 import type { CbsOptions } from '../features/cbs/data';
+import type { NoiseOptions } from '../features/noise/types';
 import type { LayerId } from '../project';
 import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
 
 interface LayerPanelProps {
+  noise: NoiseOptions;
+  onNoiseChange: (options: NoiseOptions) => void;
   cbs: CbsOptions;
   onCbsChange: (options: CbsOptions) => void;
   open: boolean;
@@ -38,8 +41,14 @@ export default function LayerPanel({
   onWindChange,
   cbs,
   onCbsChange,
+  noise,
+  onNoiseChange,
 }: LayerPanelProps) {
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
+    noise: {
+      checked: noise.enabled,
+      change: (enabled) => onNoiseChange({ ...noise, enabled }),
+    },
     cbs: {
       checked: cbs.enabled,
       change: (enabled) => onCbsChange({ ...cbs, enabled }),
@@ -62,7 +71,7 @@ export default function LayerPanel({
       <h2>Layers</h2>
       <p className={styles.note}>Greyed layers are not connected yet.</p>
       {layerGroups.map((group) => (
-        <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society'].includes(group.label)}>
+        <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise'].includes(group.label)}>
           <summary>{group.label}</summary>
           {group.layers.map((layer) => {
             const control = controls[layer.id];

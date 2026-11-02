@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ImageryLayer, Viewer } from 'cesium';
 import { createViewer } from './createViewer';
+import { createNoiseLayer } from '../features/noise/scene';
+import type { NoiseLayer } from '../features/noise/scene';
+import type { NoiseInfo, NoiseLocation, NoiseOptions } from '../features/noise/types';
 import { createCbsLayer } from '../features/cbs/scene';
 import type { CbsOptions } from '../features/cbs/data';
 import { createAerialImagery, createGlobeImagery } from './imagery';
@@ -18,6 +21,10 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  noise: NoiseOptions;
+  onNoiseInfo: (info: NoiseInfo) => void;
+  noiseProbe?: NoiseLocation | null;
+  onNoiseProbe?: (point: NoiseLocation) => void;
   cbs: CbsOptions;
   onCbsSelect: (id: string) => void;
   scenarioLabel: string;
@@ -57,6 +64,10 @@ export default function CesiumScene({
   onWindProbe,
   cbs,
   onCbsSelect,
+  noise,
+  onNoiseInfo,
+  noiseProbe,
+  onNoiseProbe,
 }: CesiumSceneProps) {
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
@@ -67,6 +78,9 @@ export default function CesiumScene({
   const context = useRef<ContextBuildings | null>(null);
   const windLayer = useRef<WindLayer | null>(null);
   const cbsLayer = useRef<ReturnType<typeof createCbsLayer> | null>(null);
+  const noiseLayer = useRef<NoiseLayer | null>(null);
+  const noiseProbeCallback = useRef(onNoiseProbe);
+  noiseProbeCallback.current = onNoiseProbe;
   const cbsSelect = useRef(onCbsSelect);
 
   cbsSelect.current = onCbsSelect;
@@ -119,6 +133,7 @@ export default function CesiumScene({
     context.current = createContextBuildings(instance, () => setContextError(true));
     windLayer.current = createWindLayer(instance, onWindInfo, (point) => onWindProbeRef.current?.(point));
     cbsLayer.current = createCbsLayer(instance, (id) => cbsSelect.current(id), setCbsError);
+    noiseLayer.current = createNoiseLayer(instance, onNoiseInfo, (point) => noiseProbeCallback.current?.(point));
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -143,21 +158,32 @@ export default function CesiumScene({
       windLayer.current = null;
       cbsLayer.current?.dispose();
       cbsLayer.current = null;
+      noiseLayer.current?.dispose();
+      noiseLayer.current = null;
       imagery.current = null;
       viewer.current = null;
       instance.destroy();
     };
-  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+  }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
     buildings.current?.setScenario(scenarioId);
     surfaces.current?.setScenario(scenarioId);
     windLayer.current?.setScenario(scenarioId);
-  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+    noiseLayer.current?.setScenario(scenarioId);
+  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
     windLayer.current?.setOptions(wind);
-  }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+  }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+
+  useEffect(() => {
+    noiseLayer.current?.setOptions(noise);
+  }, [noise, onNoiseInfo, onViewerReady]);
+
+  useEffect(() => {
+    noiseLayer.current?.setProbe(noiseProbe ?? null);
+  }, [noiseProbe, onNoiseInfo, onViewerReady]);
 
   useEffect(() => {
     cbsLayer.current?.setOptions(cbs);
@@ -170,19 +196,19 @@ export default function CesiumScene({
   useEffect(() => {
     buildings.current?.setVisibility(contextVisible, scenarioVisible);
     context.current?.setVisible(contextVisible);
-  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+  }, [contextVisible, scenarioVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
     terrain.current?.setSiteVisible(groundVisible);
-  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
     if (!viewer.current || !imagery.current) return;
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady]);
+  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   return (
     <>
