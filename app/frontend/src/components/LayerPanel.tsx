@@ -1,3 +1,4 @@
+import type { MorphologyOptions } from '../features/morphology/data';
 import { layerGroups } from '../project';
 import type { CbsOptions } from '../features/cbs/data';
 import type { NoiseOptions } from '../features/noise/types';
@@ -6,6 +7,8 @@ import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
 
 interface LayerPanelProps {
+  morphology: MorphologyOptions;
+  onMorphologyChange: (options: MorphologyOptions) => void;
   noise: NoiseOptions;
   onNoiseChange: (options: NoiseOptions) => void;
   cbs: CbsOptions;
@@ -26,6 +29,8 @@ interface LayerPanelProps {
 }
 
 export default function LayerPanel({
+  morphology,
+  onMorphologyChange,
   open,
   imageryVisible,
   onImageryChange,
@@ -44,7 +49,22 @@ export default function LayerPanel({
   noise,
   onNoiseChange,
 }: LayerPanelProps) {
+  function indicatorControl(indicator: string) {
+    return {
+      checked: morphology.enabled && morphology.indicator === indicator,
+      change: (enabled: boolean) => onMorphologyChange({ ...morphology, indicator, enabled }),
+    };
+  }
+
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
+    height: indicatorControl('factor1_height_classes_extended'),
+    density: indicatorControl('factor2_density_classes_extended'),
+    svf: indicatorControl('factor4_svf_classes_extended'),
+    hw: indicatorControl('factor3_hw_50m_classes_extended'),
+    'morphology-maps': {
+      checked: morphology.enabled,
+      change: (enabled) => onMorphologyChange({ ...morphology, enabled }),
+    },
     noise: {
       checked: noise.enabled,
       change: (enabled) => onNoiseChange({ ...noise, enabled }),

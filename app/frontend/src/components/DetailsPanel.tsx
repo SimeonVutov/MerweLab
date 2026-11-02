@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Mode } from '../project';
 import CbsPanel from '../features/cbs/CbsPanel';
 import NoisePanel from '../features/noise/NoisePanel';
@@ -10,6 +11,7 @@ import WindPanel from '../features/wind/WindPanel';
 import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
+  morphologyPanel: ReactNode;
   noise: NoiseOptions;
   noiseInfo: NoiseInfo;
   onNoiseChange: (options: NoiseOptions) => void;
@@ -65,6 +67,7 @@ export default function DetailsPanel({
   terrainStatus, wind, windInfo, onWindChange, comparison,
   cbs, onCbsChange,
   noise, noiseInfo, onNoiseChange,
+  morphologyPanel,
 }: DetailsPanelProps) {
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
@@ -72,6 +75,7 @@ export default function DetailsPanel({
         <h2>{mode === 'Explore' ? scenarioLabel : mode}</h2>
         {mode !== 'Weather' && (
           <>
+            {morphologyPanel}
             <CbsPanel options={cbs} onChange={onCbsChange} />
             <NoisePanel
               options={noise}

@@ -6,6 +6,8 @@ import { initialCbsOptions } from './features/cbs/data';
 import type { CbsOptions } from './features/cbs/data';
 import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
 import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
+import MorphologyPanel from './features/morphology/MorphologyPanel';
+import { initialMorphologyOptions } from './features/morphology/data';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -20,6 +22,7 @@ import type { WindInfo, WindLocation, WindOptions } from './features/wind/types'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
+  const [morphology, setMorphology] = useState(initialMorphologyOptions);
   const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
   const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
@@ -53,6 +56,7 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    morphology,
     imageryVisible,
     imageryOpacity,
     contextVisible,
@@ -81,9 +85,24 @@ export default function App() {
     }
   }
 
+  function changeMorphology(options: typeof morphology) {
+    setMorphology(options);
+    if (options.enabled) {
+      if (!morphology.enabled) {
+        // Site meshes cover globe imagery and mask the terrain beneath the proposal.
+        setGroundVisible(false);
+      }
+      setDetailsOpen(true);
+      setNoise((current) => ({ ...current, enabled: false }));
+      setWind((current) => ({ ...current, metric: null }));
+      setCbs((current) => ({ ...current, enabled: false }));
+    }
+  }
+
   function changeNoise(options: NoiseOptions) {
     setNoise(options);
     if (options.enabled) {
+      setMorphology((current) => ({ ...current, enabled: false }));
       setDetailsOpen(true);
       setWind((current) => {
         if (current.metric === null) {
@@ -97,6 +116,7 @@ export default function App() {
   function changeWind(options: WindOptions) {
     setWind(options);
     if (options.metric !== null) {
+      setMorphology((current) => ({ ...current, enabled: false }));
       setNoise((current) => {
         if (!current.enabled) {
           return current;
@@ -129,6 +149,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          morphology={morphology}
+          onMorphologyChange={changeMorphology}
           noise={noise}
           onNoiseChange={changeNoise}
           cbs={cbs}
@@ -197,6 +219,23 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          morphologyPanel={(
+            <>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={morphology.enabled}
+                  onChange={(event) => changeMorphology({ ...morphology, enabled: event.target.checked })}
+                />
+                Urban morphological indicators
+              </label>
+              <MorphologyPanel
+                options={morphology}
+                onChange={changeMorphology}
+                scenario={scenarioId}
+              />
+            </>
+          )}
           noise={noise}
           noiseInfo={noiseInfo}
           onNoiseChange={changeNoise}

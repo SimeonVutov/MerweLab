@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ImageryLayer, Viewer } from 'cesium';
+import { createMorphologyLayer } from '../features/morphology/scene';
+import type { MorphologyOptions } from '../features/morphology/data';
 import { createViewer } from './createViewer';
 import { createNoiseLayer } from '../features/noise/scene';
 import type { NoiseLayer } from '../features/noise/scene';
@@ -21,6 +23,7 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  morphology: MorphologyOptions;
   noise: NoiseOptions;
   onNoiseInfo: (info: NoiseInfo) => void;
   noiseProbe?: NoiseLocation | null;
@@ -46,6 +49,7 @@ interface CesiumSceneProps {
 }
 
 export default function CesiumScene({
+  morphology,
   scenarioLabel,
   imageryVisible,
   imageryOpacity,
@@ -69,6 +73,8 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
+  const morphologyLayer = useRef<ReturnType<typeof createMorphologyLayer> | null>(null);
+  const [morphologyError, setMorphologyError] = useState<string | null>(null);
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
@@ -105,6 +111,7 @@ export default function CesiumScene({
     }
 
     viewer.current = instance;
+    morphologyLayer.current = createMorphologyLayer(instance, setMorphologyError);
     onViewerReady?.(instance);
     setError(null);
     setImageryError(null);
@@ -142,6 +149,8 @@ export default function CesiumScene({
 
     return () => {
       onViewerReady?.(null);
+      morphologyLayer.current?.dispose();
+      morphologyLayer.current = null;
       resizeObserver.disconnect();
       removeBaseError();
       removeAerialError();
@@ -167,6 +176,7 @@ export default function CesiumScene({
   }, [onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
+    morphologyLayer.current?.setScenario(scenarioId);
     buildings.current?.setScenario(scenarioId);
     surfaces.current?.setScenario(scenarioId);
     windLayer.current?.setScenario(scenarioId);
@@ -176,6 +186,10 @@ export default function CesiumScene({
   useEffect(() => {
     windLayer.current?.setOptions(wind);
   }, [wind, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+
+  useEffect(() => {
+    morphologyLayer.current?.setOptions(morphology);
+  }, [morphology, onViewerReady]);
 
   useEffect(() => {
     noiseLayer.current?.setOptions(noise);
@@ -212,6 +226,9 @@ export default function CesiumScene({
 
   return (
     <>
+      {morphologyError && morphology.enabled && (
+        <p className={styles.message} role="alert">{morphologyError}</p>
+      )}
       <div ref={container} className={styles.canvas} />
       <div className={styles.toolbar}>
         <button disabled={error !== null} onClick={() => viewer.current && resetCamera(viewer.current)}>Reset view</button>
