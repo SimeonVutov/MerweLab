@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import type { Viewer } from 'cesium';
 import CompareToolbar from './features/compare/CompareToolbar';
 import { synchronizeCameras } from './features/compare/synchronizeCameras';
+import { initialCbsOptions } from './features/cbs/data';
+import type { CbsOptions } from './features/cbs/data';
 import Header from './components/Header';
 import LayerPanel from './components/LayerPanel';
 import DetailsPanel from './components/DetailsPanel';
@@ -16,6 +18,7 @@ import type { WindInfo, WindLocation, WindOptions } from './features/wind/types'
 
 export default function App() {
   const [mode, setMode] = useState<Mode>('Explore');
+  const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
   const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
   const [leftViewer, setLeftViewer] = useState<Viewer | null>(null);
@@ -43,11 +46,30 @@ export default function App() {
   const comparing = mode === 'Compare';
   const sceneSettings = {
     imageryVisible, imageryOpacity, contextVisible, scenarioVisible, groundVisible, waterVisible,
-    wind, windProbe: comparing ? windProbe : undefined, onWindProbe: setWindProbe,
+    wind,
+    windProbe: comparing ? windProbe : undefined,
+    onWindProbe: setWindProbe,
+    cbs,
+    onCbsSelect: selectNeighbourhood,
   };
 
+  function selectNeighbourhood(id: string) {
+    setCbs((current) => ({ ...current, selected: id }));
+    setDetailsOpen(true);
+  }
+
+  function changeCbs(options: CbsOptions) {
+    setCbs(options);
+    if (options.enabled) {
+      setDetailsOpen(true);
+    }
+  }
+
   useEffect(() => {
-    if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) return;
+    if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) {
+      return;
+    }
+
     return synchronizeCameras(leftViewer, rightViewer);
   }, [comparing, leftViewer, rightViewer]);
 
@@ -66,6 +88,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          cbs={cbs}
+          onCbsChange={changeCbs}
           open={layersOpen}
           imageryVisible={imageryVisible}
           onImageryChange={setImageryVisible}
@@ -128,6 +152,8 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          cbs={cbs}
+          onCbsChange={setCbs}
           open={detailsOpen}
           mode={mode}
           scenarioLabel={scenario.label}
