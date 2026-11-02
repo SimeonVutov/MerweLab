@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import EnvironmentPanel from './features/environment/EnvironmentPanel';
+import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
+import type { EnvironmentInfo } from './features/environment/types';
 import type { ViewMode } from './scene/camera';
 import type { Viewer } from 'cesium';
 import CompareToolbar from './features/compare/CompareToolbar';
@@ -22,6 +25,9 @@ import { initialWindInfo, initialWindOptions } from './features/wind/types';
 import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
+  const [environment, setEnvironment] = useState(initialEnvironmentOptions);
+  const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
+  const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
   const [mode, setMode] = useState<Mode>('Explore');
   const [viewMode, setViewMode] = useState<ViewMode>('3d');
   const [viewRequest, setViewRequest] = useState(0);
@@ -59,6 +65,7 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    environment,
     morphology,
     viewMode,
     viewRequest,
@@ -135,6 +142,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          environment={environment}
+          onEnvironmentChange={setEnvironment}
           morphology={morphology}
           onMorphologyChange={changeMorphology}
           noise={noise}
@@ -165,6 +174,7 @@ export default function App() {
                 {...sceneSettings}
                 scenarioLabel={scenario.label}
                 scenarioId={scenarioId}
+                onEnvironmentInfo={setEnvironmentInfo}
                 onBuildingStatus={setBuildingStatus}
                 onSurfaceStatus={setSurfaceStatus}
                 onTerrainStatus={setTerrainStatus}
@@ -194,6 +204,7 @@ export default function App() {
                 {...sceneSettings}
                 scenarioLabel={rightScenario.label}
                 scenarioId={rightScenarioId}
+                onEnvironmentInfo={setRightEnvironmentInfo}
                 onBuildingStatus={setRightBuildingStatus}
                 onSurfaceStatus={setRightSurfaceStatus}
                 onTerrainStatus={setRightTerrainStatus}
@@ -205,6 +216,14 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          environmentPanel={(
+            <EnvironmentPanel
+              options={environment}
+              onChange={setEnvironment}
+              info={environmentInfo}
+              comparison={comparing ? rightEnvironmentInfo : undefined}
+            />
+          )}
           morphologyPanel={(
             <>
               <MorphologyPanel

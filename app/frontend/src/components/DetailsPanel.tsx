@@ -11,6 +11,7 @@ import WindPanel from '../features/wind/WindPanel';
 import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
+  environmentPanel: ReactNode;
   morphologyPanel: ReactNode;
   noise: NoiseOptions;
   noiseInfo: NoiseInfo;
@@ -67,6 +68,7 @@ export default function DetailsPanel({
   terrainStatus, wind, windInfo, onWindChange, comparison,
   cbs, onCbsChange,
   noise, noiseInfo, onNoiseChange,
+  environmentPanel,
   morphologyPanel,
 }: DetailsPanelProps) {
   return (
@@ -75,6 +77,7 @@ export default function DetailsPanel({
         <h2>{mode === 'Explore' ? scenarioLabel : mode}</h2>
         {mode !== 'Weather' && (
           <>
+            {environmentPanel}
             {morphologyPanel}
             <CbsPanel options={cbs} onChange={onCbsChange} />
             <NoisePanel
