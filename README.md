@@ -254,7 +254,7 @@ To run the web application locally:
 - **uv** for Python dependency management
 - A browser with WebGL enabled
 - Internet access for online imagery and KNMI updates
-- A KNMI **EDR API token** for downloading weather observations
+- A KNMI **EDR API token** for downloading weather observations (you can get your own token here: https://developer.dataplatform.knmi.nl/edr-api)
 
 The frontend and backend have separate dependencies. The commands below can be used on Windows and Linux.
 
