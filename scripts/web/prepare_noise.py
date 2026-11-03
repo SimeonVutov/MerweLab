@@ -93,6 +93,7 @@ def export_receivers(scenario, folder, horizontal):
     if scenario not in TRUSTED_RECEIVERS:
         return None
 
+    # Do not read or infer V1 receiver levels: its source export was overwritten.
     path = ROOT / f"outputs/data/noise/{scenario}/receiver_levels.geojson"
     data = json.loads(path.read_text())
     crs = data.get("crs", {}).get("properties", {}).get("name")
@@ -195,19 +196,8 @@ def prepare_scenario(scenario, placement, horizontal, bounds_rd, bounds, width, 
     }
 
 
-def prepare_mesh(bounds, width, height, placement, horizontal):
-    terrain_metadata = json.loads((ROOT / "data/web/terrain/manifest.json").read_text())
-    terrain_url = terrain_metadata["scenarios"]["baseline"]["url"]
-    terrain_path = ROOT / "data/web" / terrain_url.removeprefix("/web/")
-    terrain = np.fromfile(terrain_path, dtype="<f4").reshape(
-        terrain_metadata["height"], terrain_metadata["width"]
-    )
-
-    columns = np.linspace(0, width, math.ceil(width / 2) + 1)
-    rows = np.linspace(0, height, math.ceil(height / 2) + 1)
-    cc, rr = np.meshgrid(columns, rows)
-    longitude = bounds[0] + cc.ravel() / width * (bounds[2] - bounds[0])
-    latitude = bounds[3] - rr.ravel() / height * (bounds[3] - bounds[1])
+def terrain_upper_envelope(longitude, latitude, terrain_metadata, terrain):
+    """Sample a 5 x 5 terrain maximum so the display mesh clears nearby quay steps."""
     west, south, east, north = terrain_metadata["bounds"]
     column = (longitude - west) / (east - west) * (terrain_metadata["width"] - 1)
     row = (north - latitude) / (north - south) * (terrain_metadata["height"] - 1)
@@ -224,34 +214,69 @@ def prepare_mesh(bounds, width, height, placement, horizontal):
         for offset_x in range(-2, 3):
             envelope = np.maximum(envelope, terrain[row + offset_y, column + offset_x])
 
+    return envelope
+
+
+def prepare_mesh(bounds, width, height, placement, horizontal):
+    """Build one ENU display mesh above shared and scenario ground, without changing acoustics."""
+    terrain_metadata = json.loads((ROOT / "data/web/terrain/manifest.json").read_text())
+    terrain_url = terrain_metadata["scenarios"]["baseline"]["url"]
+    terrain_path = ROOT / "data/web" / terrain_url.removeprefix("/web/")
+    terrain = np.fromfile(terrain_path, dtype="<f4").reshape(
+        terrain_metadata["height"], terrain_metadata["width"]
+    )
+
+    columns = np.linspace(0, width, math.ceil(width / 2) + 1)
+    rows = np.linspace(0, height, math.ceil(height / 2) + 1)
+    column_grid, row_grid = np.meshgrid(columns, rows)
+    longitude = bounds[0] + column_grid.ravel() / width * (bounds[2] - bounds[0])
+    latitude = bounds[3] - row_grid.ravel() / height * (bounds[3] - bounds[1])
+    envelope = terrain_upper_envelope(longitude, latitude, terrain_metadata, terrain)
+
+    # Compare NAP scenario heights in the same ellipsoid datum as the shared terrain.
     rd_x, rd_y = horizontal.transform(longitude, latitude, direction="INVERSE", errcheck=True)
     geographic = Transformer.from_crs(4978, 4979, always_xy=True)
     with tempfile.TemporaryDirectory(prefix="merwelab-noise-ground-") as directory:
         for scenario in SCENARIOS:
             source = ROOT / f"data/processed/noise/{scenario}/terrain.tif"
             ground, transform, nodata = read_raster(source, Path(directory))
-            nap = sample_raster(ground, transform, nodata, np.asarray(rd_x), np.asarray(rd_y))
-            ecef = placement.transformer.transform(rd_x, rd_y, nap, errcheck=True)
-            ellipsoid = np.asarray(geographic.transform(*ecef, errcheck=True)[2])
-            envelope = np.maximum(envelope, ellipsoid)
+            ground_nap_m = sample_raster(
+                ground,
+                transform,
+                nodata,
+                np.asarray(rd_x),
+                np.asarray(rd_y),
+            )
+            ecef = placement.transformer.transform(rd_x, rd_y, ground_nap_m, errcheck=True)
+            ground_ellipsoid_m = np.asarray(geographic.transform(*ecef, errcheck=True)[2])
+            envelope = np.maximum(envelope, ground_ellipsoid_m)
 
     display_height = envelope + 1.5
     to_ecef = Transformer.from_crs(4979, 4978, always_xy=True)
-    xyz = np.column_stack(to_ecef.transform(longitude, latitude, display_height, errcheck=True))
-    positions = ((xyz - placement.origin_ecef) @ placement.axes).astype("<f4")
-    st = np.column_stack((cc.ravel() / width, 1 - rr.ravel() / height)).astype("<f4")
-    identifiers = np.arange(cc.size, dtype=np.uint32).reshape(cc.shape)
-    a = identifiers[:-1, :-1]
-    b = identifiers[:-1, 1:]
-    c = identifiers[1:, :-1]
-    d = identifiers[1:, 1:]
-    indices = np.stack((a, c, b, b, c, d), axis=-1).astype("<u4").ravel()
+    display_ecef = np.column_stack(to_ecef.transform(
+        longitude,
+        latitude,
+        display_height,
+        errcheck=True,
+    ))
+    positions = ((display_ecef - placement.origin_ecef) @ placement.axes).astype("<f4")
+    texture_coordinates = np.column_stack((column_grid.ravel() / width, 1 - row_grid.ravel() / height)).astype("<f4")
+
+    identifiers = np.arange(column_grid.size, dtype=np.uint32).reshape(column_grid.shape)
+    top_left = identifiers[:-1, :-1]
+    top_right = identifiers[:-1, 1:]
+    bottom_left = identifiers[1:, :-1]
+    bottom_right = identifiers[1:, 1:]
+    indices = np.stack(
+        (top_left, bottom_left, top_right, top_right, bottom_left, bottom_right),
+        axis=-1,
+    ).astype("<u4").ravel()
 
     folder = OUTPUT / "shared"
     folder.mkdir(parents=True, exist_ok=True)
     return {
         "positions": asset(folder, "positions", positions.tobytes(), "bin"),
-        "st": asset(folder, "st", st.tobytes(), "bin"),
+        "st": asset(folder, "st", texture_coordinates.tobytes(), "bin"),
         "indices": asset(folder, "indices", indices.tobytes(), "bin"),
         "vertexCount": len(positions),
         "indexCount": len(indices),
@@ -269,11 +294,19 @@ def main():
 
     bounds_rd = config[config["calculation_bounds_key"]]
     west, south, east, north = bounds_rd
-    longitude, latitude = horizontal.transform([west, west, east, east], [south, north, south, north])
+    longitude, latitude = horizontal.transform(
+        [west, west, east, east],
+        [south, north, south, north],
+    )
     bounds = [min(longitude), min(latitude), max(longitude), max(latitude)]
     geod = Geod(ellps="WGS84")
     middle_latitude = (bounds[1] + bounds[3]) / 2
-    width = math.ceil(geod.inv(bounds[0], middle_latitude, bounds[2], middle_latitude)[2] / SPACING_M)
+    width = math.ceil(geod.inv(
+        bounds[0],
+        middle_latitude,
+        bounds[2],
+        middle_latitude,
+    )[2] / SPACING_M)
     height = math.ceil(geod.inv(bounds[0], bounds[1], bounds[0], bounds[3])[2] / SPACING_M)
 
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -293,7 +326,11 @@ def main():
             lower = LIMITS[index - 1]
         if index < len(LIMITS):
             upper = LIMITS[index]
-        classes.append({"code": index + 1, "label": label, "lower": lower, "upper": upper, "colour": colour})
+        classes.append({"code": index + 1,
+        "label": label,
+        "lower": lower,
+        "upper": upper,
+        "colour": colour})
 
     manifest = {
         "version": 1,
@@ -307,13 +344,38 @@ def main():
         "scenarios": scenarios,
         "mesh": prepare_mesh(bounds, width, height, placement, horizontal),
         "notes": [
-            "Colours represent exported NoiseModelling contour bands, not exact point levels.",
-            "Thresholds use the available 5 dB band boundaries without inventing within-band values.",
-            "Two-metre display rasterization does not increase acoustic resolution; missing coverage stays transparent.",
-            "Class-code GeoTIFFs are generated under outputs/data/noise/app in EPSG:28992; browser PNGs preserve those integer classes with nearest-neighbour reprojection.",
-            "One continuous approximately 4 m display mesh clears a local upper envelope of shared AHN and all three scenario ground rasters by 1.5 m. This avoids clipping holes and overlaps with local site surfaces. Display heights do not change the exported acoustic results or receiver heights.",
-            "V1 receiver levels are explicitly untrusted and excluded from all preparation and browser assets.",
-            "Trusted receiver values retain LAEQ from their D/E/N/DEN export rows; DEN is the exported Lden indicator.",
+            (
+                'Colours represent exported NoiseModelling contour bands, not exact '
+                'point levels.'
+            ),
+            (
+                'Thresholds use the available 5 dB band boundaries without '
+                'inventing within-band values.'
+            ),
+            (
+                'Two-metre display rasterization does not increase acoustic '
+                'resolution; missing coverage stays transparent.'
+            ),
+            (
+                'Class-code GeoTIFFs are generated under outputs/data/noise/app in '
+                'EPSG:28992; browser PNGs preserve those integer classes with '
+                'nearest-neighbour reprojection.'
+            ),
+            (
+                'One continuous approximately 4 m display mesh clears a local upper '
+                'envelope of shared AHN and all three scenario ground rasters by '
+                '1.5 m. This avoids clipping holes and overlaps with local site '
+                'surfaces. Display heights do not change the exported acoustic '
+                'results or receiver heights.'
+            ),
+            (
+                'V1 receiver levels are explicitly untrusted and excluded from all '
+                'preparation and browser assets.'
+            ),
+            (
+                'Trusted receiver values retain LAEQ from their D/E/N/DEN export '
+                'rows; DEN is the exported Lden indicator.'
+            ),
         ],
     }
     (OUTPUT / "manifest.json").write_text(json.dumps(manifest, indent=2, allow_nan=False) + "\n")
