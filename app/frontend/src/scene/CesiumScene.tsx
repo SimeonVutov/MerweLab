@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { createLandUseLayers } from '../features/landUse/scene';
+import { hasLandUseLayers } from '../features/landUse/types';
+import type { LandUseLocation, LandUseOptions, LandUsePane } from '../features/landUse/types';
 import type { ImageryLayer, Viewer } from 'cesium';
 import { createEnvironmentLayers } from '../features/environment/scene';
 import type { EnvironmentInfo, EnvironmentOptions } from '../features/environment/types';
@@ -28,6 +31,9 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  landUse: LandUseOptions;
+  landUsePane: LandUsePane;
+  onLandUseProbe: (point: LandUseLocation) => void;
   environment: EnvironmentOptions;
   onEnvironmentInfo: (info: EnvironmentInfo) => void;
   viewMode: ViewMode;
@@ -59,6 +65,9 @@ interface CesiumSceneProps {
 }
 
 export default function CesiumScene({
+  landUse,
+  landUsePane,
+  onLandUseProbe,
   environment,
   onEnvironmentInfo,
   morphology,
@@ -88,6 +97,10 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
+  const landUseLayers = useRef<ReturnType<typeof createLandUseLayers> | null>(null);
+  const landUseProbeCallback = useRef(onLandUseProbe);
+  landUseProbeCallback.current = onLandUseProbe;
+  const [landUseError, setLandUseError] = useState<string | null>(null);
   const environmentLayers = useRef<ReturnType<typeof createEnvironmentLayers> | null>(null);
   const environmentInfoCallback = useRef(onEnvironmentInfo);
   environmentInfoCallback.current = onEnvironmentInfo;
@@ -137,6 +150,7 @@ export default function CesiumScene({
     environmentLayers.current = createEnvironmentLayers(instance, (info) => environmentInfoCallback.current(info));
     outlines.current = createBuildingOutlines(instance, setOutlineError);
     morphologyLayer.current = createMorphologyLayer(instance, setMorphologyError);
+    landUseLayers.current = createLandUseLayers(instance, (point) => landUseProbeCallback.current(point), setLandUseError);
     onViewerReady?.(instance);
     setError(null);
     setImageryError(null);
@@ -178,6 +192,8 @@ export default function CesiumScene({
       environmentLayers.current = null;
       morphologyLayer.current?.dispose();
       morphologyLayer.current = null;
+      landUseLayers.current?.dispose();
+      landUseLayers.current = null;
       outlines.current?.dispose();
       outlines.current = null;
       resizeObserver.disconnect();
@@ -234,6 +250,10 @@ export default function CesiumScene({
   }, [morphology, onViewerReady]);
 
   useEffect(() => {
+    landUseLayers.current?.setOptions(landUse, landUsePane);
+  }, [landUse, landUsePane, onViewerReady]);
+
+  useEffect(() => {
     noiseLayer.current?.setOptions(noise);
   }, [noise, onNoiseInfo, onViewerReady]);
 
@@ -269,6 +289,9 @@ export default function CesiumScene({
 
   return (
     <>
+      {landUseError && hasLandUseLayers(landUse) && (
+        <p className={styles.message} role="alert">{landUseError}</p>
+      )}
       {morphologyError && hasMorphologyLayers(morphology) && (
         <p className={styles.message} role="alert">{morphologyError}</p>
       )}
