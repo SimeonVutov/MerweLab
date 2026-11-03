@@ -1203,6 +1203,462 @@
       },
       "source": "outputs/data/morphology/extended/shared/imagery/factor6_age_45plus_introduction.tif",
       "sourceSha256": "57880c47d5393187ed0c6bd4757d8601b79b1aea13da034245a8223074d2a7e4"
+    },
+    {
+      "id": "Existing/factor1_height_classes_extended",
+      "indicator": "factor1_height_classes_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor1_height_classes_extended-8751b6aa0b1c.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "factor",
+        "scenario": "Existing",
+        "result": "height_grid",
+        "field": "height_class",
+        "factor": "height",
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "Normal (\u2264 20 m)",
+          "Tall (> 20 m)"
+        ],
+        "colours": [
+          "#9ecae1",
+          "#de2d26"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor1_height_classes_extended.tif",
+      "sourceSha256": "b91156ebe9db4818f33b11ea46d22b9e1497c3f501038d4b8679570c3ad7a6a1"
+    },
+    {
+      "id": "Existing/factor2_density_classes_extended",
+      "indicator": "factor2_density_classes_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor2_density_classes_extended-51e61db19492.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "factor",
+        "scenario": "Existing",
+        "result": "grid",
+        "field": "density_class",
+        "factor": "density",
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "Low (< 0.2)",
+          "Medium (0.2\u2013<0.4)",
+          "High (\u2265 0.4)"
+        ],
+        "colours": [
+          "#fee8c8",
+          "#fdbb84",
+          "#e34a33"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor2_density_classes_extended.tif",
+      "sourceSha256": "ccfdd17320594d7af613afe236b32f006f9facb85fe8ea06d58789b66713d45a"
+    },
+    {
+      "id": "Existing/factor3_hw_50m_classes_extended",
+      "indicator": "factor3_hw_50m_classes_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor3_hw_50m_classes_extended-b9284ced8684.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "factor",
+        "scenario": "Existing",
+        "result": "hw_grid",
+        "field": "H_W_class",
+        "factor": "hw",
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "Open (< 0.5)",
+          "Regular (0.5\u2013<1)",
+          "Canyon-like (\u2265 1)"
+        ],
+        "colours": [
+          "#a1d99b",
+          "#fddc6c",
+          "#e34a33"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor3_hw_50m_classes_extended.tif",
+      "sourceSha256": "7c7f6da4586078de4ecca8f60dba609d05ad1e6cd885b5e7ebfd11dac03e9e30"
+    },
+    {
+      "id": "Existing/factor3_hw_classes_extended",
+      "indicator": "factor3_hw_classes_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor3_hw_classes_extended-c54ff8219288.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "factor",
+        "scenario": "Existing",
+        "result": "hw_fine",
+        "field": "H_W_class",
+        "factor": "hw",
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "Open (< 0.5)",
+          "Regular (0.5\u2013<1)",
+          "Canyon-like (\u2265 1)"
+        ],
+        "colours": [
+          "#a1d99b",
+          "#fddc6c",
+          "#e34a33"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor3_hw_classes_extended.tif",
+      "sourceSha256": "2ece4a994aa567c94b8a92574929c5b8b9f9a85ffe02ce9de36b641dd34716e9"
+    },
+    {
+      "id": "Existing/factor4_svf_classes_extended",
+      "indicator": "factor4_svf_classes_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor4_svf_classes_extended-05527d1dca8b.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "factor",
+        "scenario": "Existing",
+        "result": "svf_grid",
+        "field": "SVF_class",
+        "factor": "svf",
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "Low (< 0.3)",
+          "Medium (0.3\u2013<0.6)",
+          "High (\u2265 0.6)"
+        ],
+        "colours": [
+          "#d73027",
+          "#fee08b",
+          "#1a9850"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor4_svf_classes_extended.tif",
+      "sourceSha256": "d22e73021910a1c95cf2f9db918781b3478dfc3908db4dd447a12b9a4bd76d31"
+    },
+    {
+      "id": "Existing/factor4_svf_continuous_extended",
+      "indicator": "factor4_svf_continuous_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor4_svf_continuous_extended-afba36e3466f.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "continuous",
+        "scenario": "Existing",
+        "result": "svf_grid",
+        "field": "SVF",
+        "factor": null,
+        "cmap": "viridis",
+        "limits": [
+          0,
+          1
+        ],
+        "categories": null,
+        "colours": null,
+        "gradient": [
+          "#440154",
+          "#460c5f",
+          "#47186a",
+          "#482273",
+          "#462d7c",
+          "#443781",
+          "#414186",
+          "#3d4a89",
+          "#39548b",
+          "#355c8c",
+          "#31648d",
+          "#2e6c8e",
+          "#2a758e",
+          "#277c8e",
+          "#24848d",
+          "#228b8d",
+          "#1f948b",
+          "#1e9b89",
+          "#1fa386",
+          "#24aa82",
+          "#2eb27c",
+          "#39b976",
+          "#47c06e",
+          "#57c665",
+          "#6bcd59",
+          "#7ed24e",
+          "#92d741",
+          "#a7db33",
+          "#bfdf24",
+          "#d4e11a",
+          "#e9e419",
+          "#fde724"
+        ]
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor4_svf_continuous_extended.tif",
+      "sourceSha256": "275edc11f75587e7dcb4ae3de9847a4368565b2d75ea778c5a514c24a17a480f"
+    },
+    {
+      "id": "Existing/factor5_heat_ventilation_risk_extended",
+      "indicator": "factor5_heat_ventilation_risk_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor5_heat_ventilation_risk_extended-cbed1eb831e3.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "continuous",
+        "scenario": "Existing",
+        "result": "risk_grid",
+        "field": "R",
+        "factor": null,
+        "cmap": "YlOrRd",
+        "limits": [
+          0,
+          1
+        ],
+        "categories": null,
+        "colours": null,
+        "gradient": [
+          "#ffffcc",
+          "#fffac0",
+          "#fff5b5",
+          "#fff1aa",
+          "#feec9e",
+          "#fee793",
+          "#fee289",
+          "#fedd7e",
+          "#fed673",
+          "#fecc68",
+          "#fec25d",
+          "#feb853",
+          "#fdae4a",
+          "#fda446",
+          "#fd9b42",
+          "#fd923e",
+          "#fc8439",
+          "#fc7434",
+          "#fc6430",
+          "#fc542b",
+          "#f74427",
+          "#f13724",
+          "#eb2a20",
+          "#e41d1c",
+          "#da141e",
+          "#d10d20",
+          "#c70723",
+          "#be0025",
+          "#ad0026",
+          "#9e0026",
+          "#8f0026",
+          "#800026"
+        ]
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor5_heat_ventilation_risk_extended.tif",
+      "sourceSha256": "71b4160ad1e278fb1e75e44f7fb9f2263195101139d72efdc448e7430808c930"
+    },
+    {
+      "id": "Existing/factor5_priority",
+      "indicator": "factor5_priority",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor5_priority-fa54125dac61.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "categorical",
+        "scenario": "Existing",
+        "result": "risk_grid",
+        "field": "priority_old",
+        "factor": null,
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "lower",
+          "moderate",
+          "high"
+        ],
+        "colours": [
+          "#91cf60",
+          "#fee08b",
+          "#d73027"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor5_priority.tif",
+      "sourceSha256": "cb2191dc8bb21c9d04be4961689ded4bd9d22213f3c275c147f9f01ab945576f"
+    },
+    {
+      "id": "Existing/factor6_final_risk_extended",
+      "indicator": "factor6_final_risk_extended",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor6_final_risk_extended-c47a77fd48a7.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "continuous",
+        "scenario": "Existing",
+        "result": "risk_grid",
+        "field": "R_final",
+        "factor": null,
+        "cmap": "YlOrRd",
+        "limits": [
+          0,
+          1
+        ],
+        "categories": null,
+        "colours": null,
+        "gradient": [
+          "#ffffcc",
+          "#fffac0",
+          "#fff5b5",
+          "#fff1aa",
+          "#feec9e",
+          "#fee793",
+          "#fee289",
+          "#fedd7e",
+          "#fed673",
+          "#fecc68",
+          "#fec25d",
+          "#feb853",
+          "#fdae4a",
+          "#fda446",
+          "#fd9b42",
+          "#fd923e",
+          "#fc8439",
+          "#fc7434",
+          "#fc6430",
+          "#fc542b",
+          "#f74427",
+          "#f13724",
+          "#eb2a20",
+          "#e41d1c",
+          "#da141e",
+          "#d10d20",
+          "#c70723",
+          "#be0025",
+          "#ad0026",
+          "#9e0026",
+          "#8f0026",
+          "#800026"
+        ]
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor6_final_risk_extended.tif",
+      "sourceSha256": "fbbcdaedb998b9d40a5f308c5dd2cc4507f3240e1e7c7bcd193d48cb85c8c468"
+    },
+    {
+      "id": "Existing/factor6_priority",
+      "indicator": "factor6_priority",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor6_priority-d3d943454601.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "categorical",
+        "scenario": "Existing",
+        "result": "risk_grid",
+        "field": "priority_new",
+        "factor": null,
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "lower",
+          "moderate",
+          "high"
+        ],
+        "colours": [
+          "#91cf60",
+          "#fee08b",
+          "#d73027"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor6_priority.tif",
+      "sourceSha256": "4070b0ba747e5ae634b82ef329ef5299f5b388fd0521ef75e529c30a83ef16ab"
+    },
+    {
+      "id": "Existing/factor6_priority_change",
+      "indicator": "factor6_priority_change",
+      "scenario": "baseline",
+      "url": "/web/morphology/baseline-factor6_priority_change-09115a18a9a0.png",
+      "bounds": [
+        4.401593301242944,
+        51.89979976318692,
+        4.449993771448788,
+        51.92308206330986
+      ],
+      "legend": {
+        "kind": "categorical",
+        "scenario": "Existing",
+        "result": "risk_grid",
+        "field": "priority_change",
+        "factor": null,
+        "cmap": null,
+        "limits": null,
+        "categories": [
+          "down",
+          "unchanged",
+          "up"
+        ],
+        "colours": [
+          "#4575b4",
+          "#eeeeee",
+          "#d73027"
+        ],
+        "gradient": null
+      },
+      "source": "outputs/data/morphology/extended/baseline/imagery/factor6_priority_change.tif",
+      "sourceSha256": "56ebf549ef1ef89f65c52dea636a4eb8b8a6fd0c2ea176589135a0f303a5cca7"
     }
   ],
   "notes": [

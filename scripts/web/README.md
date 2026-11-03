@@ -106,6 +106,21 @@ uv run --project scripts/web python scripts/web/prepare_morphology.py
 
 This converts the supplied coloured maps. It does not recompute the indicators.
 
+Current indicator TIFFs belong in
+`outputs/data/morphology/extended/baseline/imagery/`, using the same filenames
+as the corresponding V1/V2 exports. The preparation script reads the
+`Existing/...` entries in `metadata/legends.json` and maps them to `baseline`.
+The eleven Current indicators use the same class legends and fixed continuous
+scales as V1/V2. Four additional Current TIFFs (continuous height, nDSM,
+density, and H/W) are retained as source exports but are not listed for web
+preparation because the app has no controls for them. The height and nDSM
+exports use the notebook's maximum-roof height model despite the legacy
+`mean_height` filename.
+
+SVF change versus Existing is available for V1/V2 only; no Current-versus-itself
+map is generated. The source TIFFs and the morphology notebook are not modified
+by preparation.
+
 ### Update only water
 
 ```bash
