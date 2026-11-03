@@ -26,9 +26,7 @@ export default function EnvironmentPanel({ options, onChange, info, comparison }
       {comparison?.error && <p role="alert">Right map: {comparison.error}</p>}
       {options.trees && (
         <p className={styles.note}>
-          228 supplied OSM-derived tree locations. Illustrative crowns and trunks retain the source
-          model dimensions; they are not measured tree sizes. 2D shows location markers.
-          Coverage follows the supplied dataset, not a complete tree inventory.
+          Illustrative trees, not measured sizes or a complete inventory.
         </p>
       )}
       {options.elevation && (
@@ -45,9 +43,7 @@ export default function EnvironmentPanel({ options, onChange, info, comparison }
             onChange={(event) => onChange({ ...options, elevationOpacity: Number(event.target.value) / 100 })}
           />
           <p className={styles.note}>
-            Supplied AHN elevation colour image, draped on the numerical terrain.
-            No numerical colour legend was supplied. Colours do not provide exact height readings.
-            Analytical maps appear above this context layer.
+            AHN colour image; exact heights cannot be read from these colours.
           </p>
         </>
       )}

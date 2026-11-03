@@ -91,7 +91,6 @@ export default function NoisePanel({ options, onChange, info, scenarioLabel, com
   return (
     <section className={styles.panel} aria-label="Noise analysis">
       <h2>Road-traffic noise</h2>
-      <p className={styles.note}>NoiseModelling · calculated at 1.5 m above ground</p>
       {error && <p role="alert">{error}</p>}
       {hasError && (
         <button onClick={() => onChange({ ...options, retryRequest: options.retryRequest + 1 })}>
@@ -129,7 +128,7 @@ export default function NoisePanel({ options, onChange, info, scenarioLabel, com
           onChange={(event) => onChange({ ...options, threshold: Number(event.target.value) })}
         />
       </label>
-      <p className={styles.note}>Live filtering in 5 dB steps, matching the exported contour bands.</p>
+      <p className={styles.note}>5 dB bands; filtering uses the same steps.</p>
       <label>
         Noise opacity <output>{Math.round(options.opacity * 100)}%</output>
         <input
@@ -160,17 +159,19 @@ export default function NoisePanel({ options, onChange, info, scenarioLabel, com
         </div>
       )}
       <p className={styles.note}>
-        Select a location to inspect its contour band. In Compare, both maps use the same location,
-        period, colours and threshold. Lden includes the exported evening/night weighting.
+        Select a location to inspect its band. Compare uses the same location and scale.
       </p>
       <NoiseReadout info={info} label={scenarioLabel} options={options} />
       {comparison && (
         <NoiseReadout info={comparison.info} label={comparison.scenarioLabel} options={options} />
       )}
-      <p className={styles.note}>
-        Display geometry clears terrain and local site surfaces. It does not change the acoustic
-        calculation height or turn contour bands into exact point values.
-      </p>
+      <details>
+        <summary>Model notes</summary>
+        <p className={styles.note}>
+          Calculated at 1.5 m above ground. Bands are ranges, not exact point values.
+          Lden includes evening and night weighting.
+        </p>
+      </details>
     </section>
   );
 }

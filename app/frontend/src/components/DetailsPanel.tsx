@@ -71,35 +71,37 @@ function SceneSummary({
 
   return (
     <section className={styles.summary} aria-label={title}>
-      <h2>{title}</h2>
-      <dl className={styles.values}>
-        <div>
-          <dt>Context</dt>
-          <dd>{buildingStatus.context}</dd>
-        </div>
-        <div>
-          <dt>Buildings</dt>
-          <dd>{buildingStatus.scenario}</dd>
-        </div>
-        <div>
-          <dt>AHN terrain</dt>
-          <dd>{terrainStatus}</dd>
-        </div>
-        <div>
-          <dt>Site surfaces</dt>
-          <dd>{surfaceStatus.scenario}</dd>
-        </div>
-        <div>
-          <dt>Water</dt>
-          <dd>{surfaceStatus.water}</dd>
-        </div>
-        {showWind && (
+      <details>
+        <summary>{title} · layer status</summary>
+        <dl className={styles.values}>
           <div>
-            <dt>Wind</dt>
-            <dd>{windInfo.status}</dd>
+            <dt>Context</dt>
+            <dd>{buildingStatus.context}</dd>
           </div>
-        )}
-      </dl>
+          <div>
+            <dt>Buildings</dt>
+            <dd>{buildingStatus.scenario}</dd>
+          </div>
+          <div>
+            <dt>AHN terrain</dt>
+            <dd>{terrainStatus}</dd>
+          </div>
+          <div>
+            <dt>Site surfaces</dt>
+            <dd>{surfaceStatus.scenario}</dd>
+          </div>
+          <div>
+            <dt>Water</dt>
+            <dd>{surfaceStatus.water}</dd>
+          </div>
+          {showWind && (
+            <div>
+              <dt>Wind</dt>
+              <dd>{windInfo.status}</dd>
+            </div>
+          )}
+        </dl>
+      </details>
       {showWind && windInfo.error && <p role="alert" className={styles.note}>{windInfo.error}</p>}
       {showWind && windInfo.metric && windInfo.sample && (
         <p>{sampleValue}{sampleWarning}</p>
@@ -140,7 +142,7 @@ export default function DetailsPanel({
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
       <div aria-live="polite">
-        <h2>{mode === 'Explore' ? scenarioLabel : mode}</h2>
+        <h2>{mode === 'Explore' ? 'Details' : mode}</h2>
         {mode !== 'Weather' && (
           <>
             {environmentPanel}
@@ -169,21 +171,17 @@ export default function DetailsPanel({
               showWind={Boolean(comparison)}
             />
             {comparison && (
-              <>
-                <SceneSummary
-                  {...comparison}
-                  title={`Right · ${comparison.scenarioLabel}`}
-                  showWind
-                />
-                <p className={styles.note}>
-                  Layer visibility and opacity apply to both maps. Move either view to navigate both.
-                </p>
-                {wind.metric && (
-                  <p className={styles.note}>
-                    Select a location on either map to read both scenarios at the same coordinates. Missing data is not zero.
-                  </p>
-                )}
-              </>
+              <SceneSummary
+                {...comparison}
+                title={`Right · ${comparison.scenarioLabel}`}
+                showWind
+              />
+            )}
+            {comparison && (
+              <p className={styles.note}>
+                Cameras and layer settings are shared.
+                {wind.metric && ' Select either map to compare values at the same location. Missing data is not zero.'}
+              </p>
             )}
             <WindPanel
               info={displayedWindInfo}
@@ -193,7 +191,6 @@ export default function DetailsPanel({
             />
             <section className={styles.block}>
               <h2>Aerial imagery</h2>
-              <p className={styles.note}>PDOK · latest 25 cm imagery</p>
               <label htmlFor="imagery-opacity">Opacity <output>{Math.round(imageryOpacity * 100)}%</output></label>
               <input
                 id="imagery-opacity"
@@ -207,7 +204,6 @@ export default function DetailsPanel({
             </section>
           </>
         )}
-        {mode === 'Weather' && <p className={styles.note}>Weather visualization to be agreed.</p>}
       </div>
     </aside>
   );

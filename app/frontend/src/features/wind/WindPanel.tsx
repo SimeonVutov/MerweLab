@@ -41,10 +41,9 @@ export default function WindPanel({ info, options, onChange, showSample = true }
   return (
     <section className={styles.panel} aria-label="Wind results">
       <h2>Wind</h2>
-      <p className={styles.note}>From 240° · steady RANS<br />16 m/s at 60 m · maps at 1.5 m</p>
       {options.metric && (
         <p className={styles.note}>
-          Values are sampled 1.5 m above CFD ground. The map is draped over the displayed terrain; gaps indicate missing CFD data.
+          Sampled 1.5 m above CFD ground. Gaps mean no data.
         </p>
       )}
       {info.status === 'Loading' && <p role="status">Loading…</p>}
@@ -83,10 +82,15 @@ export default function WindPanel({ info, options, onChange, showSample = true }
         </>
       )}
       {options.arrows && <p className={styles.note}>Arrow length: 20 m represents 10 m/s horizontal speed.</p>}
-      {options.streamlines_2d && <p className={styles.note}>2D paths follow horizontal flow at pedestrian height.</p>}
-      {options.streamlines_3d && <p className={styles.note}>3D paths show steady mean flow.</p>}
       {info.flaggedSamples > 0 && <p className={styles.note}>Flagged extreme speeds occur in these results.</p>}
-      <p className={styles.note}>Not live weather or annual comfort classes.</p>
+      <details>
+        <summary>Simulation details</summary>
+        <p className={styles.note}>
+          Steady RANS · wind from 240° · 16 m/s at 60 m.
+          Streamlines show mean flow; 2D paths are at pedestrian height.
+          These are simulation results, not live weather or annual comfort classes.
+        </p>
+      </details>
     </section>
   );
 }

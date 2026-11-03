@@ -56,7 +56,6 @@ export default function LandUsePanel({ options, onChange, probe, comparing }: Pr
   return (
     <section className={styles.panel} aria-label="Land-use details">
       <h2>Land use</h2>
-      <p className={styles.note}>One shared optimized proposal; no separate V1/V2 predictions.</p>
       {error && <p role="alert">{error}</p>}
       <button
         onClick={() => onChange({ ...options, focusRequest: options.focusRequest + 1 })}
@@ -95,6 +94,9 @@ export default function LandUsePanel({ options, onChange, probe, comparing }: Pr
         </section>
       ))}
 
+      {(options.layers.optimized.enabled || options.layers.changes.enabled) && (
+        <p className={styles.note}>The optimized proposal is shared by V1 and V2.</p>
+      )}
       {options.layers.changes.enabled && <p className={styles.note}>Changed-cell colours show the proposed class. Unchanged cells are transparent.</p>}
       {data && <LandUseAreas data={data} />}
       {data && sample && <CellDetails data={data} sample={sample} />}
