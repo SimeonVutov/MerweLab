@@ -388,6 +388,6 @@ The available date range is determined from the data. Incoming observations upda
 | Frontend | React, TypeScript, Vite |
 | Backend | Python, Flask |
 | Weather prediction | TensorFlow/Keras LSTM models |
-| Land-use modelling | Neural Q-value model with spatial constraints |
+| Land-use modelling | DQN model with spatial constraints |
 | Geospatial workflows | Raster and vector processing, notebooks, and preparation scripts |
 | Observations and context | KNMI, CBS, AHN, aerial imagery, building and vegetation datasets |
