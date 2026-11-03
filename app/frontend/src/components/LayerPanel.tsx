@@ -7,10 +7,13 @@ import type { NoiseOptions } from '../features/noise/types';
 import type { LayerId } from '../project';
 import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
+import type { NetworkOptions } from '../features/network/types';
 import { landUseMaps } from '../features/landUse/types';
 import type { LandUseOptions } from '../features/landUse/types';
 
 interface LayerPanelProps {
+  network: NetworkOptions;
+  onNetworkChange: (options: NetworkOptions) => void;
   landUse: LandUseOptions;
   onLandUseChange: (options: LandUseOptions) => void;
   environment: EnvironmentOptions;
@@ -37,6 +40,8 @@ interface LayerPanelProps {
 }
 
 export default function LayerPanel({
+  network,
+  onNetworkChange,
   landUse,
   onLandUseChange,
   environment,
@@ -62,6 +67,22 @@ export default function LayerPanel({
   onNoiseChange,
 }: LayerPanelProps) {
   const controls: Partial<Record<LayerId, { checked: boolean; change: (visible: boolean) => void }>> = {
+    roads: {
+      checked: network.paths,
+      change: (paths) => onNetworkChange({ ...network, paths }),
+    },
+    entrances: {
+      checked: network.entrances,
+      change: (entrances) => onNetworkChange({ ...network, entrances }),
+    },
+    'garage-ramp': {
+      checked: network.ramp,
+      change: (ramp) => onNetworkChange({ ...network, ramp }),
+    },
+    'unbuilt-paths': {
+      checked: network.candidates,
+      change: (candidates) => onNetworkChange({ ...network, candidates }),
+    },
     trees: {
       checked: environment.trees,
       change: (trees) => onEnvironmentChange({ ...environment, trees }),
@@ -128,7 +149,7 @@ export default function LayerPanel({
         ))}
       </details>
       {layerGroups.filter((group) => group.label !== 'Morphology' && group.label !== 'Land use').map((group) => (
-        <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise'].includes(group.label)}>
+        <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise', 'Mobility'].includes(group.label)}>
           <summary>{group.label}</summary>
           {group.layers.map((layer) => {
             const control = controls[layer.id];

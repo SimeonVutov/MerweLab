@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { createNetworkLayer } from '../features/network/scene';
+import type { NetworkInfo, NetworkOptions, NetworkPane } from '../features/network/types';
 import { createLandUseLayers } from '../features/landUse/scene';
 import { hasLandUseLayers } from '../features/landUse/types';
 import type { LandUseLocation, LandUseOptions, LandUsePane } from '../features/landUse/types';
@@ -31,6 +33,9 @@ import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
 
 interface CesiumSceneProps {
+  network: NetworkOptions;
+  networkPane: NetworkPane;
+  onNetworkInfo: (info: NetworkInfo) => void;
   landUse: LandUseOptions;
   landUsePane: LandUsePane;
   onLandUseProbe: (point: LandUseLocation) => void;
@@ -65,6 +70,9 @@ interface CesiumSceneProps {
 }
 
 export default function CesiumScene({
+  network,
+  networkPane,
+  onNetworkInfo,
   landUse,
   landUsePane,
   onLandUseProbe,
@@ -97,6 +105,9 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
+  const networkLayer = useRef<ReturnType<typeof createNetworkLayer> | null>(null);
+  const networkInfoCallback = useRef(onNetworkInfo);
+  networkInfoCallback.current = onNetworkInfo;
   const landUseLayers = useRef<ReturnType<typeof createLandUseLayers> | null>(null);
   const landUseProbeCallback = useRef(onLandUseProbe);
   landUseProbeCallback.current = onLandUseProbe;
@@ -180,6 +191,7 @@ export default function CesiumScene({
     windLayer.current = createWindLayer(instance, onWindInfo, (point) => onWindProbeRef.current?.(point));
     cbsLayer.current = createCbsLayer(instance, (id) => cbsSelect.current(id), setCbsError);
     noiseLayer.current = createNoiseLayer(instance, onNoiseInfo, (point) => noiseProbeCallback.current?.(point));
+    networkLayer.current = createNetworkLayer(instance, (info) => networkInfoCallback.current(info));
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -214,6 +226,8 @@ export default function CesiumScene({
       cbsLayer.current = null;
       noiseLayer.current?.dispose();
       noiseLayer.current = null;
+      networkLayer.current?.dispose();
+      networkLayer.current = null;
       imagery.current = null;
       viewer.current = null;
       cameraMode.current = null;
@@ -227,6 +241,7 @@ export default function CesiumScene({
     surfaces.current?.setScenario(scenarioId);
     windLayer.current?.setScenario(scenarioId);
     noiseLayer.current?.setScenario(scenarioId);
+    networkLayer.current?.setScenario(scenarioId);
   }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
 
   useEffect(() => {
@@ -256,6 +271,10 @@ export default function CesiumScene({
   useEffect(() => {
     noiseLayer.current?.setOptions(noise);
   }, [noise, onNoiseInfo, onViewerReady]);
+
+  useEffect(() => {
+    networkLayer.current?.setOptions(network, networkPane);
+  }, [network, networkPane, onViewerReady]);
 
   useEffect(() => {
     noiseLayer.current?.setProbe(noiseProbe ?? null);

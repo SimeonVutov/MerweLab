@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import WeatherView from './features/weather/WeatherView';
+import NetworkPanel from './features/network/NetworkPanel';
+import { initialNetworkInfo, initialNetworkOptions } from './features/network/types';
 import LandUsePanel from './features/landUse/LandUsePanel';
 import { initialLandUseOptions } from './features/landUse/types';
 import type { LandUseLocation } from './features/landUse/types';
@@ -29,6 +31,9 @@ import { initialWindInfo, initialWindOptions } from './features/wind/types';
 import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
+  const [network, setNetwork] = useState(initialNetworkOptions);
+  const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
+  const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
   const [landUse, setLandUse] = useState(initialLandUseOptions);
   const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
   const [environment, setEnvironment] = useState(initialEnvironmentOptions);
@@ -71,6 +76,8 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    network,
+    networkPane: 'left' as const,
     landUse,
     landUsePane: comparing ? 'left' as const : 'single' as const,
     onLandUseProbe: selectLandUsePoint,
@@ -141,6 +148,10 @@ export default function App() {
     return synchronizeCameras(leftViewer, rightViewer);
   }, [comparing, leftViewer, rightViewer]);
 
+  useEffect(() => {
+    if (networkInfo.selected || rightNetworkInfo.selected) setDetailsOpen(true);
+  }, [networkInfo.selected, rightNetworkInfo.selected]);
+
   return (
     <div className={styles.app}>
       <a className={styles.skipLink} href={mode === 'Weather' ? '#weather' : '#scene'}>Skip to content</a>
@@ -158,6 +169,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          network={network}
+          onNetworkChange={setNetwork}
           landUse={landUse}
           onLandUseChange={setLandUse}
           environment={environment}
@@ -198,6 +211,7 @@ export default function App() {
                 onTerrainStatus={setTerrainStatus}
                 onWindInfo={setWindInfo}
                 onNoiseInfo={setNoiseInfo}
+                onNetworkInfo={setNetworkInfo}
                 onViewerReady={setLeftViewer}
               />
               <div className={styles.panelControls}>
@@ -220,6 +234,8 @@ export default function App() {
             {comparing && <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
               <CesiumScene
                 {...sceneSettings}
+                networkPane="right"
+                onNetworkInfo={setRightNetworkInfo}
                 landUsePane="right"
                 scenarioLabel={rightScenario.label}
                 scenarioId={rightScenarioId}
@@ -235,6 +251,20 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          networkPanel={(
+            <NetworkPanel
+              options={network}
+              onChange={setNetwork}
+              scenario={scenarioId}
+              scenarioLabel={scenario.label}
+              info={networkInfo}
+              comparison={comparing ? {
+                scenario: rightScenarioId,
+                scenarioLabel: rightScenario.label,
+                info: rightNetworkInfo,
+              } : undefined}
+            />
+          )}
           landUsePanel={(
             <LandUsePanel
               options={landUse}

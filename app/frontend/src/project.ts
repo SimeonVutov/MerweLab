@@ -42,9 +42,10 @@ export const layerGroups = [
     { id: 'land-use-optimized', label: 'Optimized land use' },
   ] },
   { label: 'Mobility', layers: [
-    { id: 'roads', label: 'Road network' },
+    { id: 'roads', label: 'Optimized paths' },
     { id: 'entrances', label: 'Entrances' },
     { id: 'garage-ramp', label: 'Garage ramp' },
+    { id: 'unbuilt-paths', label: 'Unbuilt candidates' },
   ] },
 ] as const;
 
