@@ -17,12 +17,21 @@ export default function Header({ mode, scenarioId, onModeChange, onScenarioChang
       <span className={styles.brand}>MerweLab</span>
       <nav className={styles.modes} aria-label="Mode">
         {modes.map((item) => (
-          <button key={item} aria-pressed={mode === item} onClick={() => onModeChange(item)}>
+          <button
+            key={item}
+            aria-pressed={mode === item}
+            onClick={() => onModeChange(item)}
+          >
             {item}
           </button>
         ))}
       </nav>
-      <div className={styles.scenarios} role="group" aria-label="Scenario" hidden={mode === 'Weather'}>
+      <div
+        className={styles.scenarios}
+        role="group"
+        aria-label="Scenario"
+        hidden={mode === 'Weather'}
+      >
         {scenarios.map((scenario) => (
           <button
             key={scenario.id}

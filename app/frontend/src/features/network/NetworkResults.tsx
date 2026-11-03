@@ -60,8 +60,8 @@ export default function NetworkResults({ data, options, scenario, scenarioLabel,
           </tr>
         </tbody>
       </table>
-      <p className={styles.note}>Cost and objective scores apply within each scenario. Wind uses the 240° simulation.</p>
-      {(!left || (comparison && !right)) && <p className={styles.note}>Current has accessibility statistics, but no supplied optimized network geometry.</p>}
+      <p className={styles.note}>Compare cost and scores within a scenario. Wind assumes 240°.</p>
+      {(!left || (comparison && !right)) && <p className={styles.note}>Current has accessibility statistics only; no optimized network.</p>}
 
       <details>
         <summary>Objective weights</summary>

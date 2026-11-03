@@ -1,56 +1,90 @@
+import type { Viewer } from 'cesium';
 import { useEffect, useState } from 'react';
-import WeatherView from './features/weather/WeatherView';
-import NetworkPanel from './features/network/NetworkPanel';
-import { initialNetworkInfo, initialNetworkOptions } from './features/network/types';
-import LandUsePanel from './features/landUse/LandUsePanel';
-import { initialLandUseOptions } from './features/landUse/types';
-import type { LandUseLocation } from './features/landUse/types';
+import DetailsPanel from './components/DetailsPanel';
+import Header from './components/Header';
+import LayerPanel from './components/LayerPanel';
+import { initialCbsOptions } from './features/cbs/data';
+import type { CbsOptions } from './features/cbs/data';
+import CompareToolbar from './features/compare/CompareToolbar';
+import { synchronizeCameras } from './features/compare/synchronizeCameras';
 import EnvironmentPanel from './features/environment/EnvironmentPanel';
 import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
 import type { EnvironmentInfo } from './features/environment/types';
-import type { ViewMode } from './scene/camera';
-import type { Viewer } from 'cesium';
-import CompareToolbar from './features/compare/CompareToolbar';
-import { synchronizeCameras } from './features/compare/synchronizeCameras';
-import { initialCbsOptions } from './features/cbs/data';
-import type { CbsOptions } from './features/cbs/data';
-import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
-import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
+import LandUsePanel from './features/landUse/LandUsePanel';
+import { initialLandUseOptions } from './features/landUse/types';
+import type { LandUseLocation } from './features/landUse/types';
 import MorphologyPanel from './features/morphology/MorphologyPanel';
 import { initialMorphologyOptions } from './features/morphology/data';
-import Header from './components/Header';
-import LayerPanel from './components/LayerPanel';
-import DetailsPanel from './components/DetailsPanel';
-import CesiumScene from './scene/CesiumScene';
-import { scenarios } from './project';
-import type { Mode, ScenarioId } from './project';
-import styles from './App.module.css';
-import type { ModelStatus } from './scene/modelLayers';
-import type { TerrainStatus } from './scene/terrain';
+import NetworkPanel from './features/network/NetworkPanel';
+import { initialNetworkInfo, initialNetworkOptions } from './features/network/types';
+import { initialNoiseInfo, initialNoiseOptions } from './features/noise/types';
+import type { NoiseInfo, NoiseLocation, NoiseOptions } from './features/noise/types';
+import WeatherView from './features/weather/WeatherView';
 import { initialWindInfo, initialWindOptions } from './features/wind/types';
 import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
+import { scenarios } from './project';
+import type { Mode, ScenarioId } from './project';
+import CesiumScene from './scene/CesiumScene';
+import type { ViewMode } from './scene/camera';
+import type { ModelStatus } from './scene/modelLayers';
+import type { TerrainStatus } from './scene/terrain';
+import styles from './App.module.css';
 
 export default function App() {
-  const [network, setNetwork] = useState(initialNetworkOptions);
-  const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
-  const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
-  const [landUse, setLandUse] = useState(initialLandUseOptions);
-  const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
-  const [environment, setEnvironment] = useState(initialEnvironmentOptions);
-  const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
-  const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
   const [mode, setMode] = useState<Mode>('Explore');
   const [viewMode, setViewMode] = useState<ViewMode>('3d');
   const [viewRequest, setViewRequest] = useState(0);
-  const [morphology, setMorphology] = useState(initialMorphologyOptions);
-  const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
+  const [layersOpen, setLayersOpen] = useState(true);
+  const [detailsOpen, setDetailsOpen] = useState(true);
+
   const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
   const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
   const [leftViewer, setLeftViewer] = useState<Viewer | null>(null);
   const [rightViewer, setRightViewer] = useState<Viewer | null>(null);
+
+  const [imageryVisible, setImageryVisible] = useState(true);
+  const [imageryOpacity, setImageryOpacity] = useState(1);
+  const [contextVisible, setContextVisible] = useState(true);
+  const [scenarioVisible, setScenarioVisible] = useState(true);
+  const [groundVisible, setGroundVisible] = useState(true);
+  const [waterVisible, setWaterVisible] = useState(false);
+
+  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
   const [rightTerrainStatus, setRightTerrainStatus] = useState<TerrainStatus>('Loading');
-  const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
-  const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
+  const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({
+    context: 'Loading',
+    scenario: 'Loading',
+  });
+  const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({
+    context: 'Loading',
+    scenario: 'Loading',
+  });
+  const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({
+    context: 'Loading',
+    scenario: 'Loading',
+    water: 'Loading',
+  });
+  const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({
+    context: 'Loading',
+    scenario: 'Loading',
+    water: 'Loading',
+  });
+
+  const [environment, setEnvironment] = useState(initialEnvironmentOptions);
+  const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
+  const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
+  const [morphology, setMorphology] = useState(initialMorphologyOptions);
+  const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
+
+  const [network, setNetwork] = useState(initialNetworkOptions);
+  const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
+  const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
+
+  const [landUse, setLandUse] = useState(initialLandUseOptions);
+  const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
+
+  const [wind, setWind] = useState<WindOptions>(initialWindOptions);
+  const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
   const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
   const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
 
@@ -59,22 +93,43 @@ export default function App() {
   const [rightNoiseInfo, setRightNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
   const [noiseProbe, setNoiseProbe] = useState<NoiseLocation | null>(null);
 
-  const [layersOpen, setLayersOpen] = useState(true);
-  const [detailsOpen, setDetailsOpen] = useState(true);
-  const [imageryVisible, setImageryVisible] = useState(true);
-  const [imageryOpacity, setImageryOpacity] = useState(1);
-  const [contextVisible, setContextVisible] = useState(true);
-  const [scenarioVisible, setScenarioVisible] = useState(true);
-  const [groundVisible, setGroundVisible] = useState(true);
-  const [waterVisible, setWaterVisible] = useState(false);
-  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
-  const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading' });
-  const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({ context: 'Loading', scenario: 'Loading', water: 'Loading' });
-  const [wind, setWind] = useState<WindOptions>(initialWindOptions);
-  const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
   const scenario = scenarios.find((item) => item.id === scenarioId)!;
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
+
+  function selectLandUsePoint(point: LandUseLocation) {
+    setLandUseProbe(point);
+    setDetailsOpen(true);
+  }
+
+  function selectNeighbourhood(id: string) {
+    setCbs((current) => ({ ...current, selected: id }));
+    setDetailsOpen(true);
+  }
+
+  function swapScenarios() {
+    setScenarioId(rightScenarioId);
+    setRightScenarioId(scenarioId);
+  }
+
+  function changeViewMode(value: ViewMode) {
+    setViewMode(value);
+
+    if (value === '2d') {
+      setGroundVisible(false);
+      setWind((current) => ({ ...current, streamlines_3d: false }));
+    }
+  }
+
+  function changeWind(options: WindOptions) {
+    if (options.streamlines_3d && !wind.streamlines_3d) {
+      setViewMode('3d');
+      setViewRequest((current) => current + 1);
+    }
+
+    setWind(options);
+  }
+
   const sceneSettings = {
     network,
     networkPane: 'left' as const,
@@ -102,44 +157,6 @@ export default function App() {
     onNoiseProbe: setNoiseProbe,
   };
 
-  function selectLandUsePoint(point: LandUseLocation) {
-    setLandUseProbe(point);
-    setDetailsOpen(true);
-  }
-
-  function selectNeighbourhood(id: string) {
-    setCbs((current) => ({ ...current, selected: id }));
-    setDetailsOpen(true);
-  }
-
-  function changeCbs(options: CbsOptions) {
-    setCbs(options);
-  }
-
-  function changeMorphology(options: typeof morphology) {
-    setMorphology(options);
-  }
-
-  function changeNoise(options: NoiseOptions) {
-    setNoise(options);
-  }
-
-  function changeViewMode(value: ViewMode) {
-    setViewMode(value);
-    if (value === '2d') {
-      setGroundVisible(false);
-      setWind((current) => ({ ...current, streamlines_3d: false }));
-    }
-  }
-
-  function changeWind(options: WindOptions) {
-    if (options.streamlines_3d && !wind.streamlines_3d) {
-      setViewMode('3d');
-      setViewRequest((current) => current + 1);
-    }
-    setWind(options);
-  }
-
   useEffect(() => {
     if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) {
       return;
@@ -149,7 +166,9 @@ export default function App() {
   }, [comparing, leftViewer, rightViewer]);
 
   useEffect(() => {
-    if (networkInfo.selected || rightNetworkInfo.selected) setDetailsOpen(true);
+    if (networkInfo.selected || rightNetworkInfo.selected) {
+      setDetailsOpen(true);
+    }
   }, [networkInfo.selected, rightNetworkInfo.selected]);
 
   return (
@@ -176,11 +195,11 @@ export default function App() {
           environment={environment}
           onEnvironmentChange={setEnvironment}
           morphology={morphology}
-          onMorphologyChange={changeMorphology}
+          onMorphologyChange={setMorphology}
           noise={noise}
-          onNoiseChange={changeNoise}
+          onNoiseChange={setNoise}
           cbs={cbs}
-          onCbsChange={changeCbs}
+          onCbsChange={setCbs}
           open={layersOpen}
           imageryVisible={imageryVisible}
           onImageryChange={setImageryVisible}
@@ -196,11 +215,20 @@ export default function App() {
           onWindChange={changeWind}
         />
         <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
-          {comparing && <CompareToolbar left={scenarioId} right={rightScenarioId}
-            onLeftChange={setScenarioId} onRightChange={setRightScenarioId}
-            onSwap={() => { setScenarioId(rightScenarioId); setRightScenarioId(scenarioId); }} />}
+          {comparing && (
+            <CompareToolbar
+              left={scenarioId}
+              right={rightScenarioId}
+              onLeftChange={setScenarioId}
+              onRightChange={setRightScenarioId}
+              onSwap={swapScenarios}
+            />
+          )}
           <div className={styles.views} data-comparing={comparing}>
-            <section className={styles.view} aria-label={comparing ? `Left map: ${scenario.label}` : `Map: ${scenario.label}`}>
+            <section
+              className={styles.view}
+              aria-label={comparing ? `Left map: ${scenario.label}` : `Map: ${scenario.label}`}
+            >
               <CesiumScene
                 {...sceneSettings}
                 scenarioLabel={scenario.label}
@@ -231,23 +259,25 @@ export default function App() {
                 </button>
               </div>
             </section>
-            {comparing && <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
-              <CesiumScene
-                {...sceneSettings}
-                networkPane="right"
-                onNetworkInfo={setRightNetworkInfo}
-                landUsePane="right"
-                scenarioLabel={rightScenario.label}
-                scenarioId={rightScenarioId}
-                onEnvironmentInfo={setRightEnvironmentInfo}
-                onBuildingStatus={setRightBuildingStatus}
-                onSurfaceStatus={setRightSurfaceStatus}
-                onTerrainStatus={setRightTerrainStatus}
-                onWindInfo={setRightWindInfo}
-                onNoiseInfo={setRightNoiseInfo}
-                onViewerReady={setRightViewer}
-              />
-            </section>}
+            {comparing && (
+              <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
+                <CesiumScene
+                  {...sceneSettings}
+                  networkPane="right"
+                  onNetworkInfo={setRightNetworkInfo}
+                  landUsePane="right"
+                  scenarioLabel={rightScenario.label}
+                  scenarioId={rightScenarioId}
+                  onEnvironmentInfo={setRightEnvironmentInfo}
+                  onBuildingStatus={setRightBuildingStatus}
+                  onSurfaceStatus={setRightSurfaceStatus}
+                  onTerrainStatus={setRightTerrainStatus}
+                  onWindInfo={setRightWindInfo}
+                  onNoiseInfo={setRightNoiseInfo}
+                  onViewerReady={setRightViewer}
+                />
+              </section>
+            )}
           </div>
         </main>
         <DetailsPanel
@@ -282,17 +312,15 @@ export default function App() {
             />
           )}
           morphologyPanel={(
-            <>
-              <MorphologyPanel
-                options={morphology}
-                onChange={changeMorphology}
-                scenario={scenarioId}
-              />
-            </>
+            <MorphologyPanel
+              options={morphology}
+              onChange={setMorphology}
+              scenario={scenarioId}
+            />
           )}
           noise={noise}
           noiseInfo={noiseInfo}
-          onNoiseChange={changeNoise}
+          onNoiseChange={setNoise}
           cbs={cbs}
           onCbsChange={setCbs}
           open={detailsOpen}

@@ -1,36 +1,36 @@
+import type { ImageryLayer, Viewer } from 'cesium';
 import { useEffect, useRef, useState } from 'react';
-import { createNetworkLayer } from '../features/network/scene';
-import type { NetworkInfo, NetworkOptions, NetworkPane } from '../features/network/types';
+import type { CbsOptions } from '../features/cbs/data';
+import { createCbsLayer } from '../features/cbs/scene';
+import { createEnvironmentLayers } from '../features/environment/scene';
+import type { EnvironmentInfo, EnvironmentOptions } from '../features/environment/types';
 import { createLandUseLayers } from '../features/landUse/scene';
 import { hasLandUseLayers } from '../features/landUse/types';
 import type { LandUseLocation, LandUseOptions, LandUsePane } from '../features/landUse/types';
-import type { ImageryLayer, Viewer } from 'cesium';
-import { createEnvironmentLayers } from '../features/environment/scene';
-import type { EnvironmentInfo, EnvironmentOptions } from '../features/environment/types';
-import { createMorphologyLayer } from '../features/morphology/scene';
 import { hasMorphologyLayers } from '../features/morphology/data';
 import type { MorphologyOptions } from '../features/morphology/data';
-import { createViewer } from './createViewer';
+import { createMorphologyLayer } from '../features/morphology/scene';
+import { createNetworkLayer } from '../features/network/scene';
+import type { NetworkInfo, NetworkOptions, NetworkPane } from '../features/network/types';
 import { createNoiseLayer } from '../features/noise/scene';
 import type { NoiseLayer } from '../features/noise/scene';
 import type { NoiseInfo, NoiseLocation, NoiseOptions } from '../features/noise/types';
-import { createCbsLayer } from '../features/cbs/scene';
-import type { CbsOptions } from '../features/cbs/data';
-import { createAerialImagery, createGlobeImagery } from './imagery';
-import { createBuildingOutlines } from './buildingOutlines';
-import type { ViewMode } from './camera';
-import { resetCamera } from './camera';
-import styles from './CesiumScene.module.css';
-import { createModelLayers } from './modelLayers';
-import type { ModelLayers, ModelStatus } from './modelLayers';
-import type { ScenarioId } from '../project';
-import { createTerrainLayer } from './terrain';
-import type { TerrainLayer, TerrainStatus } from './terrain';
-import { createContextBuildings } from './contextBuildings';
-import type { ContextBuildings } from './contextBuildings';
 import { createWindLayer } from '../features/wind/scene';
 import type { WindLayer } from '../features/wind/scene';
 import type { WindInfo, WindLocation, WindOptions } from '../features/wind/types';
+import type { ScenarioId } from '../project';
+import { createBuildingOutlines } from './buildingOutlines';
+import { resetCamera } from './camera';
+import type { ViewMode } from './camera';
+import { createContextBuildings } from './contextBuildings';
+import type { ContextBuildings } from './contextBuildings';
+import { createViewer } from './createViewer';
+import { createAerialImagery, createGlobeImagery } from './imagery';
+import { createModelLayers } from './modelLayers';
+import type { ModelLayers, ModelStatus } from './modelLayers';
+import { createTerrainLayer } from './terrain';
+import type { TerrainLayer, TerrainStatus } from './terrain';
+import styles from './CesiumScene.module.css';
 
 interface CesiumSceneProps {
   network: NetworkOptions;
@@ -105,23 +105,6 @@ export default function CesiumScene({
   noiseProbe,
   onNoiseProbe,
 }: CesiumSceneProps) {
-  const networkLayer = useRef<ReturnType<typeof createNetworkLayer> | null>(null);
-  const networkInfoCallback = useRef(onNetworkInfo);
-  networkInfoCallback.current = onNetworkInfo;
-  const landUseLayers = useRef<ReturnType<typeof createLandUseLayers> | null>(null);
-  const landUseProbeCallback = useRef(onLandUseProbe);
-  landUseProbeCallback.current = onLandUseProbe;
-  const [landUseError, setLandUseError] = useState<string | null>(null);
-  const environmentLayers = useRef<ReturnType<typeof createEnvironmentLayers> | null>(null);
-  const environmentInfoCallback = useRef(onEnvironmentInfo);
-  environmentInfoCallback.current = onEnvironmentInfo;
-
-  const morphologyLayer = useRef<ReturnType<typeof createMorphologyLayer> | null>(null);
-  const [morphologyError, setMorphologyError] = useState<string | null>(null);
-  const outlines = useRef<ReturnType<typeof createBuildingOutlines> | null>(null);
-  const [outlineError, setOutlineError] = useState<string | null>(null);
-  const cameraMode = useRef<ViewMode | null>(null);
-  const cameraRequest = useRef<number | null>(null);
   const container = useRef<HTMLDivElement>(null);
   const viewer = useRef<Viewer | null>(null);
   const imagery = useRef<ImageryLayer | null>(null);
@@ -129,25 +112,48 @@ export default function CesiumScene({
   const surfaces = useRef<ModelLayers | null>(null);
   const terrain = useRef<TerrainLayer | null>(null);
   const context = useRef<ContextBuildings | null>(null);
-  const windLayer = useRef<WindLayer | null>(null);
+  const outlines = useRef<ReturnType<typeof createBuildingOutlines> | null>(null);
+
+  const environmentLayers = useRef<ReturnType<typeof createEnvironmentLayers> | null>(null);
+  const morphologyLayer = useRef<ReturnType<typeof createMorphologyLayer> | null>(null);
+  const landUseLayers = useRef<ReturnType<typeof createLandUseLayers> | null>(null);
   const cbsLayer = useRef<ReturnType<typeof createCbsLayer> | null>(null);
+  const windLayer = useRef<WindLayer | null>(null);
   const noiseLayer = useRef<NoiseLayer | null>(null);
-  const noiseProbeCallback = useRef(onNoiseProbe);
-  noiseProbeCallback.current = onNoiseProbe;
+  const networkLayer = useRef<ReturnType<typeof createNetworkLayer> | null>(null);
+
+  const cameraMode = useRef<ViewMode | null>(null);
+  const cameraRequest = useRef<number | null>(null);
+
+  // Long-lived scene handlers read the latest callbacks without recreating the viewer.
+  const environmentInfoCallback = useRef(onEnvironmentInfo);
+  const landUseProbeCallback = useRef(onLandUseProbe);
   const cbsSelect = useRef(onCbsSelect);
-
-  cbsSelect.current = onCbsSelect;
-
-  const [cbsError, setCbsError] = useState<string | null>(null);
   const onWindProbeRef = useRef(onWindProbe);
+  const noiseProbeCallback = useRef(onNoiseProbe);
+  const networkInfoCallback = useRef(onNetworkInfo);
+
+  environmentInfoCallback.current = onEnvironmentInfo;
+  landUseProbeCallback.current = onLandUseProbe;
+  cbsSelect.current = onCbsSelect;
   onWindProbeRef.current = onWindProbe;
-  const [contextError, setContextError] = useState(false);
-  const [terrainError, setTerrainError] = useState<string | null>(null);
+  noiseProbeCallback.current = onNoiseProbe;
+  networkInfoCallback.current = onNetworkInfo;
+
   const [error, setError] = useState<string | null>(null);
   const [imageryError, setImageryError] = useState<string | null>(null);
+  const [terrainError, setTerrainError] = useState<string | null>(null);
+  const [contextError, setContextError] = useState(false);
+  const [outlineError, setOutlineError] = useState<string | null>(null);
+  const [morphologyError, setMorphologyError] = useState<string | null>(null);
+  const [landUseError, setLandUseError] = useState<string | null>(null);
+  const [cbsError, setCbsError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!container.current) return;
+    if (!container.current) {
+      return;
+    }
+
     let instance: Viewer;
     try {
       instance = createViewer(container.current);
@@ -167,6 +173,7 @@ export default function CesiumScene({
     setImageryError(null);
     setTerrainError(null);
     setContextError(false);
+
     const base = createGlobeImagery();
     const aerial = createAerialImagery();
     const removeBaseError = base.errorEvent.addEventListener(() => {
@@ -178,9 +185,11 @@ export default function CesiumScene({
     const removeRenderError = instance.scene.renderError.addEventListener(() => {
       setError('The 3D view stopped rendering. Reload the page to try again.');
     });
+
     instance.imageryLayers.add(base);
     instance.imageryLayers.add(aerial);
     imagery.current = aerial;
+
     buildings.current = createModelLayers(instance, 'buildings', onBuildingStatus);
     terrain.current = createTerrainLayer(instance, onTerrainStatus, setTerrainError);
     surfaces.current = createModelLayers(instance, 'surfaces', (status) => {
@@ -192,6 +201,7 @@ export default function CesiumScene({
     cbsLayer.current = createCbsLayer(instance, (id) => cbsSelect.current(id), setCbsError);
     noiseLayer.current = createNoiseLayer(instance, onNoiseInfo, (point) => noiseProbeCallback.current?.(point));
     networkLayer.current = createNetworkLayer(instance, (info) => networkInfoCallback.current(info));
+
     const resizeObserver = new ResizeObserver(() => {
       instance.resize();
       instance.scene.requestRender();
@@ -208,10 +218,12 @@ export default function CesiumScene({
       landUseLayers.current = null;
       outlines.current?.dispose();
       outlines.current = null;
+
       resizeObserver.disconnect();
       removeBaseError();
       removeAerialError();
       removeRenderError();
+
       buildings.current?.dispose();
       buildings.current = null;
       surfaces.current?.dispose();
@@ -228,6 +240,7 @@ export default function CesiumScene({
       noiseLayer.current = null;
       networkLayer.current?.dispose();
       networkLayer.current = null;
+
       imagery.current = null;
       viewer.current = null;
       cameraMode.current = null;
@@ -242,7 +255,15 @@ export default function CesiumScene({
     windLayer.current?.setScenario(scenarioId);
     noiseLayer.current?.setScenario(scenarioId);
     networkLayer.current?.setScenario(scenarioId);
-  }, [scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+  }, [
+    scenarioId,
+    onBuildingStatus,
+    onSurfaceStatus,
+    onTerrainStatus,
+    onWindInfo,
+    onViewerReady,
+    onNoiseInfo,
+  ]);
 
   useEffect(() => {
     windLayer.current?.setOptions(wind);
@@ -292,19 +313,51 @@ export default function CesiumScene({
     buildings.current?.setVisibility(contextVisible && viewMode === '3d', scenarioVisible && viewMode === '3d');
     context.current?.setVisible(contextVisible && viewMode === '3d');
     outlines.current?.setOptions(viewMode === '2d', scenarioId, contextVisible, scenarioVisible);
-  }, [contextVisible, scenarioVisible, viewMode, scenarioId, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+  }, [
+    contextVisible,
+    scenarioVisible,
+    viewMode,
+    scenarioId,
+    onBuildingStatus,
+    onSurfaceStatus,
+    onTerrainStatus,
+    onWindInfo,
+    onViewerReady,
+    onNoiseInfo,
+  ]);
 
   useEffect(() => {
     surfaces.current?.setVisibility(groundVisible, groundVisible, waterVisible);
     terrain.current?.setSiteVisible(groundVisible);
-  }, [groundVisible, waterVisible, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+  }, [
+    groundVisible,
+    waterVisible,
+    onBuildingStatus,
+    onSurfaceStatus,
+    onTerrainStatus,
+    onWindInfo,
+    onViewerReady,
+    onNoiseInfo,
+  ]);
 
   useEffect(() => {
-    if (!viewer.current || !imagery.current) return;
+    if (!viewer.current || !imagery.current) {
+      return;
+    }
+
     imagery.current.show = imageryVisible;
     imagery.current.alpha = imageryOpacity;
     viewer.current.scene.requestRender();
-  }, [imageryVisible, imageryOpacity, onBuildingStatus, onSurfaceStatus, onTerrainStatus, onWindInfo, onViewerReady, onNoiseInfo]);
+  }, [
+    imageryVisible,
+    imageryOpacity,
+    onBuildingStatus,
+    onSurfaceStatus,
+    onTerrainStatus,
+    onWindInfo,
+    onViewerReady,
+    onNoiseInfo,
+  ]);
 
   return (
     <>
@@ -319,16 +372,27 @@ export default function CesiumScene({
       )}
       <div ref={container} className={styles.canvas} />
       <div className={styles.toolbar}>
-        <button disabled={error !== null} onClick={() => viewer.current && resetCamera(viewer.current, viewMode)}>Reset view</button>
+        <button
+          disabled={error !== null}
+          onClick={() => viewer.current && resetCamera(viewer.current, viewMode)}
+        >
+          Reset view
+        </button>
         <div role="group" aria-label="Building view mode">
           <button aria-pressed={viewMode === '2d'} onClick={() => onViewModeChange('2d')}>2D</button>
           <button aria-pressed={viewMode === '3d'} onClick={() => onViewModeChange('3d')}>3D</button>
         </div>
       </div>
       <div className={styles.location}>Merwehaven · {scenarioLabel}</div>
-      {terrainError && !error && <p className={styles.message} role="alert">{terrainError}</p>}
-      {imageryError && imageryVisible && !terrainError && !error && <p className={styles.message} role="status">{imageryError}</p>}
-      {contextError && contextVisible && !imageryError && !terrainError && !error && <p className={styles.message} role="status">Some surrounding buildings could not load.</p>}
+      {terrainError && !error && (
+        <p className={styles.message} role="alert">{terrainError}</p>
+      )}
+      {imageryError && imageryVisible && !terrainError && !error && (
+        <p className={styles.message} role="status">{imageryError}</p>
+      )}
+      {contextError && contextVisible && !imageryError && !terrainError && !error && (
+        <p className={styles.message} role="status">Some surrounding buildings could not load.</p>
+      )}
       {error && <p className={styles.message} role="alert">{error}</p>}
       {cbsError && cbs.enabled && !error && (
         <p className={styles.message} role="alert">{cbsError}</p>

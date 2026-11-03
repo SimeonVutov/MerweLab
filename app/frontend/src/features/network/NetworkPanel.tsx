@@ -101,7 +101,7 @@ export default function NetworkPanel({ options, onChange, scenario, scenarioLabe
       </button>
 
       <NetworkLegend options={options} data={data} />
-      <p className={styles.note}>Saved design alternatives. Walking assignments and car trips are estimates.</p>
+      <p className={styles.note}>Walking assignments and car trips are estimates.</p>
       {info.status === 'Loading' && <p role="status">Loading network…</p>}
       {data && (
         <>

@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
-import type { Mode } from '../project';
 import CbsPanel from '../features/cbs/CbsPanel';
+import type { CbsOptions } from '../features/cbs/data';
 import NoisePanel from '../features/noise/NoisePanel';
 import type { NoiseInfo, NoiseOptions } from '../features/noise/types';
-import type { CbsOptions } from '../features/cbs/data';
-import styles from './DetailsPanel.module.css';
-import type { ModelStatus } from '../scene/modelLayers';
-import type { TerrainStatus } from '../scene/terrain';
 import WindPanel from '../features/wind/WindPanel';
 import type { WindInfo, WindOptions } from '../features/wind/types';
+import type { Mode } from '../project';
+import type { ModelStatus } from '../scene/modelLayers';
+import type { TerrainStatus } from '../scene/terrain';
+import styles from './DetailsPanel.module.css';
 
 interface DetailsPanelProps {
   networkPanel: ReactNode;
@@ -44,23 +44,68 @@ interface SceneDetails {
   noiseInfo: NoiseInfo;
 }
 
-function SceneSummary({ title, buildingStatus, surfaceStatus, terrainStatus, windInfo, showWind }: SceneDetails & { title: string; showWind: boolean }) {
+interface SceneSummaryProps extends SceneDetails {
+  title: string;
+  showWind: boolean;
+}
+
+function SceneSummary({
+  title,
+  buildingStatus,
+  surfaceStatus,
+  terrainStatus,
+  windInfo,
+  showWind,
+}: SceneSummaryProps) {
+  let sampleValue = 'No data at this location';
+  if (windInfo.metric && windInfo.sample && windInfo.sample.value !== null) {
+    sampleValue = `${windInfo.sample.value.toFixed(2)} ${windInfo.metric.units}`;
+  }
+
+  let sampleWarning = '';
+  if (windInfo.sample?.flagged) {
+    sampleWarning = ' · flagged extreme';
+  } else if (windInfo.sample?.outsideRange) {
+    sampleWarning = ' · outside colour range';
+  }
+
   return (
     <section className={styles.summary} aria-label={title}>
-      <h2>{title}</h2>
-      <dl className={styles.values}>
-        <div><dt>Context</dt><dd>{buildingStatus.context}</dd></div>
-        <div><dt>Buildings</dt><dd>{buildingStatus.scenario}</dd></div>
-        <div><dt>AHN terrain</dt><dd>{terrainStatus}</dd></div>
-        <div><dt>Site surfaces</dt><dd>{surfaceStatus.scenario}</dd></div>
-        <div><dt>Water</dt><dd>{surfaceStatus.water}</dd></div>
-        {showWind && <div><dt>Wind</dt><dd>{windInfo.status}</dd></div>}
-      </dl>
+      <details>
+        <summary>{title} · layer status</summary>
+        <dl className={styles.values}>
+          <div>
+            <dt>Context</dt>
+            <dd>{buildingStatus.context}</dd>
+          </div>
+          <div>
+            <dt>Buildings</dt>
+            <dd>{buildingStatus.scenario}</dd>
+          </div>
+          <div>
+            <dt>AHN terrain</dt>
+            <dd>{terrainStatus}</dd>
+          </div>
+          <div>
+            <dt>Site surfaces</dt>
+            <dd>{surfaceStatus.scenario}</dd>
+          </div>
+          <div>
+            <dt>Water</dt>
+            <dd>{surfaceStatus.water}</dd>
+          </div>
+          {showWind && (
+            <div>
+              <dt>Wind</dt>
+              <dd>{windInfo.status}</dd>
+            </div>
+          )}
+        </dl>
+      </details>
       {showWind && windInfo.error && <p role="alert" className={styles.note}>{windInfo.error}</p>}
-      {showWind && windInfo.metric && windInfo.sample && <p>
-        {windInfo.sample.value === null ? 'No data at this location' : `${windInfo.sample.value.toFixed(2)} ${windInfo.metric.units}`}
-        {windInfo.sample.flagged ? ' · flagged extreme' : windInfo.sample.outsideRange ? ' · outside colour range' : ''}
-      </p>}
+      {showWind && windInfo.metric && windInfo.sample && (
+        <p>{sampleValue}{sampleWarning}</p>
+      )}
     </section>
   );
 }
@@ -68,17 +113,36 @@ function SceneSummary({ title, buildingStatus, surfaceStatus, terrainStatus, win
 export default function DetailsPanel({
   networkPanel,
   landUsePanel,
-  open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus, surfaceStatus,
-  terrainStatus, wind, windInfo, onWindChange, comparison,
-  cbs, onCbsChange,
-  noise, noiseInfo, onNoiseChange,
+  open,
+  mode,
+  scenarioLabel,
+  imageryVisible,
+  imageryOpacity,
+  onOpacityChange,
+  buildingStatus,
+  surfaceStatus,
+  terrainStatus,
+  wind,
+  windInfo,
+  onWindChange,
+  comparison,
+  cbs,
+  onCbsChange,
+  noise,
+  noiseInfo,
+  onNoiseChange,
   environmentPanel,
   morphologyPanel,
 }: DetailsPanelProps) {
+  let displayedWindInfo = windInfo;
+  if (comparison && !windInfo.metric && !windInfo.flowLegend) {
+    displayedWindInfo = comparison.windInfo;
+  }
+
   return (
     <aside id="details-panel" className={styles.panel} hidden={!open} aria-label="Details">
       <div aria-live="polite">
-        <h2>{mode === 'Explore' ? scenarioLabel : mode}</h2>
+        <h2>{mode === 'Explore' ? 'Details' : mode}</h2>
         {mode !== 'Weather' && (
           <>
             {environmentPanel}
@@ -106,16 +170,27 @@ export default function DetailsPanel({
               noiseInfo={noiseInfo}
               showWind={Boolean(comparison)}
             />
-            {comparison && <>
-              <SceneSummary {...comparison} title={`Right · ${comparison.scenarioLabel}`} showWind />
-              <p className={styles.note}>Layer visibility and opacity apply to both maps. Move either view to navigate both.</p>
-              {wind.metric && <p className={styles.note}>Select a location on either map to read both scenarios at the same coordinates. Missing data is not zero.</p>}
-            </>}
-            <WindPanel info={comparison && !windInfo.metric && !windInfo.flowLegend ? comparison.windInfo : windInfo}
-              options={wind} onChange={onWindChange} showSample={!comparison} />
+            {comparison && (
+              <SceneSummary
+                {...comparison}
+                title={`Right · ${comparison.scenarioLabel}`}
+                showWind
+              />
+            )}
+            {comparison && (
+              <p className={styles.note}>
+                Cameras and layer settings are shared.
+                {wind.metric && ' Select either map to compare values at the same location. Missing data is not zero.'}
+              </p>
+            )}
+            <WindPanel
+              info={displayedWindInfo}
+              options={wind}
+              onChange={onWindChange}
+              showSample={!comparison}
+            />
             <section className={styles.block}>
               <h2>Aerial imagery</h2>
-              <p className={styles.note}>PDOK · latest 25 cm imagery</p>
               <label htmlFor="imagery-opacity">Opacity <output>{Math.round(imageryOpacity * 100)}%</output></label>
               <input
                 id="imagery-opacity"
@@ -129,7 +204,6 @@ export default function DetailsPanel({
             </section>
           </>
         )}
-        {mode === 'Weather' && <p className={styles.note}>Weather visualization to be agreed.</p>}
       </div>
     </aside>
   );

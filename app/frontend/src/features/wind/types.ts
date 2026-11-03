@@ -10,7 +10,11 @@ export interface WindOptions {
 }
 
 export const initialWindOptions: WindOptions = {
-  metric: null, arrows: false, streamlines_2d: false, streamlines_3d: false, opacity: 0.8,
+  metric: null,
+  arrows: false,
+  streamlines_2d: false,
+  streamlines_3d: false,
+  opacity: 0.8,
 };
 
 export interface WindMetricInfo {
@@ -30,7 +34,10 @@ export interface WindSample {
   flagged: boolean;
 }
 
-export interface WindLocation { longitude: number; latitude: number }
+export interface WindLocation {
+  longitude: number;
+  latitude: number;
+}
 
 export interface WindInfo {
   status: 'Off' | 'Loading' | 'Loaded' | 'Unavailable';
@@ -42,5 +49,10 @@ export interface WindInfo {
 }
 
 export const initialWindInfo: WindInfo = {
-  status: 'Off', metric: null, flowLegend: null, sample: null, error: null, flaggedSamples: 0,
+  status: 'Off',
+  metric: null,
+  flowLegend: null,
+  sample: null,
+  error: null,
+  flaggedSamples: 0,
 };

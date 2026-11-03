@@ -39,6 +39,10 @@ export default function MorphologyPanel({ options, onChange, scenario }: Props) 
   }
 
   const enabled = options.order.filter((id) => options.layers[id]?.enabled);
+  const showsRisk = enabled.some((id) => (
+    id.startsWith('factor5_')
+    || (id.startsWith('factor6_') && id !== 'factor6_age_45plus_introduction')
+  ));
 
   function moveLayer(id: string, offset: number) {
     const order = [...options.order];
@@ -56,7 +60,7 @@ export default function MorphologyPanel({ options, onChange, scenario }: Props) 
     <section className={styles.panel} aria-label="Morphological indicators">
       <h2>Urban morphology</h2>
       {error && <p role="alert">{error}</p>}
-      <p>Enable maps on the left. Each selected map has its own opacity. Layers later in this list draw on top.</p>
+      <p>Select maps on the left and adjust their opacity here. Lower entries draw on top.</p>
       <button onClick={() => onChange({ ...options, focusRequest: options.focusRequest + 1 })}>
         View full analysis area
       </button>
@@ -98,11 +102,18 @@ export default function MorphologyPanel({ options, onChange, scenario }: Props) 
           </section>
         );
       })}
-      <p>2D hides solid buildings and site surfaces. In 3D, disable Site surfaces if design pavement covers a terrain map. Map toggles preserve the camera.</p>
-      <p>Grey: missing observations. Outside the research boundary is transparent.</p>
-      <p>Analysis uses 50 m cells; fine H/W uses 25 m open-space support. Image pixels do not increase analytical resolution.</p>
-      <p>These are rendered maps. Exact cell values and numerical threshold filters require numerical exports.</p>
-      <p>Risk is a relative screening index with within-scenario normalization. Priority change shows the vulnerability adjustment, not proposal improvement against Current.</p>
+      <p>Grey: no data. Outside the research boundary: transparent.</p>
+      {showsRisk && (
+        <p>
+          Risk scores are normalized within each scenario. Priority change reflects vulnerability
+          adjustment, not improvement over Current.
+        </p>
+      )}
+      <details>
+        <summary>Map notes</summary>
+        <p>Analysis resolution: 50 m; fine H/W: 25 m open spaces. Finer image pixels add no analytical detail.</p>
+        <p>Rendered colours show the results; exact cell values and threshold filters are unavailable.</p>
+      </details>
     </section>
   );
 }

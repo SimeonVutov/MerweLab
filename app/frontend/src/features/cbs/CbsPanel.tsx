@@ -134,7 +134,6 @@ export default function CbsPanel({ options, onChange }: CbsPanelProps) {
   return (
     <section className={styles.panel} aria-label="CBS analysis">
       <h2>CBS neighbourhoods</h2>
-      <p className={styles.note}>Existing context · shared across scenarios</p>
       <button
         disabled={!data}
         onClick={() => onChange({ ...options, focusRequest: options.focusRequest + 1 })}
@@ -228,12 +227,14 @@ export default function CbsPanel({ options, onChange }: CbsPanelProps) {
         </details>
       )}
 
-      <p className={styles.note}>
-        Source: supplied CBS export. {data?.neighbourhoods.features.length ?? 14} neighbourhoods.
-        Reference year: {year}. These are neighbourhood figures, not peninsula population estimates.
-        Percentages may not total 100 due to rounding.
-        Facility distances are neighbourhood averages, not individual routes.
-      </p>
+      <details>
+        <summary>Data notes</summary>
+        <p className={styles.note}>
+          CBS context shared across scenarios · {data?.neighbourhoods.features.length ?? 14} neighbourhoods.
+          Reference year: {year}. Figures describe neighbourhoods, not the peninsula alone.
+          Percentages may differ from 100% through rounding. Facility distances are neighbourhood averages.
+        </p>
+      </details>
     </section>
   );
 }
