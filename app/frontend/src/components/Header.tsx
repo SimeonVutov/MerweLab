@@ -22,7 +22,7 @@ export default function Header({ mode, scenarioId, onModeChange, onScenarioChang
           </button>
         ))}
       </nav>
-      <div className={styles.scenarios} role="group" aria-label="Scenario">
+      <div className={styles.scenarios} role="group" aria-label="Scenario" hidden={mode === 'Weather'}>
         {scenarios.map((scenario) => (
           <button
             key={scenario.id}

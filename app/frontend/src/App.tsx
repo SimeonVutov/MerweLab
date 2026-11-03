@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import WeatherView from './features/weather/WeatherView';
 import EnvironmentPanel from './features/environment/EnvironmentPanel';
 import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
 import type { EnvironmentInfo } from './features/environment/types';
@@ -129,14 +130,16 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <a className={styles.skipLink} href="#scene">Skip to map</a>
+      <a className={styles.skipLink} href={mode === 'Weather' ? '#weather' : '#scene'}>Skip to content</a>
       <Header
         mode={mode}
         scenarioId={scenarioId}
         onModeChange={setMode}
         onScenarioChange={setScenarioId}
       />
+      <WeatherView hidden={mode !== 'Weather'} />
       <div
+        hidden={mode === 'Weather'}
         className={styles.workspace}
         data-layers-open={layersOpen}
         data-details-open={detailsOpen}
