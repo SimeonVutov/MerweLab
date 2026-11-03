@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "scope": "shared-proposal",
+  "bounds": [
+    4.404630482078277,
+    51.90460023963924,
+    4.432501226263082,
+    51.91684551275278
+  ],
+  "width": 476,
+  "height": 334,
+  "noData": 255,
+  "classes": [
+    {
+      "code": 0,
+      "label": "Other",
+      "colour": "#9a9489"
+    },
+    {
+      "code": 1,
+      "label": "Traffic",
+      "colour": "#bda66b"
+    },
+    {
+      "code": 2,
+      "label": "Residential",
+      "colour": "#cd8b76"
+    },
+    {
+      "code": 3,
+      "label": "Public facility",
+      "colour": "#9276af"
+    },
+    {
+      "code": 4,
+      "label": "Green space",
+      "colour": "#5b9970"
+    },
+    {
+      "code": 5,
+      "label": "Water",
+      "colour": "#5797b4"
+    }
+  ],
+  "maps": [
+    {
+      "id": "existing",
+      "label": "Existing land use",
+      "image": "/web/land-use/existing-9207380ea47c.png",
+      "codes": "/web/land-use/existing-0a99b6a502d7.uint8"
+    },
+    {
+      "id": "optimized",
+      "label": "Optimized proposal",
+      "image": "/web/land-use/optimized-4b4096eab4bb.png",
+      "codes": "/web/land-use/optimized-a32d52867074.uint8"
+    },
+    {
+      "id": "changes",
+      "label": "Changed cells",
+      "image": "/web/land-use/changes-8154a71169b9.png",
+      "codes": "/web/land-use/changes-e81caf4755da.uint8"
+    }
+  ],
+  "summary": {
+    "areaSquareMetres": 2540882.8880781247,
+    "changedAreaSquareMetres": 1448672.7501317963,
+    "cellAreaSquareMetres": 63.9280150978243,
+    "classes": [
+      {
+        "code": 0,
+        "existingArea": 1144247.5422359572,
+        "optimizedArea": 0.0
+      },
+      {
+        "code": 1,
+        "existingArea": 86558.5324424541,
+        "optimizedArea": 86558.5324424541
+      },
+      {
+        "code": 2,
+        "existingArea": 559178.3480606691,
+        "optimizedArea": 1427320.7930891232
+      },
+      {
+        "code": 3,
+        "existingArea": 199583.26313540747,
+        "optimizedArea": 101645.54400554064
+      },
+      {
+        "code": 4,
+        "existingArea": 135591.32002248534,
+        "optimizedArea": 509634.1363598553
+      },
+      {
+        "code": 5,
+        "existingArea": 415723.8821811514,
+        "optimizedArea": 415723.8821811514
+      }
+    ]
+  },
+  "sources": [
+    {
+      "path": "data/land_use/land_use_in_context_area_smaller.tif",
+      "sha256": "bb66d5bc8fa928daa375e4363f26364b056585c742b8fbfad14e157477cdeb59"
+    },
+    {
+      "path": "data/land_use/simplified_land_use.tif",
+      "sha256": "be73dcbdd929ccf4e202cc5f35d590ddc7d326bf3a0ad71a588b0687c538db5b"
+    },
+    {
+      "path": "data/land_use/predicted_map_corrected.tif",
+      "sha256": "d65765860a50756a0cbb601e27866188360b8dc68f9d965a7209d63391019175"
+    }
+  ],
+  "notes": [
+    "One shared optimized proposal was supplied, not separate V1/V2 predictions.",
+    "Changed-cell colours show the proposed class; unchanged cells are transparent.",
+    "Areas use original RD cells; browser pixels do not increase analytical resolution."
+  ]
+}
