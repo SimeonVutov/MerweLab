@@ -90,3 +90,41 @@ For plotting, edit `scripts/wind/visualization/settings.py`: select `SCENARIO`, 
 Git contains configuration, input surfaces, plotting code and selected figures. Meshes, processor partitions, solver fields and extracted `.eMesh` files stay local. **Pulling the branch does not provide the solved datasets.** Replotting requires these results separately or a local simulation.
 
 Background: [Blocken (2015)](https://doi.org/10.1016/j.buildenv.2015.02.015) and the [OpenFOAM meshing guide](https://www.openfoam.com/documentation/user-guide/4-mesh-generation-and-conversion/4.4-mesh-generation-with-the-snappyhexmesh-utility). Refinement extents and runtime compromises are project choices, not universal values prescribed by those references.
+
+## Run visualization and browser exports
+
+From the repository root, in a Python environment with the packages listed in
+`scripts/wind/visualization/requirements.txt`:
+
+```bash
+python scripts/wind/visualization/wind_speed.py
+python scripts/wind/visualization/pressure.py
+python scripts/wind/visualization/turbulence.py
+```
+
+The numerical solution and matching mesh must already be present locally.
+The visualization requirements include Python GDAL bindings, which must match
+the installed GDAL library; the web-preparation environment alone is insufficient.
+
+The app has a separate two-stage export:
+
+```bash
+python scripts/wind/visualization/export_app_data.py --scenario all
+uv run --project scripts/web python scripts/web/prepare_wind.py
+```
+
+The first stage reads saved CFD fields and writes grids, metadata, arrows and
+streamlines under `outputs/data/wind/app/<scenario>/`. Its iteration mapping is
+baseline 500 and V1/V2 800. The second stage consumes those exports and shared
+prepared terrain, producing browser assets under `data/web/wind/`.
+See the [preparation guide](../../scripts/web/README.md) for GDAL tools,
+transformation-grid setup and terrain dependencies.
+
+For the pedestrian wind rasters consumed by network analysis:
+
+```bash
+python scripts/wind/visualization/export_pedestrian_wind.py
+```
+
+This writes under `outputs/data/wind/study_area/`. Neither export reruns the CFD
+solver. If only starting the app, use the committed browser assets instead.

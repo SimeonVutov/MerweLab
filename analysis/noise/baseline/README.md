@@ -1,9 +1,12 @@
 # Baseline noise setup
 
-The baseline inputs and native NoiseModelling 6.0.0 workflow are prepared for
-the same study area as V1 and V2. **The full study-area baseline run is pending;
-its results will be added in a separate PR.** The earlier small pilot is not a
-final baseline comparison.
+The baseline NoiseModelling 6.0.0 run is complete for the same study area as V1
+and V2. Contours and trusted receiver levels are stored in
+`outputs/data/noise/baseline/`; four figures are in
+`outputs/figures/noise/baseline/study_area/`.
+
+The saved workflow and inputs remain available for reproducing the run.
+The earlier small pilot is not the final baseline comparison.
 
 ## Inputs
 
@@ -46,5 +49,15 @@ outputs/data/noise/baseline/receiver_levels.geojson
 outputs/data/noise/baseline/noise_map.geojson
 ```
 
-The current visualization script accepts V1 and V2 only. Add baseline support
-when the baseline results are introduced; no baseline figures are claimed here.
+## Visualize the saved results
+
+From the repository root, with the plotting dependencies listed in the
+[noise README](../README.md#results-and-visualization):
+
+```bash
+python scripts/noise/visualize_noise.py baseline --view study_area
+```
+
+For browser assets, use `scripts/web/prepare_noise.py` as described in the
+[preparation guide](../../../scripts/web/README.md). It prepares all scenarios,
+including baseline, and keeps V1 receiver values excluded.

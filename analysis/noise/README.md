@@ -8,12 +8,12 @@ cover road traffic only; they do not include shipping, industry or aircraft.
 
 | Scenario | Saved workflow | Current outputs |
 | --- | --- | --- |
-| `baseline` | `baseline/workflow.json` | Inputs prepared; the study-area run and results will follow in a separate PR |
+| `baseline` | `baseline/workflow.json` | Final contours, trusted receiver levels and four study-area PNGs |
 | `scenario_a` (V1) | `scenario_a/workflow.json` | Final contours and four study-area PNGs |
 | `scenario_b` (V2) | `scenario_b/workflow.json` | Final contours, precise receiver levels and four study-area PNGs |
 
-The earlier baseline pilot covered a smaller area. It is not the final baseline
-comparison, and its experimental workflow and outputs are not included here.
+The committed baseline results now cover the same study area as V1 and V2.
+Earlier small-area pilot results are not the baseline used for comparison.
 
 For each scenario, `data/processed/noise/{scenario}/` contains:
 
@@ -131,8 +131,8 @@ The workflows are the authoritative record of the full settings.
 
 ## Results and visualization
 
-Final exports are under `outputs/data/noise/{scenario}/`. Both V1 and V2 have
-`noise_map.geojson`; only V2 currently has a valid `receiver_levels.geojson`.
+Final exports are under `outputs/data/noise/{scenario}/`. All three scenarios have
+`noise_map.geojson`; baseline and V2 have trusted `receiver_levels.geojson` exports.
 V1's receiver export was overwritten during the later V2 export. Its final
 contours remain valid for band-based maps, thresholds and class rasters, but
 cannot reconstruct precise V1 receiver levels or exact V1–V2 dB differences.
@@ -146,14 +146,15 @@ it does not require receiver-level exports or a NoiseModelling database.
 From the repository root:
 
 ```bash
+python scripts/noise/visualize_noise.py baseline --view study_area
 python scripts/noise/visualize_noise.py scenario_a --view study_area
 python scripts/noise/visualize_noise.py scenario_b --view study_area
 ```
 
 Each command produces four PNGs in
 `outputs/figures/noise/{scenario}/study_area/`: `noise_bands.png`,
-`day_night.png`, `thresholds.png` and `noise_3d.png`. Those eight final V1/V2
-PNGs are committed. No HTML or PDF files are generated. The default view is
+`day_night.png`, `thresholds.png` and `noise_3d.png`. The twelve study-area
+PNGs for baseline, V1 and V2 are committed. No HTML or PDF files are generated. The default view is
 `study_area`; thresholds and the 3D view default to `DEN` and can use
 `--period D`, `E` or `N`. Thresholds are 45, 55, 65 and 75 dB; edit the settings
 at the top of the script to change them at existing contour-band boundaries.
@@ -162,3 +163,19 @@ The 3D preview shows pedestrian noise bands above flat ground with relative
 building heights and vertical scale 1. It is not terrain-following or a façade
 noise calculation. Uncoloured areas may lack contour coverage, including
 building setbacks. Threshold maps are not legal compliance assessments.
+
+## Prepare results for the web application
+
+Use the committed assets to run the application; no simulation rerun is needed.
+After changing the contour or trusted receiver exports, run from the repository root:
+
+```bash
+uv run --project scripts/web python scripts/web/prepare_noise.py
+```
+
+This requires the preparation environment, GDAL tools, transformation grids,
+prepared shared terrain, and all three scenario ground rasters. See the
+[preparation guide](../../scripts/web/README.md) for setup and dependency order.
+It writes browser assets under `data/web/noise/` and classified RD TIFFs under
+`outputs/data/noise/app/`. The app filters existing 5 dB bands; it does not
+rerun the acoustic calculation. V1 receiver data remains excluded.
