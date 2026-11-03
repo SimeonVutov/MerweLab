@@ -1,60 +1,60 @@
 .panel {
-  margin-top: 24px;
-  font-size: 12px;
+    margin-top: 24px;
+    font-size: 12px;
 }
 
 .panel label {
-  display: block;
-  margin: 14px 0;
+    display: block;
+    margin: 14px 0;
 }
 
 .panel select {
-  display: block;
-  width: 100%;
-  margin-top: 6px;
-  padding: 6px;
-  font: inherit;
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 4px;
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 6px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
 }
 
 .panel .checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .legend > div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
 }
 
 .swatch {
-  display: inline-block;
-  width: 20px;
-  height: 10px;
-  border: 1px solid var(--line);
+    display: inline-block;
+    width: 20px;
+    height: 10px;
+    border: 1px solid var(--line);
 }
 
 .filtered {
-  opacity: 0.35;
+    opacity: 0.35;
 }
 
 .readout {
-  border-top: 1px solid var(--line);
-  margin-top: 14px;
+    border-top: 1px solid var(--line);
+    margin-top: 14px;
 }
 
 .panel small {
-  display: block;
-  margin-top: 6px;
+    display: block;
+    margin-top: 6px;
 }
 
 .note,
 .panel small {
-  color: var(--muted);
+    color: var(--muted);
 }

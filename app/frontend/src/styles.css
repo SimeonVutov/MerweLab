@@ -1,97 +1,97 @@
 :root {
-  font-family: system-ui, sans-serif;
-  font-size: 14px;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  color-scheme: light;
-  --surface: #fff;
-  --ink: #252c28;
-  --line: #e2e6e1;
-  --soft: #f3f5f1;
-  --active: #245b49;
-  --on-active: #fff;
-  --muted: #647067;
-  color: var(--ink);
-  background: var(--surface);
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    color-scheme: light;
+    --surface: #fff;
+    --ink: #252c28;
+    --line: #e2e6e1;
+    --soft: #f3f5f1;
+    --active: #245b49;
+    --on-active: #fff;
+    --muted: #647067;
+    color: var(--ink);
+    background: var(--surface);
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html, body, #root {
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
 body {
-  margin: 0;
+    margin: 0;
 }
 
 button, input {
-  font: inherit;
+    font: inherit;
 }
 
 button {
-  color: inherit;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  padding: 7px 11px;
-  cursor: pointer;
+    color: inherit;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 7px 11px;
+    cursor: pointer;
 }
 
 button:hover {
-  background: var(--soft);
+    background: var(--soft);
 }
 
 button[aria-pressed='true'] {
-  color: var(--on-active);
-  background: var(--active);
+    color: var(--on-active);
+    background: var(--active);
 }
 
 :focus-visible {
-  outline: 2px solid var(--active);
-  outline-offset: 3px;
+    outline: 2px solid var(--active);
+    outline-offset: 3px;
 }
 
 button:disabled, input:disabled {
-  cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 h2 {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 15px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 15px;
 }
 
 p {
-  line-height: 1.5;
+    line-height: 1.5;
 }
 
 input {
-  accent-color: var(--active);
+    accent-color: var(--active);
 }
 
 input[type='range'] {
-  width: 100%;
-  margin: 12px 0 0;
+    width: 100%;
+    margin: 12px 0 0;
 }
 
 [hidden] {
-  display: none !important;
+    display: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --surface: #202321;
-    --ink: #edf0ed;
-    --line: #3b413d;
-    --soft: #292e2a;
-    --active: #8fc5aa;
-    --on-active: #14271d;
-    --muted: #b4bdb6;
-  }
+    :root {
+        color-scheme: dark;
+        --surface: #202321;
+        --ink: #edf0ed;
+        --line: #3b413d;
+        --soft: #292e2a;
+        --active: #8fc5aa;
+        --on-active: #14271d;
+        --muted: #b4bdb6;
+    }
 }

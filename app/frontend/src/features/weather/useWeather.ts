@@ -3,104 +3,106 @@ import { fields } from './types';
 import type { Observation, WeatherPage } from './types';
 
 function decodeRows(page: WeatherPage): Observation[] {
-  return page.rows.map((row) => {
-    const observation = { time: Date.parse(String(row[0])) } as Observation;
-    for (const field of fields) {
-      const index = page.columns.indexOf(field.id);
-      const value = row[index];
-      observation[field.id] = typeof value === 'number' ? value : null;
-    }
-    return observation;
-  });
+    return page.rows.map((row) => {
+        const observation = { time: Date.parse(String(row[0])) } as Observation;
+        for (const field of fields) {
+            const index = page.columns.indexOf(field.id);
+            const value = row[index];
+            observation[field.id] = typeof value === 'number' ? value : null;
+        }
+        return observation;
+    });
 }
 
 export function useWeather() {
-  const [observations, setObservations] = useState<Observation[]>([]);
-  const [page, setPage] = useState<WeatherPage | null>(null);
-  const [connected, setConnected] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [lastFetched, setLastFetched] = useState<number | null>(null);
+    const [observations, setObservations] = useState<Observation[]>([]);
+    const [page, setPage] = useState<WeatherPage | null>(null);
+    const [connected, setConnected] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [lastFetched, setLastFetched] = useState<number | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    let timer: ReturnType<typeof setTimeout>;
-    let cursor: string | undefined;
-    let accumulated: Observation[] = [];
-    let refreshing = false;
-    let pollDelay = 60_000;
+    useEffect(() => {
+        const controller = new AbortController();
+        let timer: ReturnType<typeof setTimeout>;
+        let cursor: string | undefined;
+        let accumulated: Observation[] = [];
+        let refreshing = false;
+        let pollDelay = 60_000;
 
-    async function refresh() {
-      if (refreshing || controller.signal.aborted) return;
+        async function refresh() {
+            if (refreshing || controller.signal.aborted) return;
 
-      refreshing = true;
-      clearTimeout(timer);
-      let through: string | undefined;
+            refreshing = true;
+            clearTimeout(timer);
+            let through: string | undefined;
 
-      try {
-        let more = true;
-        while (more && !controller.signal.aborted) {
-          const query = new URLSearchParams();
-          if (cursor) query.set('after', cursor);
-          if (through) query.set('through', through);
+            try {
+                let more = true;
+                while (more && !controller.signal.aborted) {
+                    const query = new URLSearchParams();
+                    if (cursor) query.set('after', cursor);
+                    if (through) query.set('through', through);
 
-          const response = await fetch(`/api/weather/observations?${query}`, {
-            signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]),
-            cache: 'no-store',
-          });
-          if (!response.ok) {
-            throw new Error('Weather server unavailable');
-          }
+                    const response = await fetch(`/api/weather/observations?${query}`, {
+                        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15_000)]),
+                        cache: 'no-store',
+                    });
+                    if (!response.ok) {
+                        throw new Error('Weather server unavailable');
+                    }
 
-          const next: WeatherPage = await response.json();
-          const additions = decodeRows(next);
-          if (!through) through = next.history.lastObservation ?? undefined;
-          if (next.hasMore && additions.length === 0) {
-            throw new Error('Weather server returned an empty page');
-          }
+                    const next: WeatherPage = await response.json();
+                    const additions = decodeRows(next);
+                    // Freeze the archive endpoint while paging; later observations arrive on the next poll.
+                    if (!through) through = next.history.lastObservation ?? undefined;
+                    if (next.hasMore && additions.length === 0) {
+                        throw new Error('Weather server returned an empty page');
+                    }
 
-          accumulated = accumulated.concat(additions);
-          if (additions.length > 0) {
-            cursor = new Date(additions[additions.length - 1]!.time).toISOString();
-            setObservations(accumulated);
-          }
+                    accumulated = accumulated.concat(additions);
+                    if (additions.length > 0) {
+                        cursor = new Date(additions[additions.length - 1]!.time).toISOString();
+                        setObservations(accumulated);
+                    }
 
-          // Use a short interval while the server publishes historical batches.
-          // Normal live updates remain a one-minute poll.
-          pollDelay = next.sync.checking ? 5_000 : 60_000;
-          setPage(next);
-          setConnected(true);
-          setLastFetched(Date.now());
-          more = next.hasMore;
+                    // Use a short interval while the server publishes historical batches.
+                    // Normal live updates remain a one-minute poll.
+                    pollDelay = next.sync.checking ? 5_000 : 60_000;
+                    setPage(next);
+                    setConnected(true);
+                    setLastFetched(Date.now());
+                    more = next.hasMore;
+                }
+
+                setObservations(accumulated);
+                setLoading(false);
+            } catch {
+                if (!controller.signal.aborted) {
+                    setConnected(false);
+                    setLoading(false);
+                    setObservations(accumulated);
+                }
+            } finally {
+                refreshing = false;
+                if (!controller.signal.aborted) {
+                    timer = setTimeout(refresh, pollDelay);
+                }
+            }
         }
 
-        setObservations(accumulated);
-        setLoading(false);
-      } catch {
-        if (!controller.signal.aborted) {
-          setConnected(false);
-          setLoading(false);
-          setObservations(accumulated);
+        function onVisibilityChange() {
+            if (document.visibilityState === 'visible') void refresh();
         }
-      } finally {
-        refreshing = false;
-        if (!controller.signal.aborted) {
-          timer = setTimeout(refresh, pollDelay);
-        }
-      }
-    }
 
-    function onVisibilityChange() {
-      if (document.visibilityState === 'visible') void refresh();
-    }
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        void refresh();
+        return () => {
+            // Cancel outstanding work on unmount, including React Strict Mode cleanup in development.
+            controller.abort();
+            clearTimeout(timer);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
+        };
+    }, []);
 
-    document.addEventListener('visibilitychange', onVisibilityChange);
-    void refresh();
-    return () => {
-      controller.abort();
-      clearTimeout(timer);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-    };
-  }, []);
-
-  return { observations, page, connected, loading, lastFetched };
+    return { observations, page, connected, loading, lastFetched };
 }
