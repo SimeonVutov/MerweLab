@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import WeatherView from './features/weather/WeatherView';
 import NetworkPanel from './features/network/NetworkPanel';
 import { initialNetworkInfo, initialNetworkOptions } from './features/network/types';
+import LandUsePanel from './features/landUse/LandUsePanel';
+import { initialLandUseOptions } from './features/landUse/types';
+import type { LandUseLocation } from './features/landUse/types';
 import EnvironmentPanel from './features/environment/EnvironmentPanel';
 import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
 import type { EnvironmentInfo } from './features/environment/types';
@@ -31,6 +34,8 @@ export default function App() {
   const [network, setNetwork] = useState(initialNetworkOptions);
   const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
   const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
+  const [landUse, setLandUse] = useState(initialLandUseOptions);
+  const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
   const [environment, setEnvironment] = useState(initialEnvironmentOptions);
   const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
   const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
@@ -73,6 +78,9 @@ export default function App() {
   const sceneSettings = {
     network,
     networkPane: 'left' as const,
+    landUse,
+    landUsePane: comparing ? 'left' as const : 'single' as const,
+    onLandUseProbe: selectLandUsePoint,
     environment,
     morphology,
     viewMode,
@@ -93,6 +101,11 @@ export default function App() {
     noiseProbe: comparing ? noiseProbe : undefined,
     onNoiseProbe: setNoiseProbe,
   };
+
+  function selectLandUsePoint(point: LandUseLocation) {
+    setLandUseProbe(point);
+    setDetailsOpen(true);
+  }
 
   function selectNeighbourhood(id: string) {
     setCbs((current) => ({ ...current, selected: id }));
@@ -158,6 +171,8 @@ export default function App() {
         <LayerPanel
           network={network}
           onNetworkChange={setNetwork}
+          landUse={landUse}
+          onLandUseChange={setLandUse}
           environment={environment}
           onEnvironmentChange={setEnvironment}
           morphology={morphology}
@@ -221,6 +236,7 @@ export default function App() {
                 {...sceneSettings}
                 networkPane="right"
                 onNetworkInfo={setRightNetworkInfo}
+                landUsePane="right"
                 scenarioLabel={rightScenario.label}
                 scenarioId={rightScenarioId}
                 onEnvironmentInfo={setRightEnvironmentInfo}
@@ -247,6 +263,14 @@ export default function App() {
                 scenarioLabel: rightScenario.label,
                 info: rightNetworkInfo,
               } : undefined}
+            />
+          )}
+          landUsePanel={(
+            <LandUsePanel
+              options={landUse}
+              onChange={setLandUse}
+              probe={landUseProbe}
+              comparing={comparing}
             />
           )}
           environmentPanel={(

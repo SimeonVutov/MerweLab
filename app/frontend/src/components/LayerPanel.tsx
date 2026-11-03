@@ -8,10 +8,14 @@ import type { LayerId } from '../project';
 import styles from './LayerPanel.module.css';
 import type { WindOptions } from '../features/wind/types';
 import type { NetworkOptions } from '../features/network/types';
+import { landUseMaps } from '../features/landUse/types';
+import type { LandUseOptions } from '../features/landUse/types';
 
 interface LayerPanelProps {
   network: NetworkOptions;
   onNetworkChange: (options: NetworkOptions) => void;
+  landUse: LandUseOptions;
+  onLandUseChange: (options: LandUseOptions) => void;
   environment: EnvironmentOptions;
   onEnvironmentChange: (options: EnvironmentOptions) => void;
   morphology: MorphologyOptions;
@@ -38,6 +42,8 @@ interface LayerPanelProps {
 export default function LayerPanel({
   network,
   onNetworkChange,
+  landUse,
+  onLandUseChange,
   environment,
   onEnvironmentChange,
   morphology,
@@ -126,7 +132,23 @@ export default function LayerPanel({
           </label>
         ))}
       </details>
-      {layerGroups.filter((group) => group.label !== 'Morphology').map((group) => (
+      <details open>
+        <summary>Land use</summary>
+        {landUseMaps.map(({ id, label }) => (
+          <label key={id} className={styles.layer}>
+            <input
+              type="checkbox"
+              checked={landUse.layers[id].enabled}
+              onChange={(event) => onLandUseChange({
+                ...landUse,
+                layers: { ...landUse.layers, [id]: { ...landUse.layers[id], enabled: event.target.checked } },
+              })}
+            />
+            {label}
+          </label>
+        ))}
+      </details>
+      {layerGroups.filter((group) => group.label !== 'Morphology' && group.label !== 'Land use').map((group) => (
         <details key={group.label} open={['Models', 'Environment', 'Morphology', 'Society', 'Wind & noise', 'Mobility'].includes(group.label)}>
           <summary>{group.label}</summary>
           {group.layers.map((layer) => {

@@ -12,6 +12,7 @@ import type { WindInfo, WindOptions } from '../features/wind/types';
 
 interface DetailsPanelProps {
   networkPanel: ReactNode;
+  landUsePanel: ReactNode;
   environmentPanel: ReactNode;
   morphologyPanel: ReactNode;
   noise: NoiseOptions;
@@ -66,6 +67,7 @@ function SceneSummary({ title, buildingStatus, surfaceStatus, terrainStatus, win
 
 export default function DetailsPanel({
   networkPanel,
+  landUsePanel,
   open, mode, scenarioLabel, imageryVisible, imageryOpacity, onOpacityChange, buildingStatus, surfaceStatus,
   terrainStatus, wind, windInfo, onWindChange, comparison,
   cbs, onCbsChange,
@@ -82,6 +84,7 @@ export default function DetailsPanel({
             {environmentPanel}
             {morphologyPanel}
             {networkPanel}
+            {landUsePanel}
             <CbsPanel options={cbs} onChange={onCbsChange} />
             <NoisePanel
               options={noise}
