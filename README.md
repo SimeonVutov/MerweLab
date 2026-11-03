@@ -108,7 +108,7 @@ The land-use workflow simplifies the source classification into six categories:
 | 4 | Green space |
 | 5 | Water |
 
-A neural Q-value model evaluates possible land-use assignments using neighbourhood composition and proximity features.
+A DQN model evaluates possible land-use assignments using neighbourhood composition and proximity features.
 
 Its training and constraint logic account for factors such as:
 
