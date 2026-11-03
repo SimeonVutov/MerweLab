@@ -22,7 +22,7 @@ export default defineConfig({
       })),
     }),
     viteStaticCopy({
-      targets: ['buildings', 'surfaces', 'terrain', 'context', 'wind', 'cbs', 'noise', 'morphology', 'building-outlines', 'environment'].map((directory) => ({
+      targets: ['buildings', 'surfaces', 'terrain', 'context', 'wind', 'cbs', 'noise', 'morphology', 'building-outlines', 'environment', 'land-use'].map((directory) => ({
         src: normalizePath(fileURLToPath(new URL(`../../data/web/${directory}`, import.meta.url))),
         dest: 'web',
       })),

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import WeatherView from './features/weather/WeatherView';
+import LandUsePanel from './features/landUse/LandUsePanel';
+import { initialLandUseOptions } from './features/landUse/types';
+import type { LandUseLocation } from './features/landUse/types';
 import EnvironmentPanel from './features/environment/EnvironmentPanel';
 import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
 import type { EnvironmentInfo } from './features/environment/types';
@@ -26,6 +29,8 @@ import { initialWindInfo, initialWindOptions } from './features/wind/types';
 import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
+  const [landUse, setLandUse] = useState(initialLandUseOptions);
+  const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
   const [environment, setEnvironment] = useState(initialEnvironmentOptions);
   const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
   const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
@@ -66,6 +71,9 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    landUse,
+    landUsePane: comparing ? 'left' as const : 'single' as const,
+    onLandUseProbe: selectLandUsePoint,
     environment,
     morphology,
     viewMode,
@@ -86,6 +94,11 @@ export default function App() {
     noiseProbe: comparing ? noiseProbe : undefined,
     onNoiseProbe: setNoiseProbe,
   };
+
+  function selectLandUsePoint(point: LandUseLocation) {
+    setLandUseProbe(point);
+    setDetailsOpen(true);
+  }
 
   function selectNeighbourhood(id: string) {
     setCbs((current) => ({ ...current, selected: id }));
@@ -145,6 +158,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          landUse={landUse}
+          onLandUseChange={setLandUse}
           environment={environment}
           onEnvironmentChange={setEnvironment}
           morphology={morphology}
@@ -205,6 +220,7 @@ export default function App() {
             {comparing && <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
               <CesiumScene
                 {...sceneSettings}
+                landUsePane="right"
                 scenarioLabel={rightScenario.label}
                 scenarioId={rightScenarioId}
                 onEnvironmentInfo={setRightEnvironmentInfo}
@@ -219,6 +235,14 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          landUsePanel={(
+            <LandUsePanel
+              options={landUse}
+              onChange={setLandUse}
+              probe={landUseProbe}
+              comparing={comparing}
+            />
+          )}
           environmentPanel={(
             <EnvironmentPanel
               options={environment}

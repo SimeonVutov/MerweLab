@@ -3,8 +3,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # ---- Paths ----
-DATA_LAND_USE_DIR = Path("../../data/land_use")
+ROOT = Path(__file__).resolve().parents[2]
+DATA_LAND_USE_DIR = ROOT / "data/land_use"
 LAND_USE_PATH = DATA_LAND_USE_DIR.joinpath("land_use_in_context_area_smaller.tif")
+SIMPLIFIED_MAP_PATH = DATA_LAND_USE_DIR / "simplified_land_use.tif"
 PREDICTED_MAP_PATH = DATA_LAND_USE_DIR.joinpath("predicted_map_corrected.tif")
 MODEL_PATH = DATA_LAND_USE_DIR.joinpath("results/land_use_prediction_corrected.keras")
 
