@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import WeatherView from './features/weather/WeatherView';
+import NetworkPanel from './features/network/NetworkPanel';
+import { initialNetworkInfo, initialNetworkOptions } from './features/network/types';
 import EnvironmentPanel from './features/environment/EnvironmentPanel';
 import { initialEnvironmentInfo, initialEnvironmentOptions } from './features/environment/types';
 import type { EnvironmentInfo } from './features/environment/types';
@@ -26,6 +28,9 @@ import { initialWindInfo, initialWindOptions } from './features/wind/types';
 import type { WindInfo, WindLocation, WindOptions } from './features/wind/types';
 
 export default function App() {
+  const [network, setNetwork] = useState(initialNetworkOptions);
+  const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
+  const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
   const [environment, setEnvironment] = useState(initialEnvironmentOptions);
   const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
   const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
@@ -66,6 +71,8 @@ export default function App() {
   const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
   const comparing = mode === 'Compare';
   const sceneSettings = {
+    network,
+    networkPane: 'left' as const,
     environment,
     morphology,
     viewMode,
@@ -128,6 +135,10 @@ export default function App() {
     return synchronizeCameras(leftViewer, rightViewer);
   }, [comparing, leftViewer, rightViewer]);
 
+  useEffect(() => {
+    if (networkInfo.selected || rightNetworkInfo.selected) setDetailsOpen(true);
+  }, [networkInfo.selected, rightNetworkInfo.selected]);
+
   return (
     <div className={styles.app}>
       <a className={styles.skipLink} href={mode === 'Weather' ? '#weather' : '#scene'}>Skip to content</a>
@@ -145,6 +156,8 @@ export default function App() {
         data-details-open={detailsOpen}
       >
         <LayerPanel
+          network={network}
+          onNetworkChange={setNetwork}
           environment={environment}
           onEnvironmentChange={setEnvironment}
           morphology={morphology}
@@ -183,6 +196,7 @@ export default function App() {
                 onTerrainStatus={setTerrainStatus}
                 onWindInfo={setWindInfo}
                 onNoiseInfo={setNoiseInfo}
+                onNetworkInfo={setNetworkInfo}
                 onViewerReady={setLeftViewer}
               />
               <div className={styles.panelControls}>
@@ -205,6 +219,8 @@ export default function App() {
             {comparing && <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
               <CesiumScene
                 {...sceneSettings}
+                networkPane="right"
+                onNetworkInfo={setRightNetworkInfo}
                 scenarioLabel={rightScenario.label}
                 scenarioId={rightScenarioId}
                 onEnvironmentInfo={setRightEnvironmentInfo}
@@ -219,6 +235,20 @@ export default function App() {
           </div>
         </main>
         <DetailsPanel
+          networkPanel={(
+            <NetworkPanel
+              options={network}
+              onChange={setNetwork}
+              scenario={scenarioId}
+              scenarioLabel={scenario.label}
+              info={networkInfo}
+              comparison={comparing ? {
+                scenario: rightScenarioId,
+                scenarioLabel: rightScenario.label,
+                info: rightNetworkInfo,
+              } : undefined}
+            />
+          )}
           environmentPanel={(
             <EnvironmentPanel
               options={environment}

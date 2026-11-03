@@ -1,0 +1,113 @@
+.panel {
+  margin-bottom: 28px;
+}
+
+.panel h3 {
+  font-size: 13px;
+  margin: 20px 0 10px;
+}
+
+.control {
+  display: block;
+  margin: 14px 0;
+}
+
+.control select {
+  display: block;
+  width: 100%;
+  padding: 7px 5px;
+  margin-top: 7px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font: inherit;
+}
+
+.control output {
+  float: right;
+}
+
+.legend {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 5px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.gradient {
+  height: 10px;
+  border-radius: 3px;
+}
+
+.range {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table th,
+.table td {
+  padding: 9px 3px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  text-align: right;
+  vertical-align: top;
+}
+
+.table th:first-child {
+  text-align: left;
+}
+
+.selection dl {
+  margin: 0;
+}
+
+.selection dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.selection dt {
+  color: var(--muted);
+}
+
+.selection dd {
+  margin: 0;
+  text-align: right;
+}
+
+.figureLink {
+  display: block;
+  margin: 12px 0;
+  color: var(--active);
+}
+
+.panel details {
+  margin-top: 20px;
+}
+
+.panel summary {
+  cursor: pointer;
+}
