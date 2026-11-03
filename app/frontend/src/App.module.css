@@ -1,117 +1,117 @@
 .app {
-  height: 100dvh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .workspace {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 218px minmax(0, 1fr) 210px;
-  grid-template-rows: minmax(0, 1fr);
-  overflow: hidden;
-  min-height: 0;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 218px minmax(0, 1fr) 210px;
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+    min-height: 0;
 }
 
 .workspace[data-layers-open='false'] {
-  grid-template-columns: minmax(0, 1fr) 210px;
+    grid-template-columns: minmax(0, 1fr) 210px;
 }
 
 .workspace[data-details-open='false'] {
-  grid-template-columns: 218px minmax(0, 1fr);
+    grid-template-columns: 218px minmax(0, 1fr);
 }
 
 .workspace[data-layers-open='false'][data-details-open='false'] {
-  grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .scene {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .views {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  flex: 1;
-  min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    flex: 1;
+    min-height: 0;
 }
 .views[data-comparing='true'] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .view {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
 }
 .view + .view {
-  border-left: 1px solid var(--line);
+    border-left: 1px solid var(--line);
 }
 
 @media (max-width: 700px) {
-  .views[data-comparing='true'] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .views[data-comparing='true'] {
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-  .view + .view {
-    border-left: 0;
-    border-top: 1px solid var(--line);
-  }
+    .views[data-comparing='true'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .views[data-comparing='true'] {
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+    }
+    .view + .view {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+    }
 }
 
 .panelControls {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  display: flex;
-  gap: 4px;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 4px;
 }
 
 .panelControls button {
-  background: var(--surface);
-  border-color: var(--line);
+    background: var(--surface);
+    border-color: var(--line);
 }
 
 .skipLink {
-  position: fixed;
-  top: -100px;
-  left: 12px;
-  z-index: 10;
-  padding: 10px;
-  background: var(--surface);
-  color: var(--ink);
+    position: fixed;
+    top: -100px;
+    left: 12px;
+    z-index: 10;
+    padding: 10px;
+    background: var(--surface);
+    color: var(--ink);
 }
 
 .skipLink:focus {
-  top: 8px;
+    top: 8px;
 }
 
 @media (max-width: 1000px) {
-  .workspace, .workspace[data-details-open='false'] {
-    grid-template-columns: 190px minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) minmax(0, 28dvh);
-  }
-  .workspace[data-layers-open='false'] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .workspace[data-details-open='false'] {
-    grid-template-rows: minmax(0, 1fr);
-  }
+    .workspace, .workspace[data-details-open='false'] {
+        grid-template-columns: 190px minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) minmax(0, 28dvh);
+    }
+    .workspace[data-layers-open='false'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .workspace[data-details-open='false'] {
+        grid-template-rows: minmax(0, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
-  .workspace {
-    display: flex;
-    flex-direction: column;
-  }
-  .scene {
-    min-height: 0;
-    flex: 1;
-  }
+    .workspace {
+        display: flex;
+        flex-direction: column;
+    }
+    .scene {
+        min-height: 0;
+        flex: 1;
+    }
 }

@@ -31,320 +31,320 @@ import type { TerrainStatus } from './scene/terrain';
 import styles from './App.module.css';
 
 export default function App() {
-  const [mode, setMode] = useState<Mode>('Explore');
-  const [viewMode, setViewMode] = useState<ViewMode>('3d');
-  const [viewRequest, setViewRequest] = useState(0);
-  const [layersOpen, setLayersOpen] = useState(true);
-  const [detailsOpen, setDetailsOpen] = useState(true);
+    const [mode, setMode] = useState<Mode>('Explore');
+    const [viewMode, setViewMode] = useState<ViewMode>('3d');
+    const [viewRequest, setViewRequest] = useState(0);
+    const [layersOpen, setLayersOpen] = useState(true);
+    const [detailsOpen, setDetailsOpen] = useState(true);
 
-  const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
-  const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
-  const [leftViewer, setLeftViewer] = useState<Viewer | null>(null);
-  const [rightViewer, setRightViewer] = useState<Viewer | null>(null);
+    const [scenarioId, setScenarioId] = useState<ScenarioId>('scenario_a');
+    const [rightScenarioId, setRightScenarioId] = useState<ScenarioId>('scenario_b');
+    const [leftViewer, setLeftViewer] = useState<Viewer | null>(null);
+    const [rightViewer, setRightViewer] = useState<Viewer | null>(null);
 
-  const [imageryVisible, setImageryVisible] = useState(true);
-  const [imageryOpacity, setImageryOpacity] = useState(1);
-  const [contextVisible, setContextVisible] = useState(true);
-  const [scenarioVisible, setScenarioVisible] = useState(true);
-  const [groundVisible, setGroundVisible] = useState(true);
-  const [waterVisible, setWaterVisible] = useState(false);
+    const [imageryVisible, setImageryVisible] = useState(true);
+    const [imageryOpacity, setImageryOpacity] = useState(1);
+    const [contextVisible, setContextVisible] = useState(true);
+    const [scenarioVisible, setScenarioVisible] = useState(true);
+    const [groundVisible, setGroundVisible] = useState(true);
+    const [waterVisible, setWaterVisible] = useState(false);
 
-  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
-  const [rightTerrainStatus, setRightTerrainStatus] = useState<TerrainStatus>('Loading');
-  const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({
-    context: 'Loading',
-    scenario: 'Loading',
-  });
-  const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({
-    context: 'Loading',
-    scenario: 'Loading',
-  });
-  const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({
-    context: 'Loading',
-    scenario: 'Loading',
-    water: 'Loading',
-  });
-  const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({
-    context: 'Loading',
-    scenario: 'Loading',
-    water: 'Loading',
-  });
+    const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('Loading');
+    const [rightTerrainStatus, setRightTerrainStatus] = useState<TerrainStatus>('Loading');
+    const [buildingStatus, setBuildingStatus] = useState<ModelStatus>({
+        context: 'Loading',
+        scenario: 'Loading',
+    });
+    const [rightBuildingStatus, setRightBuildingStatus] = useState<ModelStatus>({
+        context: 'Loading',
+        scenario: 'Loading',
+    });
+    const [surfaceStatus, setSurfaceStatus] = useState<ModelStatus>({
+        context: 'Loading',
+        scenario: 'Loading',
+        water: 'Loading',
+    });
+    const [rightSurfaceStatus, setRightSurfaceStatus] = useState<ModelStatus>({
+        context: 'Loading',
+        scenario: 'Loading',
+        water: 'Loading',
+    });
 
-  const [environment, setEnvironment] = useState(initialEnvironmentOptions);
-  const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
-  const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
-  const [morphology, setMorphology] = useState(initialMorphologyOptions);
-  const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
+    const [environment, setEnvironment] = useState(initialEnvironmentOptions);
+    const [environmentInfo, setEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
+    const [rightEnvironmentInfo, setRightEnvironmentInfo] = useState<EnvironmentInfo>(initialEnvironmentInfo);
+    const [morphology, setMorphology] = useState(initialMorphologyOptions);
+    const [cbs, setCbs] = useState<CbsOptions>(initialCbsOptions);
 
-  const [network, setNetwork] = useState(initialNetworkOptions);
-  const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
-  const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
+    const [network, setNetwork] = useState(initialNetworkOptions);
+    const [networkInfo, setNetworkInfo] = useState(initialNetworkInfo);
+    const [rightNetworkInfo, setRightNetworkInfo] = useState(initialNetworkInfo);
 
-  const [landUse, setLandUse] = useState(initialLandUseOptions);
-  const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
+    const [landUse, setLandUse] = useState(initialLandUseOptions);
+    const [landUseProbe, setLandUseProbe] = useState<LandUseLocation | null>(null);
 
-  const [wind, setWind] = useState<WindOptions>(initialWindOptions);
-  const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
-  const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
-  const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
+    const [wind, setWind] = useState<WindOptions>(initialWindOptions);
+    const [windInfo, setWindInfo] = useState<WindInfo>(initialWindInfo);
+    const [rightWindInfo, setRightWindInfo] = useState<WindInfo>(initialWindInfo);
+    const [windProbe, setWindProbe] = useState<WindLocation | null>(null);
 
-  const [noise, setNoise] = useState<NoiseOptions>(initialNoiseOptions);
-  const [noiseInfo, setNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
-  const [rightNoiseInfo, setRightNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
-  const [noiseProbe, setNoiseProbe] = useState<NoiseLocation | null>(null);
+    const [noise, setNoise] = useState<NoiseOptions>(initialNoiseOptions);
+    const [noiseInfo, setNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
+    const [rightNoiseInfo, setRightNoiseInfo] = useState<NoiseInfo>(initialNoiseInfo);
+    const [noiseProbe, setNoiseProbe] = useState<NoiseLocation | null>(null);
 
-  const scenario = scenarios.find((item) => item.id === scenarioId)!;
-  const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
-  const comparing = mode === 'Compare';
+    const scenario = scenarios.find((item) => item.id === scenarioId)!;
+    const rightScenario = scenarios.find((item) => item.id === rightScenarioId)!;
+    const comparing = mode === 'Compare';
 
-  function selectLandUsePoint(point: LandUseLocation) {
-    setLandUseProbe(point);
-    setDetailsOpen(true);
-  }
-
-  function selectNeighbourhood(id: string) {
-    setCbs((current) => ({ ...current, selected: id }));
-    setDetailsOpen(true);
-  }
-
-  function swapScenarios() {
-    setScenarioId(rightScenarioId);
-    setRightScenarioId(scenarioId);
-  }
-
-  function changeViewMode(value: ViewMode) {
-    setViewMode(value);
-
-    if (value === '2d') {
-      setGroundVisible(false);
-      setWind((current) => ({ ...current, streamlines_3d: false }));
-    }
-  }
-
-  function changeWind(options: WindOptions) {
-    if (options.streamlines_3d && !wind.streamlines_3d) {
-      setViewMode('3d');
-      setViewRequest((current) => current + 1);
+    function selectLandUsePoint(point: LandUseLocation) {
+        setLandUseProbe(point);
+        setDetailsOpen(true);
     }
 
-    setWind(options);
-  }
-
-  const sceneSettings = {
-    network,
-    networkPane: 'left' as const,
-    landUse,
-    landUsePane: comparing ? 'left' as const : 'single' as const,
-    onLandUseProbe: selectLandUsePoint,
-    environment,
-    morphology,
-    viewMode,
-    viewRequest,
-    onViewModeChange: changeViewMode,
-    imageryVisible,
-    imageryOpacity,
-    contextVisible,
-    scenarioVisible,
-    groundVisible,
-    waterVisible,
-    wind,
-    windProbe: comparing ? windProbe : undefined,
-    onWindProbe: setWindProbe,
-    cbs,
-    onCbsSelect: selectNeighbourhood,
-    noise,
-    noiseProbe: comparing ? noiseProbe : undefined,
-    onNoiseProbe: setNoiseProbe,
-  };
-
-  useEffect(() => {
-    if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) {
-      return;
+    function selectNeighbourhood(id: string) {
+        setCbs((current) => ({ ...current, selected: id }));
+        setDetailsOpen(true);
     }
 
-    return synchronizeCameras(leftViewer, rightViewer);
-  }, [comparing, leftViewer, rightViewer]);
-
-  useEffect(() => {
-    if (networkInfo.selected || rightNetworkInfo.selected) {
-      setDetailsOpen(true);
+    function swapScenarios() {
+        setScenarioId(rightScenarioId);
+        setRightScenarioId(scenarioId);
     }
-  }, [networkInfo.selected, rightNetworkInfo.selected]);
 
-  return (
-    <div className={styles.app}>
-      <a className={styles.skipLink} href={mode === 'Weather' ? '#weather' : '#scene'}>Skip to content</a>
-      <Header
-        mode={mode}
-        scenarioId={scenarioId}
-        onModeChange={setMode}
-        onScenarioChange={setScenarioId}
-      />
-      <WeatherView hidden={mode !== 'Weather'} />
-      <div
-        hidden={mode === 'Weather'}
-        className={styles.workspace}
-        data-layers-open={layersOpen}
-        data-details-open={detailsOpen}
-      >
-        <LayerPanel
-          network={network}
-          onNetworkChange={setNetwork}
-          landUse={landUse}
-          onLandUseChange={setLandUse}
-          environment={environment}
-          onEnvironmentChange={setEnvironment}
-          morphology={morphology}
-          onMorphologyChange={setMorphology}
-          noise={noise}
-          onNoiseChange={setNoise}
-          cbs={cbs}
-          onCbsChange={setCbs}
-          open={layersOpen}
-          imageryVisible={imageryVisible}
-          onImageryChange={setImageryVisible}
-          contextVisible={contextVisible}
-          scenarioVisible={scenarioVisible}
-          onContextChange={setContextVisible}
-          onScenarioChange={setScenarioVisible}
-          groundVisible={groundVisible}
-          waterVisible={waterVisible}
-          onGroundChange={setGroundVisible}
-          onWaterChange={setWaterVisible}
-          wind={wind}
-          onWindChange={changeWind}
-        />
-        <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
-          {comparing && (
-            <CompareToolbar
-              left={scenarioId}
-              right={rightScenarioId}
-              onLeftChange={setScenarioId}
-              onRightChange={setRightScenarioId}
-              onSwap={swapScenarios}
-            />
-          )}
-          <div className={styles.views} data-comparing={comparing}>
-            <section
-              className={styles.view}
-              aria-label={comparing ? `Left map: ${scenario.label}` : `Map: ${scenario.label}`}
-            >
-              <CesiumScene
-                {...sceneSettings}
-                scenarioLabel={scenario.label}
+    function changeViewMode(value: ViewMode) {
+        setViewMode(value);
+
+        if (value === '2d') {
+            setGroundVisible(false);
+            setWind((current) => ({ ...current, streamlines_3d: false }));
+        }
+    }
+
+    function changeWind(options: WindOptions) {
+        if (options.streamlines_3d && !wind.streamlines_3d) {
+            setViewMode('3d');
+            setViewRequest((current) => current + 1);
+        }
+
+        setWind(options);
+    }
+
+    const sceneSettings = {
+        network,
+        networkPane: 'left' as const,
+        landUse,
+        landUsePane: comparing ? 'left' as const : 'single' as const,
+        onLandUseProbe: selectLandUsePoint,
+        environment,
+        morphology,
+        viewMode,
+        viewRequest,
+        onViewModeChange: changeViewMode,
+        imageryVisible,
+        imageryOpacity,
+        contextVisible,
+        scenarioVisible,
+        groundVisible,
+        waterVisible,
+        wind,
+        windProbe: comparing ? windProbe : undefined,
+        onWindProbe: setWindProbe,
+        cbs,
+        onCbsSelect: selectNeighbourhood,
+        noise,
+        noiseProbe: comparing ? noiseProbe : undefined,
+        onNoiseProbe: setNoiseProbe,
+    };
+
+    useEffect(() => {
+        if (!comparing || !leftViewer || !rightViewer || leftViewer.isDestroyed() || rightViewer.isDestroyed()) {
+            return;
+        }
+
+        return synchronizeCameras(leftViewer, rightViewer);
+    }, [comparing, leftViewer, rightViewer]);
+
+    useEffect(() => {
+        if (networkInfo.selected || rightNetworkInfo.selected) {
+            setDetailsOpen(true);
+        }
+    }, [networkInfo.selected, rightNetworkInfo.selected]);
+
+    return (
+        <div className={styles.app}>
+            <a className={styles.skipLink} href={mode === 'Weather' ? '#weather' : '#scene'}>Skip to content</a>
+            <Header
+                mode={mode}
                 scenarioId={scenarioId}
-                onEnvironmentInfo={setEnvironmentInfo}
-                onBuildingStatus={setBuildingStatus}
-                onSurfaceStatus={setSurfaceStatus}
-                onTerrainStatus={setTerrainStatus}
-                onWindInfo={setWindInfo}
-                onNoiseInfo={setNoiseInfo}
-                onNetworkInfo={setNetworkInfo}
-                onViewerReady={setLeftViewer}
-              />
-              <div className={styles.panelControls}>
-                <button
-                  aria-expanded={layersOpen}
-                  aria-controls="layer-panel"
-                  onClick={() => setLayersOpen((open) => !open)}
-                >
-                  Layers
-                </button>
-                <button
-                  aria-expanded={detailsOpen}
-                  aria-controls="details-panel"
-                  onClick={() => setDetailsOpen((open) => !open)}
-                >
-                  Details
-                </button>
-              </div>
-            </section>
-            {comparing && (
-              <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
-                <CesiumScene
-                  {...sceneSettings}
-                  networkPane="right"
-                  onNetworkInfo={setRightNetworkInfo}
-                  landUsePane="right"
-                  scenarioLabel={rightScenario.label}
-                  scenarioId={rightScenarioId}
-                  onEnvironmentInfo={setRightEnvironmentInfo}
-                  onBuildingStatus={setRightBuildingStatus}
-                  onSurfaceStatus={setRightSurfaceStatus}
-                  onTerrainStatus={setRightTerrainStatus}
-                  onWindInfo={setRightWindInfo}
-                  onNoiseInfo={setRightNoiseInfo}
-                  onViewerReady={setRightViewer}
+                onModeChange={setMode}
+                onScenarioChange={setScenarioId}
+            />
+            <WeatherView hidden={mode !== 'Weather'} />
+            <div
+                hidden={mode === 'Weather'}
+                className={styles.workspace}
+                data-layers-open={layersOpen}
+                data-details-open={detailsOpen}
+            >
+                <LayerPanel
+                    network={network}
+                    onNetworkChange={setNetwork}
+                    landUse={landUse}
+                    onLandUseChange={setLandUse}
+                    environment={environment}
+                    onEnvironmentChange={setEnvironment}
+                    morphology={morphology}
+                    onMorphologyChange={setMorphology}
+                    noise={noise}
+                    onNoiseChange={setNoise}
+                    cbs={cbs}
+                    onCbsChange={setCbs}
+                    open={layersOpen}
+                    imageryVisible={imageryVisible}
+                    onImageryChange={setImageryVisible}
+                    contextVisible={contextVisible}
+                    scenarioVisible={scenarioVisible}
+                    onContextChange={setContextVisible}
+                    onScenarioChange={setScenarioVisible}
+                    groundVisible={groundVisible}
+                    waterVisible={waterVisible}
+                    onGroundChange={setGroundVisible}
+                    onWaterChange={setWaterVisible}
+                    wind={wind}
+                    onWindChange={changeWind}
                 />
-              </section>
-            )}
-          </div>
-        </main>
-        <DetailsPanel
-          networkPanel={(
-            <NetworkPanel
-              options={network}
-              onChange={setNetwork}
-              scenario={scenarioId}
-              scenarioLabel={scenario.label}
-              info={networkInfo}
-              comparison={comparing ? {
-                scenario: rightScenarioId,
-                scenarioLabel: rightScenario.label,
-                info: rightNetworkInfo,
-              } : undefined}
-            />
-          )}
-          landUsePanel={(
-            <LandUsePanel
-              options={landUse}
-              onChange={setLandUse}
-              probe={landUseProbe}
-              comparing={comparing}
-            />
-          )}
-          environmentPanel={(
-            <EnvironmentPanel
-              options={environment}
-              onChange={setEnvironment}
-              info={environmentInfo}
-              comparison={comparing ? rightEnvironmentInfo : undefined}
-            />
-          )}
-          morphologyPanel={(
-            <MorphologyPanel
-              options={morphology}
-              onChange={setMorphology}
-              scenario={scenarioId}
-            />
-          )}
-          noise={noise}
-          noiseInfo={noiseInfo}
-          onNoiseChange={setNoise}
-          cbs={cbs}
-          onCbsChange={setCbs}
-          open={detailsOpen}
-          mode={mode}
-          scenarioLabel={scenario.label}
-          imageryVisible={imageryVisible}
-          imageryOpacity={imageryOpacity}
-          onOpacityChange={setImageryOpacity}
-          buildingStatus={buildingStatus}
-          surfaceStatus={surfaceStatus}
-          terrainStatus={terrainStatus}
-          wind={wind}
-          windInfo={windInfo}
-          onWindChange={changeWind}
-          comparison={comparing ? {
-            scenarioLabel: rightScenario.label,
-            buildingStatus: rightBuildingStatus,
-            surfaceStatus: rightSurfaceStatus,
-            terrainStatus: rightTerrainStatus,
-            windInfo: rightWindInfo,
-            noiseInfo: rightNoiseInfo,
-          } : undefined}
-        />
-      </div>
-    </div>
-  );
+                <main id="scene" className={styles.scene} tabIndex={-1} aria-label="Merwehaven map">
+                    {comparing && (
+                        <CompareToolbar
+                            left={scenarioId}
+                            right={rightScenarioId}
+                            onLeftChange={setScenarioId}
+                            onRightChange={setRightScenarioId}
+                            onSwap={swapScenarios}
+                        />
+                    )}
+                    <div className={styles.views} data-comparing={comparing}>
+                        <section
+                            className={styles.view}
+                            aria-label={comparing ? `Left map: ${scenario.label}` : `Map: ${scenario.label}`}
+                        >
+                            <CesiumScene
+                                {...sceneSettings}
+                                scenarioLabel={scenario.label}
+                                scenarioId={scenarioId}
+                                onEnvironmentInfo={setEnvironmentInfo}
+                                onBuildingStatus={setBuildingStatus}
+                                onSurfaceStatus={setSurfaceStatus}
+                                onTerrainStatus={setTerrainStatus}
+                                onWindInfo={setWindInfo}
+                                onNoiseInfo={setNoiseInfo}
+                                onNetworkInfo={setNetworkInfo}
+                                onViewerReady={setLeftViewer}
+                            />
+                            <div className={styles.panelControls}>
+                                <button
+                                    aria-expanded={layersOpen}
+                                    aria-controls="layer-panel"
+                                    onClick={() => setLayersOpen((open) => !open)}
+                                >
+                                    Layers
+                                </button>
+                                <button
+                                    aria-expanded={detailsOpen}
+                                    aria-controls="details-panel"
+                                    onClick={() => setDetailsOpen((open) => !open)}
+                                >
+                                    Details
+                                </button>
+                            </div>
+                        </section>
+                        {comparing && (
+                            <section className={styles.view} aria-label={`Right map: ${rightScenario.label}`}>
+                                <CesiumScene
+                                    {...sceneSettings}
+                                    networkPane="right"
+                                    onNetworkInfo={setRightNetworkInfo}
+                                    landUsePane="right"
+                                    scenarioLabel={rightScenario.label}
+                                    scenarioId={rightScenarioId}
+                                    onEnvironmentInfo={setRightEnvironmentInfo}
+                                    onBuildingStatus={setRightBuildingStatus}
+                                    onSurfaceStatus={setRightSurfaceStatus}
+                                    onTerrainStatus={setRightTerrainStatus}
+                                    onWindInfo={setRightWindInfo}
+                                    onNoiseInfo={setRightNoiseInfo}
+                                    onViewerReady={setRightViewer}
+                                />
+                            </section>
+                        )}
+                    </div>
+                </main>
+                <DetailsPanel
+                    networkPanel={(
+                        <NetworkPanel
+                            options={network}
+                            onChange={setNetwork}
+                            scenario={scenarioId}
+                            scenarioLabel={scenario.label}
+                            info={networkInfo}
+                            comparison={comparing ? {
+                                scenario: rightScenarioId,
+                                scenarioLabel: rightScenario.label,
+                                info: rightNetworkInfo,
+                            } : undefined}
+                        />
+                    )}
+                    landUsePanel={(
+                        <LandUsePanel
+                            options={landUse}
+                            onChange={setLandUse}
+                            probe={landUseProbe}
+                            comparing={comparing}
+                        />
+                    )}
+                    environmentPanel={(
+                        <EnvironmentPanel
+                            options={environment}
+                            onChange={setEnvironment}
+                            info={environmentInfo}
+                            comparison={comparing ? rightEnvironmentInfo : undefined}
+                        />
+                    )}
+                    morphologyPanel={(
+                        <MorphologyPanel
+                            options={morphology}
+                            onChange={setMorphology}
+                            scenario={scenarioId}
+                        />
+                    )}
+                    noise={noise}
+                    noiseInfo={noiseInfo}
+                    onNoiseChange={setNoise}
+                    cbs={cbs}
+                    onCbsChange={setCbs}
+                    open={detailsOpen}
+                    mode={mode}
+                    scenarioLabel={scenario.label}
+                    imageryVisible={imageryVisible}
+                    imageryOpacity={imageryOpacity}
+                    onOpacityChange={setImageryOpacity}
+                    buildingStatus={buildingStatus}
+                    surfaceStatus={surfaceStatus}
+                    terrainStatus={terrainStatus}
+                    wind={wind}
+                    windInfo={windInfo}
+                    onWindChange={changeWind}
+                    comparison={comparing ? {
+                        scenarioLabel: rightScenario.label,
+                        buildingStatus: rightBuildingStatus,
+                        surfaceStatus: rightSurfaceStatus,
+                        terrainStatus: rightTerrainStatus,
+                        windInfo: rightWindInfo,
+                        noiseInfo: rightNoiseInfo,
+                    } : undefined}
+                />
+            </div>
+        </div>
+    );
 }
