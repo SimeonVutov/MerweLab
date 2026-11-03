@@ -1,0 +1,827 @@
+{
+  "version": 1,
+  "scenarios": {
+    "scenario_a": {
+      "balanced": {
+        "url": "/web/network/scenario_a-balanced-d959c53b91b6.geojson",
+        "figure": "/web/network/scenario_a-balanced-c3011b3ae8b0.png",
+        "bounds": [
+          4.4112581,
+          51.91053686,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "rampRd": [
+            88189.1,
+            436464.9
+          ],
+          "score": 0.262,
+          "weights": {
+            "access": 0.3,
+            "detour": 0.15,
+            "car": 0.2,
+            "wind": 0.15,
+            "green_loss": 0.12,
+            "cost": 0.08
+          },
+          "carTripsPerDay": 2333,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 1001.303,
+            "detour": 1.078,
+            "wind": 5.628,
+            "car": 80.59,
+            "green_loss": 215.457,
+            "cost": 235.741
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_A_balanced_bridge.gpkg",
+            "sha256": "6aa7b2893c47cac7875088770cb0b4ca8d36bb69a087e907a501e1c569a4c61b"
+          },
+          {
+            "path": "data/network/output/results_A_balanced_bridge.csv",
+            "sha256": "99edb9bdfbdbcf17629da7622f6ab14cff75f3cfd7f7d4fc328c1d739573a8ed"
+          }
+        ]
+      },
+      "access_first": {
+        "url": "/web/network/scenario_a-access_first-220414f72096.geojson",
+        "figure": "/web/network/scenario_a-access_first-2d4242841b72.png",
+        "bounds": [
+          4.4112581,
+          51.91053686,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "A02",
+            "A03",
+            "A04",
+            "A05",
+            "A06",
+            "A12"
+          ],
+          "rampRd": [
+            88189.1,
+            436464.9
+          ],
+          "score": 0.255,
+          "weights": {
+            "access": 0.45,
+            "detour": 0.2,
+            "car": 0.1,
+            "wind": 0.1,
+            "green_loss": 0.09,
+            "cost": 0.06
+          },
+          "carTripsPerDay": 2333,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 962.584,
+            "detour": 1.118,
+            "wind": 6.07,
+            "car": 80.59,
+            "green_loss": 295.763,
+            "cost": 319.174
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_A_access_first_bridge.gpkg",
+            "sha256": "6bca6b7d829252bb3850c2fa16452c0f839028d6a819b0bd6acd310ea864a641"
+          },
+          {
+            "path": "data/network/output/results_A_access_first_bridge.csv",
+            "sha256": "284f245caac955c0503cebf54f8e99967c6140664d576592e41ba0dc5c2bb5b9"
+          }
+        ]
+      },
+      "green_first": {
+        "url": "/web/network/scenario_a-green_first-163ede2d05c3.geojson",
+        "figure": "/web/network/scenario_a-green_first-dded61802481.png",
+        "bounds": [
+          4.4112581,
+          51.91053686,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "A06",
+            "A07",
+            "A08",
+            "A12"
+          ],
+          "rampRd": [
+            88189.1,
+            436464.9
+          ],
+          "score": 0.157,
+          "weights": {
+            "access": 0.15,
+            "detour": 0.1,
+            "car": 0.2,
+            "wind": 0.15,
+            "green_loss": 0.3,
+            "cost": 0.1
+          },
+          "carTripsPerDay": 2333,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 1027.816,
+            "detour": 1.076,
+            "wind": 5.48,
+            "car": 80.59,
+            "green_loss": 147.453,
+            "cost": 164.404
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_A_green_first_bridge.gpkg",
+            "sha256": "10e8c2ec3c446e4d9d3f0f26badbcceb56d328a9cb442b4fe8f7cedae12f3ecb"
+          },
+          {
+            "path": "data/network/output/results_A_green_first_bridge.csv",
+            "sha256": "1bd19a0ea6ebaee91d50638b406378bfbc65cd1e7783ff6b2db49d4ac469112f"
+          }
+        ]
+      },
+      "no_wind": {
+        "url": "/web/network/scenario_a-no_wind-220414f72096.geojson",
+        "figure": "/web/network/scenario_a-no_wind-b366f1e279da.png",
+        "bounds": [
+          4.4112581,
+          51.91053686,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "A02",
+            "A03",
+            "A04",
+            "A05",
+            "A06",
+            "A12"
+          ],
+          "rampRd": [
+            88189.1,
+            436464.9
+          ],
+          "score": 0.16,
+          "weights": {
+            "access": 0.35,
+            "detour": 0.18,
+            "car": 0.23,
+            "wind": 0.0,
+            "green_loss": 0.15,
+            "cost": 0.09
+          },
+          "carTripsPerDay": 2333,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 962.584,
+            "detour": 1.118,
+            "wind": 6.07,
+            "car": 80.59,
+            "green_loss": 295.763,
+            "cost": 319.174
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_A_no_wind_bridge.gpkg",
+            "sha256": "7c44899628300ca50eeb3b4c9cd240a8ed7a319c7bf0422dfdf0872e903106ce"
+          },
+          {
+            "path": "data/network/output/results_A_no_wind_bridge.csv",
+            "sha256": "5d7aa42b25acf61333d4d95d6f58d8966afb688f60cfd77714b2aef5df5aaaf9"
+          }
+        ]
+      }
+    },
+    "scenario_b": {
+      "balanced": {
+        "url": "/web/network/scenario_b-balanced-67c6181c58c4.geojson",
+        "figure": "/web/network/scenario_b-balanced-e66dfcf62fbe.png",
+        "bounds": [
+          4.4112581,
+          51.91015224,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "B11",
+            "B12",
+            "B13",
+            "B14",
+            "B15",
+            "B16",
+            "B20"
+          ],
+          "rampRd": [
+            88148.6,
+            436459.5
+          ],
+          "score": 0.128,
+          "weights": {
+            "access": 0.3,
+            "detour": 0.15,
+            "car": 0.2,
+            "wind": 0.15,
+            "green_loss": 0.12,
+            "cost": 0.08
+          },
+          "carTripsPerDay": 2284,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 977.317,
+            "detour": 1.13,
+            "wind": 4.576,
+            "car": 56.684,
+            "green_loss": 47.83,
+            "cost": 72.941
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_B_balanced_bridge.gpkg",
+            "sha256": "7b0dbb97c9a5b9194627020e7909359c8741764469f1e796c85e3a6f559e58e8"
+          },
+          {
+            "path": "data/network/output/results_B_balanced_bridge.csv",
+            "sha256": "7c64cb05ad06a9459e0e63ca8776a6e3b54a1c105d583245b1d2df43fcb88208"
+          }
+        ]
+      },
+      "access_first": {
+        "url": "/web/network/scenario_b-access_first-baa652c25a58.geojson",
+        "figure": "/web/network/scenario_b-access_first-ac7fcf94cd98.png",
+        "bounds": [
+          4.4112581,
+          51.91015224,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "B11",
+            "B12",
+            "B13",
+            "B14",
+            "B15",
+            "B16",
+            "B20"
+          ],
+          "rampRd": [
+            88173.6,
+            436474.8
+          ],
+          "score": 0.165,
+          "weights": {
+            "access": 0.45,
+            "detour": 0.2,
+            "car": 0.1,
+            "wind": 0.1,
+            "green_loss": 0.09,
+            "cost": 0.06
+          },
+          "carTripsPerDay": 2284,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 978.133,
+            "detour": 1.052,
+            "wind": 5.166,
+            "car": 52.249,
+            "green_loss": 47.83,
+            "cost": 72.941
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_B_access_first_bridge.gpkg",
+            "sha256": "9636b2ab8232fdc84bd9fb251a2865bd31c8df118e701e923ab32c71d9e9d8ef"
+          },
+          {
+            "path": "data/network/output/results_B_access_first_bridge.csv",
+            "sha256": "b572a0452bfe2b2b6c253407b8b6c2d66fe5f1ad289036cba1e88e0058eb03e9"
+          }
+        ]
+      },
+      "green_first": {
+        "url": "/web/network/scenario_b-green_first-67c6181c58c4.geojson",
+        "figure": "/web/network/scenario_b-green_first-0c5b7e9056a5.png",
+        "bounds": [
+          4.4112581,
+          51.91015224,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "B11",
+            "B12",
+            "B13",
+            "B14",
+            "B15",
+            "B16",
+            "B20"
+          ],
+          "rampRd": [
+            88148.6,
+            436459.5
+          ],
+          "score": 0.058,
+          "weights": {
+            "access": 0.15,
+            "detour": 0.1,
+            "car": 0.2,
+            "wind": 0.15,
+            "green_loss": 0.3,
+            "cost": 0.1
+          },
+          "carTripsPerDay": 2284,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 977.317,
+            "detour": 1.13,
+            "wind": 4.576,
+            "car": 56.684,
+            "green_loss": 47.83,
+            "cost": 72.941
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_B_green_first_bridge.gpkg",
+            "sha256": "04f47bd83a3031ad2c90e2d27aa5e6297bbf6337e06a01ea540452d758ee254c"
+          },
+          {
+            "path": "data/network/output/results_B_green_first_bridge.csv",
+            "sha256": "ec28b9f748e500dcf25f42cbfda28cc50ccb2727712b0c2236d3eadab2487d9f"
+          }
+        ]
+      },
+      "no_wind": {
+        "url": "/web/network/scenario_b-no_wind-baa652c25a58.geojson",
+        "figure": "/web/network/scenario_b-no_wind-0f9988280120.png",
+        "bounds": [
+          4.4112581,
+          51.91015224,
+          4.418063,
+          51.91305936
+        ],
+        "summary": {
+          "method": "greedy",
+          "built": [
+            "B11",
+            "B12",
+            "B13",
+            "B14",
+            "B15",
+            "B16",
+            "B20"
+          ],
+          "rampRd": [
+            88173.6,
+            436474.8
+          ],
+          "score": 0.093,
+          "weights": {
+            "access": 0.35,
+            "detour": 0.18,
+            "car": 0.23,
+            "wind": 0.0,
+            "green_loss": 0.15,
+            "cost": 0.09
+          },
+          "carTripsPerDay": 2284,
+          "bridgeBuilt": false,
+          "indicators": {
+            "access": 978.133,
+            "detour": 1.052,
+            "wind": 5.166,
+            "car": 52.249,
+            "green_loss": 47.83,
+            "cost": 72.941
+          }
+        },
+        "sources": [
+          {
+            "path": "data/network/output/network_B_no_wind_bridge.gpkg",
+            "sha256": "874d9ec4ff2bef86c963ed41695d4a52bc1d9a98afc017be0001c8a6031d0dbd"
+          },
+          {
+            "path": "data/network/output/results_B_no_wind_bridge.csv",
+            "sha256": "5b8df2c15ea87b3cd1b258938dbd4e6a5574d307a40884d64ba7515f67dda35d"
+          }
+        ]
+      }
+    }
+  },
+  "variants": [
+    {
+      "id": "balanced",
+      "label": "Balanced"
+    },
+    {
+      "id": "access_first",
+      "label": "Accessibility first"
+    },
+    {
+      "id": "green_first",
+      "label": "Green first"
+    },
+    {
+      "id": "no_wind",
+      "label": "Without wind"
+    }
+  ],
+  "bounds": [
+    4.4112581,
+    51.91015224,
+    4.418063,
+    51.91305936
+  ],
+  "ranges": {
+    "wind": [
+      1.1,
+      9.7
+    ],
+    "residents_walking": [
+      0,
+      4433
+    ],
+    "car_trips_per_day": [
+      0,
+      2333
+    ]
+  },
+  "baseline": {
+    "accessibility": [
+      {
+        "facility": "supermarket",
+        "meanDistance": 1344.0,
+        "maximumDistance": 1503.0,
+        "walkMinutes": 16.8
+      },
+      {
+        "facility": "gp",
+        "meanDistance": 1094.0,
+        "maximumDistance": 1253.0,
+        "walkMinutes": 13.7
+      },
+      {
+        "facility": "pharmacy",
+        "meanDistance": 1094.0,
+        "maximumDistance": 1253.0,
+        "walkMinutes": 13.7
+      },
+      {
+        "facility": "day_care",
+        "meanDistance": 1571.0,
+        "maximumDistance": 1731.0,
+        "walkMinutes": 19.6
+      },
+      {
+        "facility": "school",
+        "meanDistance": 853.0,
+        "maximumDistance": 1012.0,
+        "walkMinutes": 10.7
+      },
+      {
+        "facility": "park",
+        "meanDistance": 1337.0,
+        "maximumDistance": 1496.0,
+        "walkMinutes": 16.7
+      },
+      {
+        "facility": "tram_bus_stop",
+        "meanDistance": 401.0,
+        "maximumDistance": 574.0,
+        "walkMinutes": 5.0
+      },
+      {
+        "facility": "metro",
+        "meanDistance": 1684.0,
+        "maximumDistance": 1857.0,
+        "walkMinutes": 21.0
+      },
+      {
+        "facility": "train_station",
+        "meanDistance": 1868.0,
+        "maximumDistance": 2028.0,
+        "walkMinutes": 23.4
+      }
+    ],
+    "figures": [
+      {
+        "label": "Walking time to metro",
+        "url": "/web/network/walk_time_metro-27f7a45d73fa.png"
+      },
+      {
+        "label": "Walking time to supermarket",
+        "url": "/web/network/walk_time_supermarket-1adfd9d189f9.png"
+      },
+      {
+        "label": "Accessibility check against CBS",
+        "url": "/web/network/check_vs_cbs-ed618ce6365b.png"
+      }
+    ]
+  },
+  "sensitivity": [
+    {
+      "parameter": "cost_weight",
+      "rows": [
+        {
+          "value": 0.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 0.04,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 0.08,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 0.15,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 0.25,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 0.4,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        }
+      ]
+    },
+    {
+      "parameter": "bridge_cost_factor",
+      "rows": [
+        {
+          "value": 0.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 1.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 2.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 4.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 8.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 16.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        },
+        {
+          "value": 32.0,
+          "bridgeBuilt": false,
+          "built": [
+            "A03",
+            "A04",
+            "A06",
+            "A08",
+            "A12"
+          ],
+          "indicators": {
+            "access": 1001.3,
+            "wind": 5.63,
+            "car": 80.6,
+            "green_loss": 215.5,
+            "cost": 235.7
+          }
+        }
+      ]
+    }
+  ],
+  "placementSources": [
+    {
+      "path": "data/network/design/network_design.gpkg",
+      "sha256": "d5d3afd4922573a6dc2beb475b18e5158ff1456b0ee7b6b6cb63a650117f4fb3"
+    },
+    {
+      "path": "data/network/design/scenario_A_layout.gpkg",
+      "sha256": "cffa2673becb21b703d69eeab6e3f0b3a2c7b5fb0bfa2bcb3e03f7acb4c3d4b2"
+    },
+    {
+      "path": "data/network/design/scenario_B_layout.gpkg",
+      "sha256": "559f20e5c1639272885b67b6355aa7e3b59747820aa201dbc0d35cf81763386c"
+    },
+    {
+      "path": "data/web/terrain/manifest.json",
+      "sha256": "81bc2d6402e94fc1ccbcb35916604dd7820861b0cc82d462b2e6c8d490382b66"
+    },
+    {
+      "path": "data/web/surfaces/manifest.json",
+      "sha256": "de1e72d0c2d0fa322d9fb0a3ea1ad4e27477c4dfd90a81ad2d003d0d6ffe6a18"
+    }
+  ],
+  "notes": [
+    "Saved design alternatives, not live route calculation.",
+    "Cost and scores are relative within each scenario; they are not comparable monetary costs.",
+    "Wind is a relative indicator for the 240-degree simulation direction.",
+    "Walking assignments and car trips are model estimates, not measured traffic.",
+    "Display heights clear prepared terrain and proposal pavement by 0.2 m; analytical lengths are unchanged."
+  ]
+}
