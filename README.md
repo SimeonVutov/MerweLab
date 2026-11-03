@@ -2,7 +2,17 @@
 
 MerweLab is a geospatial analysis and visualization project focused on redevelopment scenarios in **Merwehaven, Rotterdam**.
 
-Developed for the Geo-Spatial Studio, it combines urban design, morphological indicators, environmental simulations, demographic analysis, machine learning, and accessibility planning. An interactive Cesium application brings these results together so users can explore the study area and compare design proposals.
+Developed for Geo-Computation Studio at Delft University of Technology, it combines urban design, morphological indicators, environmental simulations, demographic analysis, machine learning, and accessibility planning. An interactive Cesium application brings these results together so users can explore the study area and compare design proposals.
+
+## Documentation
+
+- [Web-data preparation: setup, commands, and regeneration order](scripts/web/README.md)
+- [Wind simulations and exports](analysis/wind/README.md)
+- [Noise workflows and results](analysis/noise/README.md)
+- [Baseline noise results](analysis/noise/baseline/README.md)
+- [KNMI observations, model training, and prediction](analysis/sensor/README.md)
+- [Route optimization and accessibility](analysis/network/README.md)
+- [Optional CityJSON-to-CityGML tool](tools/3dbag_to_gml/README.md)
 
 ## Design scenarios
 
@@ -331,7 +341,17 @@ Check that it is running by opening:
 http://127.0.0.1:5000/api/health
 ```
 
-Starting `server.py` also starts the background weather updater.
+Starting `server.py` also starts the background weather updater. A GPU or CUDA
+installation is not required; prediction supports CPU execution.
+
+You can also launch it directly from the repository root:
+
+```bash
+uv run --project app/backend python app/backend/server.py
+```
+
+`/api/health` checks that Flask responds. For archive, synchronization, and forecast
+availability, open `http://127.0.0.1:5000/api/weather`.
 
 ### Frontend
 
@@ -349,6 +369,9 @@ http://127.0.0.1:5173
 ```
 
 The frontend forwards API requests to the backend on port `5000`.
+The spatial views can run without Flask, but Weather requires it. The Weather
+component currently loads data even while its view is hidden, so starting only
+the frontend can still produce weather API errors on Explore.
 
 To use a different frontend port:
 

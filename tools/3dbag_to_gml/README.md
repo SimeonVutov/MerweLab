@@ -1,67 +1,88 @@
-# Create a 3D city model for the big assignment
+# Merge 3DBAG CityJSON tiles and export CityGML
 
-Follow these instructions to combine 3DBAG tiles, remove selected buildings, and create a CityGML model for Cesium ion.
+This optional tool merges downloaded 3DBAG CityJSON tiles, removes selected
+buildings, retains LoD2.2 geometry, and converts the result to CityGML 2.0 for
+Cesium ion. It is separate from the web application's local GLB pipeline;
+starting the app does not require this conversion or a Cesium ion upload.
 
-Run all commands from the project folder containing `merge.py`.
+## Setup
 
-## Dependencies
-
-Create a Python virtual environment and install `cjio`:
-
->If you use **PyCharm**, select your project's virtual environment as the Python interpreter. Open **View > Tool Windows > Python Packages**, search for `cjio`, and click **Install**. See the [PyCharm package installation guide](https://www.jetbrains.com/help/pycharm/installing-uninstalling-and-upgrading-packages.html) for details.
-
-**Windows — Command Prompt (`cmd.exe`)**
-
-```cmd
-python -m venv venv
-.\venv\Scripts\activate.bat
-python -m pip install cjio
-```
-
-**Linux/macOS — Bash or Zsh**
+From the repository root:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+cd tools/3dbag_to_gml
+python -m venv .venv
+```
+
+Activate the environment on Linux/macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Or in Windows Command Prompt:
+
+```cmd
+.venv\Scripts\activate.bat
+```
+
+Then install the Python dependency:
+
+```bash
 python -m pip install cjio
 ```
 
+The script expects Java 17 or newer and the complete citygml-tools 2.5.0 package.
+Check Java with:
 
-The conversion tool requires **Java 17 or newer**. You can download a Java SE Development Kit (JDK) from [Oracle](https://www.oracle.com/java/technologies/downloads/). Ensure that Java is available on your `PATH`. After installation of Java SE, close and reopen your terminal or IDE, then check the installed version:
-
-```text
+```bash
 java -version
 ```
 
-If it is not found try restarting your computer. If the issue still not resilved try adding JAVA to `PATH` manually or ask the assistance of course staff.
-
-
-The software `citygml-tools` should already be included next to this file, but if not, dowload [citygml-tools 2.5.0](https://github.com/citygml4j/citygml-tools/releases/tag/v2.5.0). Extract the complete package into the project folder so that the launcher is located at:
+If the tool package is absent, obtain [citygml-tools 2.5.0](https://github.com/citygml4j/citygml-tools/releases/tag/v2.5.0)
+and extract it beside `merge.py`. The expected launcher is:
 
 - Windows: `citygml-tools-2.5.0/citygml-tools.bat`
 - Linux/macOS: `citygml-tools-2.5.0/citygml-tools`
 
-On Linux/macOS, you might need to make the launcher executable:
+On Linux/macOS, make the launcher executable if necessary:
 
 ```bash
-chmod +x ./citygml-tools-2.5.0/citygml-tools
+chmod +x citygml-tools-2.5.0/citygml-tools
 ```
 
-## Preparing the 3D buildings for Cesium ION.
+## Prepare inputs
 
+1. Download the required tiles in CityJSON format from [3DBAG](https://3dbag.nl/en/download).
+2. Extract them and place `*.city.json` files directly in this tool's `data/` folder.
+3. Edit `to_remove.txt` beside `merge.py`: one building identifier per line.
+   It accepts matching CityObject IDs or the `identificatie` attribute, including
+   the `NL.IMBAG.Pand.` prefix when present. Empty lines and lines starting with
+   `#` are ignored. Keep the file empty if no buildings should be removed.
 
-1. Go to the [3DBAG downloads page](https://3dbag.nl/en/download). Select the tiles covering your area of interest and download them in **CityJSON** format. Place the `*.city.json` files directly in the project's `data` subfolder. Create this folder if necessary and extract any compressed downloads first.
+## Run
 
-2. Open the [3DBAG viewer](https://3dbag.nl/en/viewer?basemap=standaard&lod=lod22&rdx=89717.07966557384&rdy=436983.5903027065&ox=-5.820766091346741e-11&oy=9713.390711649296&oz=1240.989919038061). Click a building you want to remove, open the **Attributes** panel, and find `identificatie`. Copy the complete value, including the `NL.IMBAG.Pand.` prefix, into `to_remove.txt` in the project folder. Put each identifier on a separate line, without quotation marks. Repeat for every building you want to remove.
+Run from **`tools/3dbag_to_gml`**, with the environment active:
 
-3. With the virtual environment active, run:
+```bash
+python merge.py
+```
 
-   ```text
-   python merge.py
-   ```
+The script deliberately resolves `./data`, `to_remove.txt`, the converter, and
+its outputs from the current working directory. Running it from the repository
+root without changing directory will use the wrong locations.
 
-   The script merges the tiles, removes the buildings listed in `to_remove.txt`, and creates `merged.city.json`. It then converts this file to `merged.city.gml` for Cesium ion. Both output files are saved in the project folder, outside `data`.
+It writes or replaces:
 
-4. Open `merged.city.gml` in the [CityGML Viewer](https://transfer.hft-stuttgart.de/pages/citydoctor/citygml-viewer/). Check that the buildings you intended to remove are absent and that the buildings you want to keep are still present.
+```text
+merged.city.json
+merged.city.gml
+```
 
-5. Upload `merged.city.gml` to **Cesium ion** and select the **CityGML** import option. Wait for tiling to finish, then inspect the model in the asset preview. Tiling may take some time, depending on the size of the model. You may rename the file.
+It does not modify the source tiles. It filters to LoD2.2, so inspect the output
+before using it if your tiles contain different levels of detail. Confirm the
+intended buildings were removed, then upload `merged.city.gml` to Cesium ion
+using its CityGML import flow if that is your intended destination.
+
+For assets used by the current local application, see the
+[web-preparation guide](../../scripts/web/README.md) instead.
