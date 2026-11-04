@@ -482,6 +482,198 @@
       ],
       "categories": null,
       "colours": null
+    },
+    "Existing/factor1_height_classes_extended": {
+      "kind": "factor",
+      "scenario": "Existing",
+      "result": "height_grid",
+      "field": "height_class",
+      "factor": "height",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Normal (\u2264 20 m)",
+        "Tall (> 20 m)"
+      ],
+      "colours": [
+        "#9ecae1",
+        "#de2d26"
+      ]
+    },
+    "Existing/factor2_density_classes_extended": {
+      "kind": "factor",
+      "scenario": "Existing",
+      "result": "grid",
+      "field": "density_class",
+      "factor": "density",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.2)",
+        "Medium (0.2\u2013<0.4)",
+        "High (\u2265 0.4)"
+      ],
+      "colours": [
+        "#fee8c8",
+        "#fdbb84",
+        "#e34a33"
+      ]
+    },
+    "Existing/factor3_hw_50m_classes_extended": {
+      "kind": "factor",
+      "scenario": "Existing",
+      "result": "hw_grid",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "Existing/factor3_hw_classes_extended": {
+      "kind": "factor",
+      "scenario": "Existing",
+      "result": "hw_fine",
+      "field": "H_W_class",
+      "factor": "hw",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Open (< 0.5)",
+        "Regular (0.5\u2013<1)",
+        "Canyon-like (\u2265 1)"
+      ],
+      "colours": [
+        "#a1d99b",
+        "#fddc6c",
+        "#e34a33"
+      ]
+    },
+    "Existing/factor4_svf_classes_extended": {
+      "kind": "factor",
+      "scenario": "Existing",
+      "result": "svf_grid",
+      "field": "SVF_class",
+      "factor": "svf",
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "Low (< 0.3)",
+        "Medium (0.3\u2013<0.6)",
+        "High (\u2265 0.6)"
+      ],
+      "colours": [
+        "#d73027",
+        "#fee08b",
+        "#1a9850"
+      ]
+    },
+    "Existing/factor4_svf_continuous_extended": {
+      "kind": "continuous",
+      "scenario": "Existing",
+      "result": "svf_grid",
+      "field": "SVF",
+      "factor": null,
+      "cmap": "viridis",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "Existing/factor5_heat_ventilation_risk_extended": {
+      "kind": "continuous",
+      "scenario": "Existing",
+      "result": "risk_grid",
+      "field": "R",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "Existing/factor5_priority": {
+      "kind": "categorical",
+      "scenario": "Existing",
+      "result": "risk_grid",
+      "field": "priority_old",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "Existing/factor6_final_risk_extended": {
+      "kind": "continuous",
+      "scenario": "Existing",
+      "result": "risk_grid",
+      "field": "R_final",
+      "factor": null,
+      "cmap": "YlOrRd",
+      "limits": [
+        0,
+        1
+      ],
+      "categories": null,
+      "colours": null
+    },
+    "Existing/factor6_priority": {
+      "kind": "categorical",
+      "scenario": "Existing",
+      "result": "risk_grid",
+      "field": "priority_new",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "lower",
+        "moderate",
+        "high"
+      ],
+      "colours": [
+        "#91cf60",
+        "#fee08b",
+        "#d73027"
+      ]
+    },
+    "Existing/factor6_priority_change": {
+      "kind": "categorical",
+      "scenario": "Existing",
+      "result": "risk_grid",
+      "field": "priority_change",
+      "factor": null,
+      "cmap": null,
+      "limits": null,
+      "categories": [
+        "down",
+        "unchanged",
+        "up"
+      ],
+      "colours": [
+        "#4575b4",
+        "#eeeeee",
+        "#d73027"
+      ]
     }
   }
 }
